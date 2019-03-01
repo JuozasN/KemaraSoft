@@ -1,0 +1,6 @@
+Pirmai uzduociai ND1:
+- Realios masinos komandos. Apibrezti ir paaiskinti ka daro.
+- Interrupt'ai. Aprasyti detaliau, pvz. kas ivyksta HALT (kas ivyksta sistemoje?)
+- Prideti Supervizorine atminti prie brezinio (ir turbut apie ja kazka parasyti :))
+- PTR registras - "kas atsakingas uz jo nustatyma?"
+- PC Registras 2 baitu (patikslinti).
