@@ -1,6 +1,7 @@
-Pirmai uzduociai ND1:
-- Realios masinos komandos. Apibrezti ir paaiskinti ka daro.DONE
-- Interrupt'ai. Aprasyti detaliau, pvz. kas ivyksta HALT (kas ivyksta sistemoje?) DONE
-- Prideti Supervizorine atminti prie brezinio (ir turbut apie ja kazka parasyti :)) DONE
-- PTR registras - "kas atsakingas uz jo nustatyma?" (OS kvies PTRxy komanda). DONE
-- PC Registras 2 baitu (patikslinti). DONE
+Antrai Uzduociai ND2:
+- Realizuoti projekta (komandas, registrus).
+- Turi buti diskreti deterministine zingsnine masina (?:D)
+- Turime kazkokia busena (STATE). Po kiekvieno zingsnio turime viena konkrecia busena.
+- Reikalavimai UI: Patogus, kad butu galima parodyti destytojui (?:D)
+- start -> nereikia, imame bet kokia busena ir rodome kas gaunasi atlikus veiksmus/zingsnius.
+- geriau daugiau mazu programu negu viena didele.
