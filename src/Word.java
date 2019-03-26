@@ -1,8 +1,9 @@
 public class Word {
+	public static final int BYTE_COUNT = 4;
 	private byte[] bytes;
 	
 	public Word(){
-		bytes = new byte[0x4];
+		bytes = new byte[BYTE_COUNT];
 	}
 	
 	public byte[] getBytes(){return bytes;}

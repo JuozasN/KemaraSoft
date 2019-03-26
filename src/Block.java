@@ -1,9 +1,10 @@
 public class Block {
+	public static final int WORD_COUNT = 0x10;
 	private Word[] words;
 	
 	public Block(){
-		words = new Word[0x10];
-		for(int i = 0; i < 0x10; ++i)
+		words = new Word[WORD_COUNT];
+		for(int i = 0; i < WORD_COUNT; ++i)
 			words[i] = new Word();
 	}
 	public Word[] getWords(){return words;}
@@ -14,7 +15,7 @@ public class Block {
 	
 	public String toString(){
 		String str = "|";
-		for(int i = 0; i < 0x10; ++i){
+		for(int i = 0; i < WORD_COUNT; ++i){
 			str += words[i]+"|";
 		}
 		return str;
