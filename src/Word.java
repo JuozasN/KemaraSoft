@@ -1,5 +1,5 @@
 public class Word {
-	public static final int BYTE_COUNT = 4;
+	public static final int BYTE_COUNT = 0x4;
 	private byte[] bytes;
 	private void resetBytes(){
 		byte[] empty = {0, 0, 0, 0};
@@ -8,6 +8,12 @@ public class Word {
 	
 	public Word(){
 		bytes = new byte[BYTE_COUNT];
+	}
+
+	public Word(byte[] bytes) {
+		this();
+		if (bytes != null && bytes.length <= 4)
+			this.bytes = bytes;
 	}
 	
 	public byte[] getBytes(){return bytes;}

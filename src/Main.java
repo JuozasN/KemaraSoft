@@ -11,7 +11,7 @@ public class Main {
             System.exit(0);
         }
 
-        VM vm = new VM(new Block[VM.BLOCK_COUNT]);
+        VM vm = new VM(new Block[VM.MEM_BLOCK_COUNT]);
 
         try{
             br = new BufferedReader(new FileReader(args[0]));
@@ -38,13 +38,8 @@ public class Main {
 
         vm.exec();
 
-        for(int i = 0; i < VM.BLOCK_COUNT; ++i){
+        for(int i = 0; i < VM.MEM_BLOCK_COUNT; ++i){
             System.out.println(vm.getMem()[i]);
         }
-
-
-        RM realMachine = new RM();
-        System.out.println();
-        realMachine.printExternalMemory();
     }
 }
