@@ -16,7 +16,7 @@ public class Block {
 	public String toString(){
 		String str = "|";
 		for(int i = 0; i < WORD_COUNT; ++i){
-			str += words[i]+"|";
+			str += String.format("%-4s|", words[i]);
 		}
 		return str;
 	}

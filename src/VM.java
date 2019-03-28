@@ -35,50 +35,42 @@ public class VM {
 		while(running){
 			String command = read();		
 			switch(command){
-				case "PUSH": 
-					push(read());
-					break;
-				case "PSHC":
-					pshc(read());
-					break;
-				case "POPM":
-					popm(read());
-					break;
-				case "POP":
-					pop();
-					break;
-				case "TOP":
-					top(read());
-					break;
-				case "ADD":
-					binOp(1);
-					break;
-				case "SUB":
-					binOp(2);
-					break;
-				case "MULT":
-					binOp(3);
-					break;
-				case "DIV":
-					binOp(4);
-					break;
-				case "HALT":
-					running = false;
-					break;
+				case "PUSH": push(read()); break;
+				case "PSHC": pshc(read()); break;
+				case "POPM": popm(read()); break;
+				case "POP": pop(); break;
+				case "TOP": top(read()); break;
+				case "ADD": binOp(1); break;
+				case "SUB": binOp(2); break;
+				case "MULT": binOp(3); break;
+				case "DIV": binOp(4); break;
+				case "CMP": cmp(); break;
+				case "JZ": jmp(1, read()); break;
+				case "JP": jmp(2, read()); break;
+				case "JN": jmp(3, read()); break;
+				case "JMP": jmp(4,read()); break;
+				case "GET": get(read()); break;
+				case "PUT": put(read()); break;
+				case "HALT": running = false; break;
 				default:
-					System.err.println("Invalid command");
+					System.err.println("Invalid command: " + command);
 					// Invalid command interrupt here
 					System.exit(0);
 			}
+			//System.out.format("Command %s executed successfully\n", command);
 		}
 	}
 	
-	public void execInput(int numVars){
-		// Ughhh...
+	public void get(String strAdr){
+		strAdr += "0";
+		byte adr = strToByte(strAdr);
+		// Do output stuff
 	}
 	
-	public void execOut(int numArgs){
-		// Ughhh...
+	public void put(String strAdr){
+		strAdr += "0";
+		byte adr = strToByte(strAdr);
+		// Do input stuff
 	}
 	
 	public String read(){
@@ -133,10 +125,36 @@ public class VM {
 					System.err.println("Impossible error at VM.binOp method");
 					System.exit(0);
 			}
-			push(String.valueOf(result));
+			pshc(String.valueOf(result));
 		} catch(NumberFormatException e){
 			// Invalid assign interrupt here
 			System.exit(0);
+		}
+	}
+	
+	public void cmp(){
+		int op2 = Integer.parseInt(pop().toString());
+		int op1 = Integer.parseInt(pop().toString());
+		if(op1 > op2) pshc("1");
+		else if(op1 == op2) pshc("0");
+		else pshc("-1");
+	}
+	
+	public void jmp(int cond, String strAdr){
+		int val = Integer.parseInt(pop().toString());
+		boolean doJump = false;
+		switch(cond){
+			case 1: if(val == 0) doJump = true; break;
+			case 2: if(val > 0) doJump = true; break;
+			case 3: if(val < 0) doJump = true; break;
+			case 4: doJump = true; sp++; break;
+			default:
+				System.err.println("Impossible error at VM.jmp() method");
+				System.exit(0);
+		}
+		if(doJump){
+			byte adr = strToByte(strAdr);
+			pc = adr;
 		}
 	}
 }
