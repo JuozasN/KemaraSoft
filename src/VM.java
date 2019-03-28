@@ -63,13 +63,13 @@ public class VM {
 	
 	public void get(String strAdr){
 		strAdr += "0";
-		byte adr = strToByte(strAdr);
+		byte adr = Utils.strToByte(strAdr);
 		// Do output stuff
 	}
 	
 	public void put(String strAdr){
 		strAdr += "0";
-		byte adr = strToByte(strAdr);
+		byte adr = Utils.strToByte(strAdr);
 		// Do input stuff
 	}
 	
@@ -153,7 +153,7 @@ public class VM {
 				System.exit(0);
 		}
 		if(doJump){
-			byte adr = strToByte(strAdr);
+			byte adr = Utils.strToByte(strAdr);
 			pc = adr;
 		}
 	}
