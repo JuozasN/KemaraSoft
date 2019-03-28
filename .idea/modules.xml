@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/KemaraSoft.iml" filepath="$PROJECT_DIR$/KemaraSoft.iml" />
+      <module fileurl="file://$PROJECT_DIR$/OSgui.iml" filepath="$PROJECT_DIR$/OSgui.iml" />
     </modules>
   </component>
 </project>
