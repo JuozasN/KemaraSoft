@@ -1,5 +1,5 @@
 public class VM {
-	public static final int BLOCK_COUNT = 0x10;
+	public static final int MEM_BLOCK_COUNT = 0x10;
 	private Block[] mem;
 	private byte pc;
 	private byte sp;
@@ -7,37 +7,25 @@ public class VM {
 	
 	VM(Block[] mem){
 		this.mem = mem;
-		for(int i = 0; i < BLOCK_COUNT; ++i)
+		for(int i = 0; i < MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
 		pc = 0;
-		sp = intToByte(0xA0);
+		sp = Utils.intToByte(0xA0);
 	}
 
     public Block[] getMem() {
         return mem;
     }
-
-    public int byteToInt(byte value){return (int)(value&0xFF);}
-	
-	public byte intToByte(int value){return (byte)(value&0xFF);}
-	
-	public byte strToByte(String str){
-		if(str.length() > 2); // Invalid adress interrupt here
-		if(str.length() == 1)
-			str = "0" + str;
-		return((byte) ((Character.digit(str.charAt(0), 16) << 4)
-                             + Character.digit(str.charAt(1), 16)));
-	}
 	
 	public void setValue(byte[] value, byte adr){
-		int row = byteToInt(adr)/0x10;
-		int col = byteToInt(adr)%0x10;
+		int row = Utils.byteToInt(adr)/0x10;
+		int col = Utils.byteToInt(adr)%0x10;
 		mem[row].setBlock(value, col);
 	}
 	
 	public Word getValue(byte adr){
-		int row = byteToInt(adr)/0x10;
-		int col = byteToInt(adr)%0x10;
+		int row = Utils.byteToInt(adr)/0x10;
+		int col = Utils.byteToInt(adr)%0x10;
 		return mem[row].getBlock(col);
 	}
 	
@@ -100,7 +88,7 @@ public class VM {
 	}
 	
 	public void push(String strAdr){
-		byte adr = strToByte(strAdr);
+		byte adr = Utils.strToByte(strAdr);
 		Word value = getValue(adr);
 		setValue(value.getBytes(), sp);
 		sp++;
@@ -117,7 +105,7 @@ public class VM {
 	}
 	
 	public void popm(String strAdr){
-		byte adr = strToByte(strAdr);
+		byte adr = Utils.strToByte(strAdr);
 		Word value = pop();
 		setValue(value.getBytes(), adr);
 	}
