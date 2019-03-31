@@ -1,5 +1,4 @@
 public class VM {
-	public static final int MEM_BLOCK_COUNT = 0x10;
 	private Block[] mem;
 	private byte pc;
 	private byte sp;
@@ -7,7 +6,7 @@ public class VM {
 	
 	VM(Block[] mem){
 		this.mem = mem;
-		for(int i = 0; i < MEM_BLOCK_COUNT; ++i)
+		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
 		pc = 0;
 		sp = Utils.intToByte(0xA0);

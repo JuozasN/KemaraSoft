@@ -1,5 +1,4 @@
 public class Word {
-	public static final int BYTE_COUNT = 0x4;
 	private byte[] bytes;
 	private void resetBytes(){
 		byte[] empty = {0, 0, 0, 0};
@@ -7,7 +6,7 @@ public class Word {
 	}
 	
 	public Word(){
-		bytes = new byte[BYTE_COUNT];
+		bytes = new byte[Utils.WORD_BYTE_COUNT];
 	}
 
 	public Word(byte[] bytes) {

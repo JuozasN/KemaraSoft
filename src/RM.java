@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class RM {
-    public static final int UM_BLOCK_COUNT = 0x40;
     private RandomAccessFile externalMemoryFile;
     // user memory array
     private byte ptr;
@@ -32,7 +31,7 @@ public class RM {
             if (memFile.createNewFile()) {
                 externalMemoryFile = new RandomAccessFile(memFile, "rw");
                 try {
-                    externalMemoryFile.setLength(Utils.EM_BLOCK_COUNT * Block.WORD_COUNT * Word.BYTE_COUNT);
+                    externalMemoryFile.setLength(Utils.EM_BLOCK_COUNT * Utils.BLOCK_WORD_COUNT * Utils.WORD_BYTE_COUNT);
                 } catch(IOException e) {
                     System.err.println("Error creating external random access file");
                     e.printStackTrace();
@@ -62,8 +61,8 @@ public class RM {
         for (byte b : wordBytes)
             externalMemoryFile.writeByte(b);
 
-        if (wordBytes.length < Word.BYTE_COUNT) {
-            for(int i = wordBytes.length; i < Word.BYTE_COUNT; ++i)
+        if (wordBytes.length < Utils.WORD_BYTE_COUNT) {
+            for(int i = wordBytes.length; i < Utils.WORD_BYTE_COUNT; ++i)
                 externalMemoryFile.writeByte(0);
         }
     }
@@ -80,7 +79,7 @@ public class RM {
     public void printWordEM(int block, int word) {
         try {
             externalMemoryFile.seek(getBytePosition(block, word));
-            for (int i = 0; i < Word.BYTE_COUNT; ++i) {
+            for (int i = 0; i < Utils.WORD_BYTE_COUNT; ++i) {
                 System.out.print(externalMemoryFile.readChar());
             }
         } catch (IOException e) {
@@ -90,15 +89,15 @@ public class RM {
     }
 
     private int getBytePosition(int block, int word) {
-        return block * Block.WORD_COUNT * Word.BYTE_COUNT + word * Word.BYTE_COUNT;
+        return block * Utils.BLOCK_WORD_COUNT * Utils.WORD_BYTE_COUNT + word * Utils.WORD_BYTE_COUNT;
     }
 
     // gets a word from random access file
     private Word getWordEM(int block, int word) {
-        byte[] wordBytes = new byte[Word.BYTE_COUNT];
+        byte[] wordBytes = new byte[Utils.WORD_BYTE_COUNT];
         try {
             externalMemoryFile.seek(getBytePosition(block, word));
-            for (int i = 0; i < Word.BYTE_COUNT; ++i)
+            for (int i = 0; i < Utils.WORD_BYTE_COUNT; ++i)
                 wordBytes[i] = externalMemoryFile.readByte();
 
         } catch (IOException e) {

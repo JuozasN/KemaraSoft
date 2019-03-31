@@ -1,5 +1,3 @@
-package OSProject;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,11 +12,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TableController implements Initializable {
-    @FXML private TableView<RMStatus> RMView;
+    @FXML private TableView<RMStatus> RMRegView;
     @FXML private TableColumn<RMStatus, String> RMRegisterNameColumn;
     @FXML private TableColumn<RMStatus, String> RMRegisterValueColumn;
 
-    @FXML private TableView<VMStatus> VMView;
+    @FXML private TableView<VMStatus> VMRegView;
     @FXML private TableColumn<VMStatus, String> VMRegisterNameColumn;
     @FXML private TableColumn<VMStatus, String> VMRegisterValueColumn;
 
@@ -90,16 +88,40 @@ public class TableController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        initializeRMRegTable();
+        initializeVMRegTable();
+        initializeRMMemTable();
+        initializeVMMemTable();
+    }
+
+    private void initializeRMRegTable() {
         RMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<RMStatus, String>("registerName"));
         RMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<RMStatus, String>("registerValue"));
 
-        RMView.setItems(getRMRegValues());
+        ObservableList<RMStatus> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new RMStatus("PTR", "PTRVal"));
+        tableValues.add(new RMStatus("SP", "SPVal"));
+        tableValues.add(new RMStatus("PC", "PCVal"));
+        tableValues.add(new RMStatus("PI", "PIVal"));
+        tableValues.add(new RMStatus("SI", "SIVal"));
+        tableValues.add(new RMStatus("TI", "TIVal"));
+        tableValues.add(new RMStatus("MODE", "ModeVal"));
 
+        RMRegView.setItems(tableValues);
+    }
+
+    private void initializeVMRegTable() {
         VMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<VMStatus, String>("registerName"));
         VMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<VMStatus, String>("registerValue"));
 
-        VMView.setItems(getVMRegValues());
+        ObservableList<VMStatus> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new VMStatus("SP", "SPVal"));
+        tableValues.add(new VMStatus("PC", "PCVal"));
 
+        VMRegView.setItems(tableValues);
+    }
+
+    private void initializeRMMemTable() {
         RMLineNo.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("LineNo"));
         RMCol0.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol0"));
         RMCol1.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol1"));
@@ -118,8 +140,18 @@ public class TableController implements Initializable {
         RMColE.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColE"));
         RMColF.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColF"));
 
-        RMMemView.setItems(getRMMemValues());
+        ObservableList<RMMemory> tableValues = FXCollections.observableArrayList();
+        for (int i = 0; i <= 0xFF; ++i){
+            String str = new String(Integer.toHexString(i));
+            tableValues.add(new RMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
+                    "0000", "0000", "0000", "0000", "0000", "0000", "0000",
+                    "0000", "0000", "0000", "0000"));
+        }
 
+        RMMemView.setItems(tableValues);
+    }
+
+    private void initializeVMMemTable() {
         VMLineNo.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("LineNo"));
         VMCol0.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol0"));
         VMCol1.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol1"));
@@ -138,52 +170,31 @@ public class TableController implements Initializable {
         VMColE.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColE"));
         VMColF.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColF"));
 
-        VMMemView.setItems(getVMMemValues());
-
-    }
-
-    public ObservableList<RMStatus> getRMRegValues(){
-        ObservableList<RMStatus> regValues = FXCollections.observableArrayList();
-        regValues.add(new RMStatus("PTR", "PTRVal"));
-        regValues.add(new RMStatus("SP", "SPVal"));
-        regValues.add(new RMStatus("PC", "PCVal"));
-        regValues.add(new RMStatus("PI", "PIVal"));
-        regValues.add(new RMStatus("SI", "SIVal"));
-        regValues.add(new RMStatus("TI", "TIVal"));
-        regValues.add(new RMStatus("MODE", "ModeVal"));
-
-        return regValues;
-    }
-
-    public ObservableList<VMStatus> getVMRegValues(){
-        ObservableList<VMStatus> regValues = FXCollections.observableArrayList();
-        regValues.add(new VMStatus("SP", "SPVal"));
-        regValues.add(new VMStatus("PC", "PCVal"));
-
-        return regValues;
-    }
-
-    public ObservableList<RMMemory> getRMMemValues(){
-        ObservableList<RMMemory> regValues = FXCollections.observableArrayList();
-        for (int i = 0; i <= 0xFF; ++i){
-            String str = new String(Integer.toHexString(i));
-            regValues.add(new RMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
-            "0000", "0000", "0000", "0000", "0000", "0000", "0000",
-                    "0000", "0000", "0000", "0000"));
-        }
-
-        return regValues;
-    }
-
-    public ObservableList<VMMemory> getVMMemValues(){
-        ObservableList<VMMemory> regValues = FXCollections.observableArrayList();
+        ObservableList<VMMemory> tableValues = FXCollections.observableArrayList();
         for (int i = 0; i <= 0xF; ++i){
-            String str = new String(Integer.toHexString(i));
-            regValues.add(new VMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
+            String str = Integer.toHexString(i);
+            tableValues.add(new VMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
                     "0000", "0000", "0000", "0000", "0000", "0000", "0000",
                     "0000", "0000", "0000", "0000"));
         }
 
-        return regValues;
+        VMMemView.setItems(tableValues);
+    }
+
+
+    public ObservableList<RMStatus> getRMRegValues(){
+        return RMRegView.getItems();
+    }
+
+    public ObservableList<VMStatus> getVMRegValues(){
+        return VMRegView.getItems();
+    }
+
+    public ObservableList<RMMemory> getRMMemValues(){
+        return RMMemView.getItems();
+    }
+
+    public ObservableList<VMMemory> getVMMemValues(){
+        return VMMemView.getItems();
     }
 }
