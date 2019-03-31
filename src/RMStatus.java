@@ -1,5 +1,3 @@
-package OSProject;
-
 import javafx.beans.property.SimpleStringProperty;
 
 public class RMStatus {

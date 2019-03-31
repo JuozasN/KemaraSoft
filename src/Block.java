@@ -1,10 +1,9 @@
 public class Block {
-	public static final int WORD_COUNT = 0x10;
 	private Word[] words;
 	
 	public Block(){
-		words = new Word[WORD_COUNT];
-		for(int i = 0; i < WORD_COUNT; ++i)
+		words = new Word[Utils.BLOCK_WORD_COUNT];
+		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
 			words[i] = new Word();
 	}
 	public Word[] getWords(){return words;}
@@ -15,7 +14,7 @@ public class Block {
 	
 	public String toString(){
 		String str = "|";
-		for(int i = 0; i < WORD_COUNT; ++i){
+		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i){
 			str += String.format("%-4s|", words[i]);
 		}
 		return str;
