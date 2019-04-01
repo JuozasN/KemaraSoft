@@ -6,11 +6,21 @@ public class Block {
 		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
 			words[i] = new Word();
 	}
-	public Word[] getWords(){return words;}
-	public Word getBlock(int index){return words[index];}
-	public void setWords(Word[] words){System.arraycopy(words, 0, this.words, 0, words.length);}
-	public void setBlock(byte[] block, int index){
-		words[index].setBytes(block);}
+	public Word[] getWords(){
+	    return words;
+	}
+
+	public Word getWord(int index){
+	    return words[index];
+	}
+
+	public void setWords(Word[] words){
+	    System.arraycopy(words, 0, this.words, 0, words.length);
+	}
+
+	public void setWord(byte[] block, int index){
+		words[index].setBytes(block);
+	}
 	
 	public String toString(){
 		String str = "|";

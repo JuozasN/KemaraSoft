@@ -45,7 +45,7 @@ public class RM {
         }
     }
 
-    // write byte data to externam memory file at specified position
+    // write byte data to external memory file at specified position
     public void writeWordEM(Word data, int blockPos, int wordPos) {
         try {
             externalMemoryFile.seek(getBytePosition(blockPos, wordPos));

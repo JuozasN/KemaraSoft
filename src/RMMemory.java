@@ -1,7 +1,7 @@
 import javafx.beans.property.SimpleStringProperty;
 
 public class RMMemory {
-    private SimpleStringProperty LineNo;
+    private SimpleStringProperty RMLineNo;
     private SimpleStringProperty RMCol0;
     private SimpleStringProperty RMCol1;
     private SimpleStringProperty RMCol2;
@@ -20,11 +20,11 @@ public class RMMemory {
     private SimpleStringProperty RMColF;
 
 
-    public RMMemory(String LineNo, String RMCol0, String RMCol1, String RMCol2, String RMCol3, String RMCol4, String RMCol5
+    public RMMemory(String RMLineNo, String RMCol0, String RMCol1, String RMCol2, String RMCol3, String RMCol4, String RMCol5
             , String RMCol6, String RMCol7, String RMCol8, String RMCol9, String RMColA, String RMColB, String RMColC
             , String RMColD, String RMColE, String RMColF){
 
-        this.LineNo = new SimpleStringProperty(LineNo);
+        this.RMLineNo = new SimpleStringProperty(RMLineNo);
         this.RMCol0 = new SimpleStringProperty(RMCol0);
         this.RMCol1 = new SimpleStringProperty(RMCol1);
         this.RMCol2 = new SimpleStringProperty(RMCol2);
@@ -44,16 +44,116 @@ public class RMMemory {
 
     }
 
-    public String getLineNo() {
-        return LineNo.get();
+    public String get(int i) {
+        if (i < 0 || i > 15)
+            return null;
+
+        switch(i) {
+            case 0:
+                return getRMCol0();
+            case 1:
+                return getRMCol1();
+            case 2:
+                return getRMCol2();
+            case 3:
+                return getRMCol3();
+            case 4:
+                return getRMCol4();
+            case 5:
+                return getRMCol5();
+            case 6:
+                return getRMCol6();
+            case 7:
+                return getRMCol7();
+            case 8:
+                return getRMCol8();
+            case 9:
+                return getRMCol9();
+            case 0xA:
+                return getRMColA();
+            case 0xB:
+                return getRMColB();
+            case 0xC:
+                return getRMColC();
+            case 0xD:
+                return getRMColD();
+            case 0xE:
+                return getRMColE();
+            case 0xF:
+                return getRMColF();
+            default:
+                return null;
+        }
     }
 
-    public SimpleStringProperty lineNoProperty() {
-        return LineNo;
+    public boolean set(int i, String value) {
+        if (i < 0 || i > 15 || value.length() > 4)
+            return false;
+
+        switch(i) {
+            case 0:
+                setRMCol0(value);
+                break;
+            case 1:
+                setRMCol1(value);
+                break;
+            case 2:
+                setRMCol2(value);
+                break;
+            case 3:
+                setRMCol3(value);
+                break;
+            case 4:
+                setRMCol4(value);
+                break;
+            case 5:
+                setRMCol5(value);
+                break;
+            case 6:
+                setRMCol6(value);
+                break;
+            case 7:
+                setRMCol7(value);
+                break;
+            case 8:
+                setRMCol8(value);
+                break;
+            case 9:
+                setRMCol9(value);
+                break;
+            case 0xA:
+                setRMColA(value);
+                break;
+            case 0xB:
+                setRMColB(value);
+                break;
+            case 0xC:
+                setRMColC(value);
+                break;
+            case 0xD:
+                setRMColD(value);
+                break;
+            case 0xE:
+                setRMColE(value);
+                break;
+            case 0xF:
+                setRMColF(value);
+                break;
+        }
+
+        return true;
     }
 
-    public void setLineNo(String lineNo) {
-        this.LineNo.set(lineNo);
+    public String getRMLineNo() {
+        return RMLineNo.get();
+    }
+
+    public SimpleStringProperty RMLineNoProperty() {
+        return RMLineNo;
+    }
+
+    public void setRMLineNo(String RMLineNo) {
+        this.RMLineNo.set(RMLineNo);
     }
 
     public String getRMCol0() {

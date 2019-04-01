@@ -1,7 +1,7 @@
 import javafx.beans.property.SimpleStringProperty;
 
 public class VMMemory {
-    private SimpleStringProperty LineNo;
+    private SimpleStringProperty VMLineNo;
     private SimpleStringProperty VMCol0;
     private SimpleStringProperty VMCol1;
     private SimpleStringProperty VMCol2;
@@ -20,11 +20,11 @@ public class VMMemory {
     private SimpleStringProperty VMColF;
 
 
-    public VMMemory(String LineNo, String VMCol0, String VMCol1, String VMCol2, String VMCol3, String VMCol4, String VMCol5
+    public VMMemory(String VMLineNo, String VMCol0, String VMCol1, String VMCol2, String VMCol3, String VMCol4, String VMCol5
             , String VMCol6, String VMCol7, String VMCol8, String VMCol9, String VMColA, String VMColB, String VMColC
             , String VMColD, String VMColE, String VMColF){
 
-        this.LineNo = new SimpleStringProperty(LineNo);
+        this.VMLineNo = new SimpleStringProperty(VMLineNo);
         this.VMCol0 = new SimpleStringProperty(VMCol0);
         this.VMCol1 = new SimpleStringProperty(VMCol1);
         this.VMCol2 = new SimpleStringProperty(VMCol2);
@@ -44,16 +44,116 @@ public class VMMemory {
 
     }
 
-    public String getLineNo() {
-        return LineNo.get();
+    public String get(int i) {
+        if (i < 0 || i > 15)
+            return null;
+
+        switch(i) {
+            case 0:
+                return getVMCol0();
+            case 1:
+                return getVMCol1();
+            case 2:
+                return getVMCol2();
+            case 3:
+                return getVMCol3();
+            case 4:
+                return getVMCol4();
+            case 5:
+                return getVMCol5();
+            case 6:
+                return getVMCol6();
+            case 7:
+                return getVMCol7();
+            case 8:
+                return getVMCol8();
+            case 9:
+                return getVMCol9();
+            case 0xA:
+                return getVMColA();
+            case 0xB:
+                return getVMColB();
+            case 0xC:
+                return getVMColC();
+            case 0xD:
+                return getVMColD();
+            case 0xE:
+                return getVMColE();
+            case 0xF:
+                return getVMColF();
+            default:
+                return null;
+        }
     }
 
-    public SimpleStringProperty lineNoProperty() {
-        return LineNo;
+    public boolean set(int i, String value) {
+        if (i < 0 || i > 15 || value.length() > 4)
+            return false;
+
+        switch(i) {
+            case 0:
+                setVMCol0(value);
+                break;
+            case 1:
+                setVMCol1(value);
+                break;
+            case 2:
+                setVMCol2(value);
+                break;
+            case 3:
+                setVMCol3(value);
+                break;
+            case 4:
+                setVMCol4(value);
+                break;
+            case 5:
+                setVMCol5(value);
+                break;
+            case 6:
+                setVMCol6(value);
+                break;
+            case 7:
+                setVMCol7(value);
+                break;
+            case 8:
+                setVMCol8(value);
+                break;
+            case 9:
+                setVMCol9(value);
+                break;
+            case 0xA:
+                setVMColA(value);
+                break;
+            case 0xB:
+                setVMColB(value);
+                break;
+            case 0xC:
+                setVMColC(value);
+                break;
+            case 0xD:
+                setVMColD(value);
+                break;
+            case 0xE:
+                setVMColE(value);
+                break;
+            case 0xF:
+                setVMColF(value);
+                break;
+        }
+
+        return true;
     }
 
-    public void setLineNo(String lineNo) {
-        this.LineNo.set(lineNo);
+    public String getVMLineNo() {
+        return VMLineNo.get();
+    }
+
+    public SimpleStringProperty VMLineNoProperty() {
+        return VMLineNo;
+    }
+
+    public void setVMLineNo(String VMLineNo) {
+        this.VMLineNo.set(VMLineNo);
     }
 
     public String getVMCol0() {
