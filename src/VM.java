@@ -51,6 +51,7 @@ public class VM {
             Parent rootLoader = loader.load();
             TableController controller = (TableController) loader.getController();
 
+
             byte adr = 0;
             for (String line; (line = br.readLine()) != null; ) {
                 String[] strArray = line.split(" ");
