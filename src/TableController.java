@@ -65,7 +65,7 @@ public class TableController implements Initializable {
 
     @FXML private Label previousLine;
     @FXML private Label currentLine;
-    int counter = 0;
+    private int counter = 0;
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event){
         previousLine.setText("We Starting!");
@@ -95,8 +95,8 @@ public class TableController implements Initializable {
     }
 
     private void initializeRMRegTable() {
-        RMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<RMStatus, String>("registerName"));
-        RMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<RMStatus, String>("registerValue"));
+        RMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("registerName"));
+        RMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<>("registerValue"));
 
         ObservableList<RMStatus> tableValues = FXCollections.observableArrayList();
         tableValues.add(new RMStatus("PTR", "PTRVal"));
@@ -111,8 +111,8 @@ public class TableController implements Initializable {
     }
 
     private void initializeVMRegTable() {
-        VMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<VMStatus, String>("registerName"));
-        VMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<VMStatus, String>("registerValue"));
+        VMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("registerName"));
+        VMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<>("registerValue"));
 
         ObservableList<VMStatus> tableValues = FXCollections.observableArrayList();
         tableValues.add(new VMStatus("SP", "SPVal"));
@@ -122,23 +122,23 @@ public class TableController implements Initializable {
     }
 
     private void initializeRMMemTable() {
-        RMLineNo.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("LineNo"));
-        RMCol0.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol0"));
-        RMCol1.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol1"));
-        RMCol2.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol2"));
-        RMCol3.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol3"));
-        RMCol4.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol4"));
-        RMCol5.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol5"));
-        RMCol6.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol6"));
-        RMCol7.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol7"));
-        RMCol8.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol8"));
-        RMCol9.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMCol9"));
-        RMColA.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColA"));
-        RMColB.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColB"));
-        RMColC.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColC"));
-        RMColD.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColD"));
-        RMColE.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColE"));
-        RMColF.setCellValueFactory(new PropertyValueFactory<RMMemory, String>("RMColF"));
+        RMLineNo.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        RMCol0.setCellValueFactory(new PropertyValueFactory<>("RMCol0"));
+        RMCol1.setCellValueFactory(new PropertyValueFactory<>("RMCol1"));
+        RMCol2.setCellValueFactory(new PropertyValueFactory<>("RMCol2"));
+        RMCol3.setCellValueFactory(new PropertyValueFactory<>("RMCol3"));
+        RMCol4.setCellValueFactory(new PropertyValueFactory<>("RMCol4"));
+        RMCol5.setCellValueFactory(new PropertyValueFactory<>("RMCol5"));
+        RMCol6.setCellValueFactory(new PropertyValueFactory<>("RMCol6"));
+        RMCol7.setCellValueFactory(new PropertyValueFactory<>("RMCol7"));
+        RMCol8.setCellValueFactory(new PropertyValueFactory<>("RMCol8"));
+        RMCol9.setCellValueFactory(new PropertyValueFactory<>("RMCol9"));
+        RMColA.setCellValueFactory(new PropertyValueFactory<>("RMColA"));
+        RMColB.setCellValueFactory(new PropertyValueFactory<>("RMColB"));
+        RMColC.setCellValueFactory(new PropertyValueFactory<>("RMColC"));
+        RMColD.setCellValueFactory(new PropertyValueFactory<>("RMColD"));
+        RMColE.setCellValueFactory(new PropertyValueFactory<>("RMColE"));
+        RMColF.setCellValueFactory(new PropertyValueFactory<>("RMColF"));
 
         ObservableList<RMMemory> tableValues = FXCollections.observableArrayList();
         for (int i = 0; i <= 0xFF; ++i){
@@ -152,23 +152,23 @@ public class TableController implements Initializable {
     }
 
     private void initializeVMMemTable() {
-        VMLineNo.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("LineNo"));
-        VMCol0.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol0"));
-        VMCol1.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol1"));
-        VMCol2.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol2"));
-        VMCol3.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol3"));
-        VMCol4.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol4"));
-        VMCol5.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol5"));
-        VMCol6.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol6"));
-        VMCol7.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol7"));
-        VMCol8.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol8"));
-        VMCol9.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMCol9"));
-        VMColA.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColA"));
-        VMColB.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColB"));
-        VMColC.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColC"));
-        VMColD.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColD"));
-        VMColE.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColE"));
-        VMColF.setCellValueFactory(new PropertyValueFactory<VMMemory, String>("VMColF"));
+        VMLineNo.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        VMCol0.setCellValueFactory(new PropertyValueFactory<>("VMCol0"));
+        VMCol1.setCellValueFactory(new PropertyValueFactory<>("VMCol1"));
+        VMCol2.setCellValueFactory(new PropertyValueFactory<>("VMCol2"));
+        VMCol3.setCellValueFactory(new PropertyValueFactory<>("VMCol3"));
+        VMCol4.setCellValueFactory(new PropertyValueFactory<>("VMCol4"));
+        VMCol5.setCellValueFactory(new PropertyValueFactory<>("VMCol5"));
+        VMCol6.setCellValueFactory(new PropertyValueFactory<>("VMCol6"));
+        VMCol7.setCellValueFactory(new PropertyValueFactory<>("VMCol7"));
+        VMCol8.setCellValueFactory(new PropertyValueFactory<>("VMCol8"));
+        VMCol9.setCellValueFactory(new PropertyValueFactory<>("VMCol9"));
+        VMColA.setCellValueFactory(new PropertyValueFactory<>("VMColA"));
+        VMColB.setCellValueFactory(new PropertyValueFactory<>("VMColB"));
+        VMColC.setCellValueFactory(new PropertyValueFactory<>("VMColC"));
+        VMColD.setCellValueFactory(new PropertyValueFactory<>("VMColD"));
+        VMColE.setCellValueFactory(new PropertyValueFactory<>("VMColE"));
+        VMColF.setCellValueFactory(new PropertyValueFactory<>("VMColF"));
 
         ObservableList<VMMemory> tableValues = FXCollections.observableArrayList();
         for (int i = 0; i <= 0xF; ++i){
