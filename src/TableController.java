@@ -142,7 +142,7 @@ public class TableController implements Initializable {
 
         ObservableList<RMMemory> tableValues = FXCollections.observableArrayList();
         for (int i = 0; i <= 0xFF; ++i){
-            String str = new String(Integer.toHexString(i));
+            String str = Integer.toHexString(i);
             tableValues.add(new RMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
                     "0000", "0000", "0000", "0000", "0000", "0000", "0000",
                     "0000", "0000", "0000", "0000"));
@@ -196,5 +196,150 @@ public class TableController implements Initializable {
 
     public ObservableList<VMMemory> getVMMemValues(){
         return VMMemView.getItems();
+    }
+
+    // registerIndex:
+    // [0] -> PTR
+    // [1] -> SP
+    // [2] -> PC
+    // [3] -> PI
+    // [4] -> SI
+    // [5] -> TI
+    // [6] -> MODE
+    public boolean setRMRegValue(int registerIndex, String value) {
+        if (registerIndex < 0 || registerIndex > 6)
+            return false;
+
+        getRMRegValues().get(registerIndex).setRegisterValue(value);
+        return true;
+    }
+
+    // registerIndex:
+    // [0] -> SP
+    // [1] -> PC
+    public boolean setVMRegValue(int registerIndex, String value) {
+        if (registerIndex < 0 || registerIndex > 1)
+            return false;
+
+        getVMRegValues().get(registerIndex).setRegisterValue(value);
+        return true;
+    }
+
+    // block - memory block number (hex)
+    // word - block word number (hex)
+    public boolean setRMMemValue(int block, int word, String value) {
+        if (block < 0x0 || block > 0xF || word < 0x0 || word > 0xF)
+            return false;
+
+        RMMemory rmMemory = getRMMemValues().get(block);
+        switch(word) {
+            case 0:
+                rmMemory.setRMCol0(value);
+                break;
+            case 1:
+                rmMemory.setRMCol1(value);
+                break;
+            case 2:
+                rmMemory.setRMCol2(value);
+                break;
+            case 3:
+                rmMemory.setRMCol3(value);
+                break;
+            case 4:
+                rmMemory.setRMCol4(value);
+                break;
+            case 5:
+                rmMemory.setRMCol5(value);
+                break;
+            case 6:
+                rmMemory.setRMCol6(value);
+                break;
+            case 7:
+                rmMemory.setRMCol7(value);
+                break;
+            case 8:
+                rmMemory.setRMCol8(value);
+                break;
+            case 9:
+                rmMemory.setRMCol9(value);
+                break;
+            case 0xA:
+                rmMemory.setRMColA(value);
+                break;
+            case 0xB:
+                rmMemory.setRMColB(value);
+                break;
+            case 0xC:
+                rmMemory.setRMColC(value);
+                break;
+            case 0xD:
+                rmMemory.setRMColD(value);
+                break;
+            case 0xE:
+                rmMemory.setRMColE(value);
+                break;
+            case 0xF:
+                rmMemory.setRMColF(value);
+                break;
+        }
+        return true;
+    }
+
+    public boolean setVMMemValue(int block, int word, String value) {
+        if (block < 0x0 || block > 0xFF || word < 0x0 || word > 0xF)
+            return false;
+
+        VMMemory vmMemory = getVMMemValues().get(block);
+        switch(word) {
+            case 0:
+                vmMemory.setVMCol0(value);
+                break;
+            case 1:
+                vmMemory.setVMCol1(value);
+                break;
+            case 2:
+                vmMemory.setVMCol2(value);
+                break;
+            case 3:
+                vmMemory.setVMCol3(value);
+                break;
+            case 4:
+                vmMemory.setVMCol4(value);
+                break;
+            case 5:
+                vmMemory.setVMCol5(value);
+                break;
+            case 6:
+                vmMemory.setVMCol6(value);
+                break;
+            case 7:
+                vmMemory.setVMCol7(value);
+                break;
+            case 8:
+                vmMemory.setVMCol8(value);
+                break;
+            case 9:
+                vmMemory.setVMCol9(value);
+                break;
+            case 0xA:
+                vmMemory.setVMColA(value);
+                break;
+            case 0xB:
+                vmMemory.setVMColB(value);
+                break;
+            case 0xC:
+                vmMemory.setVMColC(value);
+                break;
+            case 0xD:
+                vmMemory.setVMColD(value);
+                break;
+            case 0xE:
+                vmMemory.setVMColE(value);
+                break;
+            case 0xF:
+                vmMemory.setVMColF(value);
+                break;
+        }
+        return true;
     }
 }
