@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import jdk.jshell.execution.Util;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -228,7 +229,7 @@ public class TableController implements Initializable {
     // block - memory block number (hex)
     // word - block word number (hex)
     public boolean setRMMemValue(int block, int word, String value) {
-        if (block < 0x0 || block > 0xF || word < 0x0 || word > 0xF)
+        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
         RMMemory rmMemory = getRMMemValues().get(block);
@@ -286,7 +287,7 @@ public class TableController implements Initializable {
     }
 
     public boolean setVMMemValue(int block, int word, String value) {
-        if (block < 0x0 || block > 0xFF || word < 0x0 || word > 0xF)
+        if (block < 0x0 || block > Utils.VM_MEM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
         VMMemory vmMemory = getVMMemValues().get(block);
