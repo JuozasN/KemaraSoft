@@ -1,15 +1,27 @@
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URL;
+
 public class VM {
 	private Block[] mem;
 	private byte pc;
 	private byte sp;
 
-	
-	VM(Block[] mem){
+	public VM(Block[] mem){
 		this.mem = mem;
 		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
 		pc = 0;
 		sp = Utils.intToByte(0xA0);
+	}
+
+	public VM() {
+		this(new Block[Utils.VM_MEM_BLOCK_COUNT]);
 	}
 
     public Block[] getMem() {
@@ -19,14 +31,48 @@ public class VM {
 	public void setValue(byte[] value, byte adr){
 		int row = Utils.byteToInt(adr)/0x10;
 		int col = Utils.byteToInt(adr)%0x10;
-		mem[row].setBlock(value, col);
+		mem[row].setWord(value, col);
 	}
 	
 	public Word getValue(byte adr){
 		int row = Utils.byteToInt(adr)/0x10;
 		int col = Utils.byteToInt(adr)%0x10;
-		return mem[row].getBlock(col);
+		return mem[row].getWord(col);
 	}
+
+	public void loadProgram() {
+
+        BufferedReader br;
+        String tempFilePath = "src/test.txt";
+        try {
+            br = new BufferedReader(new FileReader(tempFilePath));
+            URL resource = getClass().getResource("OSViewer.fxml");
+            FXMLLoader loader = new FXMLLoader(resource);
+            Parent rootLoader = loader.load();
+            TableController controller = (TableController) loader.getController();
+
+            byte adr = 0;
+            for (String line; (line = br.readLine()) != null; ) {
+                String[] strArray = line.split(" ");
+                for (String str : strArray) {
+                    if (str.length() > 4) {
+                        // Invalid command interrupt?
+                        System.exit(0);
+                    }
+                    setValue(str.getBytes(), adr);
+                    controller.setVMMemValue(adr/16, adr%16, str);
+
+                    adr++;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found");
+            System.exit(0);
+        } catch (IOException e) {
+            System.err.println("Error reading from file");
+            System.exit(0);
+        }
+    }
 	
 	
 	public void exec(){

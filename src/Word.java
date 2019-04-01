@@ -15,8 +15,13 @@ public class Word {
 			this.bytes = bytes;
 	}
 	
-	public byte[] getBytes(){return bytes;}
-	public void setBytes(byte[] bytes){resetBytes(); System.arraycopy(bytes, 0, this.bytes, 0, bytes.length);}
+	public byte[] getBytes(){
+		return bytes;
+	}
+
+	public void setBytes(byte[] bytes){
+		resetBytes(); System.arraycopy(bytes, 0, this.bytes, 0, bytes.length);
+	}
 	
 	public String toString(){
 		String str = new String(bytes);

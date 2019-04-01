@@ -1,21 +1,13 @@
-import com.sun.javafx.iio.ios.IosDescriptor;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import jdk.jshell.execution.Util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -77,49 +69,14 @@ public class TableController implements Initializable {
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event){
         previousLine.setText("We Starting!");
+        VM process = new VM();
+        process.loadProgram();
+        process.exec();
 
-        try {
-            URL resource = getClass().getResource("OSViewer.fxml");
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent rootLoader = loader.load();
-            TableController controller = (TableController) loader.getController();
-
-            BufferedReader br;
-            String tempFilePath = "src/test.txt";
-
-            VM vm = new VM(new Block[Utils.VM_MEM_BLOCK_COUNT]);
-
-            try {
-                br = new BufferedReader(new FileReader(tempFilePath));
-
-                byte adr = 0;
-                for (String line; (line = br.readLine()) != null; ) {
-                    String[] strArray = line.split(" ");
-                    for (String str : strArray) {
-                        if (str.length() > 4) {
-                            // Invalid command interrupt?
-                            System.exit(0);
-                        }
-                        vm.setValue(str.getBytes(), adr);
-                        adr++;
-                    }
-                }
-            } catch (FileNotFoundException e) {
-                System.err.println("File not found");
-                System.exit(0);
-            } catch (IOException e) {
-                System.err.println("Error reading from file");
-                System.exit(0);
-            }
-
-            vm.exec();
-
-            for (int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i) {
-                System.out.println(vm.getMem()[i]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i) {
+            System.out.println(process.getMem()[i]);
         }
+
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
@@ -173,7 +130,7 @@ public class TableController implements Initializable {
     }
 
     private void initializeRMMemTable() {
-        RMLineNo.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        RMLineNo.setCellValueFactory(new PropertyValueFactory<>("RMLineNo"));
         RMCol0.setCellValueFactory(new PropertyValueFactory<>("RMCol0"));
         RMCol1.setCellValueFactory(new PropertyValueFactory<>("RMCol1"));
         RMCol2.setCellValueFactory(new PropertyValueFactory<>("RMCol2"));
@@ -203,7 +160,7 @@ public class TableController implements Initializable {
     }
 
     private void initializeVMMemTable() {
-        VMLineNo.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        VMLineNo.setCellValueFactory(new PropertyValueFactory<>("VMLineNo"));
         VMCol0.setCellValueFactory(new PropertyValueFactory<>("VMCol0"));
         VMCol1.setCellValueFactory(new PropertyValueFactory<>("VMCol1"));
         VMCol2.setCellValueFactory(new PropertyValueFactory<>("VMCol2"));
@@ -283,57 +240,7 @@ public class TableController implements Initializable {
             return false;
 
         RMMemory rmMemory = getRMMemValues().get(block);
-        switch(word) {
-            case 0:
-                rmMemory.setRMCol0(value);
-                break;
-            case 1:
-                rmMemory.setRMCol1(value);
-                break;
-            case 2:
-                rmMemory.setRMCol2(value);
-                break;
-            case 3:
-                rmMemory.setRMCol3(value);
-                break;
-            case 4:
-                rmMemory.setRMCol4(value);
-                break;
-            case 5:
-                rmMemory.setRMCol5(value);
-                break;
-            case 6:
-                rmMemory.setRMCol6(value);
-                break;
-            case 7:
-                rmMemory.setRMCol7(value);
-                break;
-            case 8:
-                rmMemory.setRMCol8(value);
-                break;
-            case 9:
-                rmMemory.setRMCol9(value);
-                break;
-            case 0xA:
-                rmMemory.setRMColA(value);
-                break;
-            case 0xB:
-                rmMemory.setRMColB(value);
-                break;
-            case 0xC:
-                rmMemory.setRMColC(value);
-                break;
-            case 0xD:
-                rmMemory.setRMColD(value);
-                break;
-            case 0xE:
-                rmMemory.setRMColE(value);
-                break;
-            case 0xF:
-                rmMemory.setRMColF(value);
-                break;
-        }
-        return true;
+        return rmMemory.set(word, value);
     }
 
     public boolean setVMMemValue(int block, int word, String value) {
@@ -341,56 +248,6 @@ public class TableController implements Initializable {
             return false;
 
         VMMemory vmMemory = getVMMemValues().get(block);
-        switch(word) {
-            case 0:
-                vmMemory.setVMCol0(value);
-                break;
-            case 1:
-                vmMemory.setVMCol1(value);
-                break;
-            case 2:
-                vmMemory.setVMCol2(value);
-                break;
-            case 3:
-                vmMemory.setVMCol3(value);
-                break;
-            case 4:
-                vmMemory.setVMCol4(value);
-                break;
-            case 5:
-                vmMemory.setVMCol5(value);
-                break;
-            case 6:
-                vmMemory.setVMCol6(value);
-                break;
-            case 7:
-                vmMemory.setVMCol7(value);
-                break;
-            case 8:
-                vmMemory.setVMCol8(value);
-                break;
-            case 9:
-                vmMemory.setVMCol9(value);
-                break;
-            case 0xA:
-                vmMemory.setVMColA(value);
-                break;
-            case 0xB:
-                vmMemory.setVMColB(value);
-                break;
-            case 0xC:
-                vmMemory.setVMColC(value);
-                break;
-            case 0xD:
-                vmMemory.setVMColD(value);
-                break;
-            case 0xE:
-                vmMemory.setVMColE(value);
-                break;
-            case 0xF:
-                vmMemory.setVMColF(value);
-                break;
-        }
-        return true;
+        return vmMemory.set(word, value);
     }
 }
