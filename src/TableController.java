@@ -12,51 +12,51 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TableController implements Initializable {
-    @FXML private TableView<RMStatus> RMRegView;
-    @FXML private TableColumn<RMStatus, String> RMRegisterNameColumn;
-    @FXML private TableColumn<RMStatus, String> RMRegisterValueColumn;
+    @FXML private TableView<RMRegister> RMRegView;
+    @FXML private TableColumn<RMRegister, String> RMRegisterNameColumn;
+    @FXML private TableColumn<RMRegister, String> RMRegisterValueColumn;
 
-    @FXML private TableView<VMStatus> VMRegView;
-    @FXML private TableColumn<VMStatus, String> VMRegisterNameColumn;
-    @FXML private TableColumn<VMStatus, String> VMRegisterValueColumn;
+    @FXML private TableView<VMRegister> VMRegView;
+    @FXML private TableColumn<VMRegister, String> VMRegisterNameColumn;
+    @FXML private TableColumn<VMRegister, String> VMRegisterValueColumn;
 
-    @FXML private TableView<RMMemory> RMMemView;
-    @FXML private TableColumn<RMMemory, String> RMLineNo;
-    @FXML private TableColumn<RMMemory, String> RMCol0;
-    @FXML private TableColumn<RMMemory, String> RMCol1;
-    @FXML private TableColumn<RMMemory, String> RMCol2;
-    @FXML private TableColumn<RMMemory, String> RMCol3;
-    @FXML private TableColumn<RMMemory, String> RMCol4;
-    @FXML private TableColumn<RMMemory, String> RMCol5;
-    @FXML private TableColumn<RMMemory, String> RMCol6;
-    @FXML private TableColumn<RMMemory, String> RMCol7;
-    @FXML private TableColumn<RMMemory, String> RMCol8;
-    @FXML private TableColumn<RMMemory, String> RMCol9;
-    @FXML private TableColumn<RMMemory, String> RMColA;
-    @FXML private TableColumn<RMMemory, String> RMColB;
-    @FXML private TableColumn<RMMemory, String> RMColC;
-    @FXML private TableColumn<RMMemory, String> RMColD;
-    @FXML private TableColumn<RMMemory, String> RMColE;
-    @FXML private TableColumn<RMMemory, String> RMColF;
+    @FXML private TableView<RMMemoryBlock> RMMemView;
+    @FXML private TableColumn<RMMemoryBlock, String> RMLineNo;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol0;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol1;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol2;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol3;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol4;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol5;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol6;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol7;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol8;
+    @FXML private TableColumn<RMMemoryBlock, String> RMCol9;
+    @FXML private TableColumn<RMMemoryBlock, String> RMColA;
+    @FXML private TableColumn<RMMemoryBlock, String> RMColB;
+    @FXML private TableColumn<RMMemoryBlock, String> RMColC;
+    @FXML private TableColumn<RMMemoryBlock, String> RMColD;
+    @FXML private TableColumn<RMMemoryBlock, String> RMColE;
+    @FXML private TableColumn<RMMemoryBlock, String> RMColF;
 
-    @FXML private TableView<VMMemory> VMMemView;
-    @FXML private TableColumn<VMMemory, String> VMLineNo;
-    @FXML private TableColumn<VMMemory, String> VMCol0;
-    @FXML private TableColumn<VMMemory, String> VMCol1;
-    @FXML private TableColumn<VMMemory, String> VMCol2;
-    @FXML private TableColumn<VMMemory, String> VMCol3;
-    @FXML private TableColumn<VMMemory, String> VMCol4;
-    @FXML private TableColumn<VMMemory, String> VMCol5;
-    @FXML private TableColumn<VMMemory, String> VMCol6;
-    @FXML private TableColumn<VMMemory, String> VMCol7;
-    @FXML private TableColumn<VMMemory, String> VMCol8;
-    @FXML private TableColumn<VMMemory, String> VMCol9;
-    @FXML private TableColumn<VMMemory, String> VMColA;
-    @FXML private TableColumn<VMMemory, String> VMColB;
-    @FXML private TableColumn<VMMemory, String> VMColC;
-    @FXML private TableColumn<VMMemory, String> VMColD;
-    @FXML private TableColumn<VMMemory, String> VMColE;
-    @FXML private TableColumn<VMMemory, String> VMColF;
+    @FXML private TableView<VMMemoryBlock> VMMemView;
+    @FXML private TableColumn<VMMemoryBlock, String> VMLineNo;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol0;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol1;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol2;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol3;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol4;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol5;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol6;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol7;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol8;
+    @FXML private TableColumn<VMMemoryBlock, String> VMCol9;
+    @FXML private TableColumn<VMMemoryBlock, String> VMColA;
+    @FXML private TableColumn<VMMemoryBlock, String> VMColB;
+    @FXML private TableColumn<VMMemoryBlock, String> VMColC;
+    @FXML private TableColumn<VMMemoryBlock, String> VMColD;
+    @FXML private TableColumn<VMMemoryBlock, String> VMColE;
+    @FXML private TableColumn<VMMemoryBlock, String> VMColF;
 
     @FXML private Button runButton;
     @FXML private Button stepButton;
@@ -69,14 +69,13 @@ public class TableController implements Initializable {
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event){
         previousLine.setText("We Starting!");
-        VM process = new VM();
+        VM process = new VM(this);
         process.loadProgram();
         process.exec();
 
         for (int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i) {
             System.out.println(process.getMem()[i]);
         }
-
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
@@ -88,6 +87,11 @@ public class TableController implements Initializable {
     @FXML private void resetButtonAction(javafx.event.ActionEvent event){
         previousLine.setText("");
         currentLine.setText("");
+
+        resetRMRegister();
+        resetVMRegister();
+        resetRMMemory();
+        resetVMMemory();
     }
 
     @FXML private void loadButtonAction(javafx.event.ActionEvent event){
@@ -106,14 +110,14 @@ public class TableController implements Initializable {
         RMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("registerName"));
         RMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<>("registerValue"));
 
-        ObservableList<RMStatus> tableValues = FXCollections.observableArrayList();
-        tableValues.add(new RMStatus("PTR", "PTRVal"));
-        tableValues.add(new RMStatus("SP", "SPVal"));
-        tableValues.add(new RMStatus("PC", "PCVal"));
-        tableValues.add(new RMStatus("PI", "PIVal"));
-        tableValues.add(new RMStatus("SI", "SIVal"));
-        tableValues.add(new RMStatus("TI", "TIVal"));
-        tableValues.add(new RMStatus("MODE", "ModeVal"));
+        ObservableList<RMRegister> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new RMRegister("PTR"));
+        tableValues.add(new RMRegister("SP"));
+        tableValues.add(new RMRegister("PC"));
+        tableValues.add(new RMRegister("PI"));
+        tableValues.add(new RMRegister("SI"));
+        tableValues.add(new RMRegister("TI"));
+        tableValues.add(new RMRegister("MODE"));
 
         RMRegView.setItems(tableValues);
     }
@@ -122,9 +126,9 @@ public class TableController implements Initializable {
         VMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("registerName"));
         VMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<>("registerValue"));
 
-        ObservableList<VMStatus> tableValues = FXCollections.observableArrayList();
-        tableValues.add(new VMStatus("SP", "SPVal"));
-        tableValues.add(new VMStatus("PC", "PCVal"));
+        ObservableList<VMRegister> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new VMRegister("SP"));
+        tableValues.add(new VMRegister("PC"));
 
         VMRegView.setItems(tableValues);
     }
@@ -148,12 +152,10 @@ public class TableController implements Initializable {
         RMColE.setCellValueFactory(new PropertyValueFactory<>("RMColE"));
         RMColF.setCellValueFactory(new PropertyValueFactory<>("RMColF"));
 
-        ObservableList<RMMemory> tableValues = FXCollections.observableArrayList();
+        ObservableList<RMMemoryBlock> tableValues = FXCollections.observableArrayList();
         for (int i = 0; i <= 0xFF; ++i){
             String str = Integer.toHexString(i);
-            tableValues.add(new RMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
-                    "0000", "0000", "0000", "0000", "0000", "0000", "0000",
-                    "0000", "0000", "0000", "0000"));
+            tableValues.add(new RMMemoryBlock(str.toUpperCase()));
         }
 
         RMMemView.setItems(tableValues);
@@ -178,31 +180,56 @@ public class TableController implements Initializable {
         VMColE.setCellValueFactory(new PropertyValueFactory<>("VMColE"));
         VMColF.setCellValueFactory(new PropertyValueFactory<>("VMColF"));
 
-        ObservableList<VMMemory> tableValues = FXCollections.observableArrayList();
+        ObservableList<VMMemoryBlock> tableValues = FXCollections.observableArrayList();
         for (int i = 0; i <= 0xF; ++i){
             String str = Integer.toHexString(i);
-            tableValues.add(new VMMemory(str.toUpperCase(), "0000", "0000", "0000", "0000", "0000",
-                    "0000", "0000", "0000", "0000", "0000", "0000", "0000",
-                    "0000", "0000", "0000", "0000"));
+            tableValues.add(new VMMemoryBlock(str.toUpperCase()));
         }
 
         VMMemView.setItems(tableValues);
     }
 
+    private void resetRMRegister() {
+        ObservableList<RMRegister> rmRegisters = getRMRegValues();
+        for(RMRegister register : rmRegisters) {
 
-    public ObservableList<RMStatus> getRMRegValues(){
+        }
+    }
+
+    private void resetVMRegister() {
+        ObservableList<VMRegister> vmRegisters = getVMRegValues();
+        for(VMRegister register : vmRegisters) {
+
+        }
+    }
+
+    private void resetRMMemory() {
+        ObservableList<RMMemoryBlock> rmMemoryBlocks = getRMMemValues();
+        for (RMMemoryBlock memoryBlock : rmMemoryBlocks) {
+            memoryBlock.setInitial();
+        }
+    }
+
+    private void resetVMMemory() {
+        ObservableList<VMMemoryBlock> vMMemoryBlocks = getVMMemValues();
+        for (VMMemoryBlock memoryBlock : vMMemoryBlocks) {
+            memoryBlock.setInitial();
+        }
+    }
+
+    public ObservableList<RMRegister> getRMRegValues(){
         return RMRegView.getItems();
     }
 
-    public ObservableList<VMStatus> getVMRegValues(){
+    public ObservableList<VMRegister> getVMRegValues(){
         return VMRegView.getItems();
     }
 
-    public ObservableList<RMMemory> getRMMemValues(){
+    public ObservableList<RMMemoryBlock> getRMMemValues(){
         return RMMemView.getItems();
     }
 
-    public ObservableList<VMMemory> getVMMemValues(){
+    public ObservableList<VMMemoryBlock> getVMMemValues(){
         return VMMemView.getItems();
     }
 
@@ -239,15 +266,16 @@ public class TableController implements Initializable {
         if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
-        RMMemory rmMemory = getRMMemValues().get(block);
-        return rmMemory.set(word, value);
+        RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
+        return rmMemoryBlock.set(word, value);
     }
 
     public boolean setVMMemValue(int block, int word, String value) {
         if (block < 0x0 || block > Utils.VM_MEM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
-        VMMemory vmMemory = getVMMemValues().get(block);
-        return vmMemory.set(word, value);
+        VMMemoryBlock vmMemoryBlock = getVMMemValues().get(block);
+
+        return vmMemoryBlock.set(word, value);
     }
 }

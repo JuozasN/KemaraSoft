@@ -1,6 +1,6 @@
 import javafx.beans.property.SimpleStringProperty;
 
-public class VMMemory {
+public class VMMemoryBlock {
     private SimpleStringProperty VMLineNo;
     private SimpleStringProperty VMCol0;
     private SimpleStringProperty VMCol1;
@@ -20,7 +20,7 @@ public class VMMemory {
     private SimpleStringProperty VMColF;
 
 
-    public VMMemory(String VMLineNo, String VMCol0, String VMCol1, String VMCol2, String VMCol3, String VMCol4, String VMCol5
+    public VMMemoryBlock(String VMLineNo, String VMCol0, String VMCol1, String VMCol2, String VMCol3, String VMCol4, String VMCol5
             , String VMCol6, String VMCol7, String VMCol8, String VMCol9, String VMColA, String VMColB, String VMColC
             , String VMColD, String VMColE, String VMColF){
 
@@ -41,7 +41,13 @@ public class VMMemory {
         this.VMColD = new SimpleStringProperty(VMColD);
         this.VMColE = new SimpleStringProperty(VMColE);
         this.VMColF = new SimpleStringProperty(VMColF);
+    }
 
+    public VMMemoryBlock(String VMLineNo) {
+        this(VMLineNo, "0000", "0000", "0000", "0000",
+                "0000", "0000", "0000", "0000",
+                "0000", "0000", "0000", "0000",
+                "0000", "0000", "0000", "0000");
     }
 
     public String get(int i) {
@@ -142,6 +148,25 @@ public class VMMemory {
         }
 
         return true;
+    }
+
+    public void setInitial() {
+        setVMCol0("0000");
+        setVMCol1("0000");
+        setVMCol2("0000");
+        setVMCol3("0000");
+        setVMCol4("0000");
+        setVMCol5("0000");
+        setVMCol6("0000");
+        setVMCol7("0000");
+        setVMCol8("0000");
+        setVMCol9("0000");
+        setVMColA("0000");
+        setVMColB("0000");
+        setVMColC("0000");
+        setVMColD("0000");
+        setVMColE("0000");
+        setVMColF("0000");
     }
 
     public String getVMLineNo() {

@@ -1,6 +1,6 @@
 import javafx.beans.property.SimpleStringProperty;
 
-public class RMMemory {
+public class RMMemoryBlock {
     private SimpleStringProperty RMLineNo;
     private SimpleStringProperty RMCol0;
     private SimpleStringProperty RMCol1;
@@ -20,7 +20,7 @@ public class RMMemory {
     private SimpleStringProperty RMColF;
 
 
-    public RMMemory(String RMLineNo, String RMCol0, String RMCol1, String RMCol2, String RMCol3, String RMCol4, String RMCol5
+    public RMMemoryBlock(String RMLineNo, String RMCol0, String RMCol1, String RMCol2, String RMCol3, String RMCol4, String RMCol5
             , String RMCol6, String RMCol7, String RMCol8, String RMCol9, String RMColA, String RMColB, String RMColC
             , String RMColD, String RMColE, String RMColF){
 
@@ -42,6 +42,13 @@ public class RMMemory {
         this.RMColE = new SimpleStringProperty(RMColE);
         this.RMColF = new SimpleStringProperty(RMColF);
 
+    }
+
+    public RMMemoryBlock(String VMLineNo) {
+        this(VMLineNo, "0000", "0000", "0000", "0000",
+                "0000", "0000", "0000", "0000",
+                "0000", "0000", "0000", "0000",
+                "0000", "0000", "0000", "0000");
     }
 
     public String get(int i) {
@@ -142,6 +149,25 @@ public class RMMemory {
         }
 
         return true;
+    }
+
+    public void setInitial() {
+        setRMCol0("0000");
+        setRMCol1("0000");
+        setRMCol2("0000");
+        setRMCol3("0000");
+        setRMCol4("0000");
+        setRMCol5("0000");
+        setRMCol6("0000");
+        setRMCol7("0000");
+        setRMCol8("0000");
+        setRMCol9("0000");
+        setRMColA("0000");
+        setRMColB("0000");
+        setRMColC("0000");
+        setRMColD("0000");
+        setRMColE("0000");
+        setRMColF("0000");
     }
 
     public String getRMLineNo() {

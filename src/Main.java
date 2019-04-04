@@ -4,16 +4,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("OSViewer.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("OSViewer.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("OS");
         primaryStage.setScene(new Scene(root, 1300, 900));
         primaryStage.show();
