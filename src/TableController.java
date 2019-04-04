@@ -72,10 +72,6 @@ public class TableController implements Initializable {
         VM process = new VM(this);
         process.loadProgram();
         process.exec();
-
-        for (int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i) {
-            System.out.println(process.getMem()[i]);
-        }
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
