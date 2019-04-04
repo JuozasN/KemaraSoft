@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 public class RM {
     private RandomAccessFile externalMemoryFile;
@@ -12,6 +13,7 @@ public class RM {
     private byte si;
     private byte ti;
     private boolean isUserMode;
+    private boolean[] assignedMemBlocks;
 
     public RM() {
         this.ptr = 0;
@@ -21,6 +23,7 @@ public class RM {
         this.si = 0;
         this.ti = 0;
         this.isUserMode = true;
+        this.assignedMemBlocks = new boolean[Utils.UM_BLOCK_COUNT];
 
         initializeExternalMemoryFile();
     }
@@ -43,6 +46,28 @@ public class RM {
             System.err.println("Error creating external file");
             e.printStackTrace();
         }
+    }
+
+    public Integer[] getRandUnassignedBlocks(int blocks) {
+        Integer[] unassignedMemBlocks = getUnassignedMemBlocks();
+        return Utils.getRandIndexes(unassignedMemBlocks, blocks);
+    }
+
+    public void assignBlocks(Integer[] indexes) {
+        for(int i : indexes) {
+            assignedMemBlocks[i] = true;
+        }
+    }
+
+    private Integer[] getUnassignedMemBlocks() {
+        ArrayList<Integer> unassignedBlocks = new ArrayList<>();
+        for (int i = 0; i < assignedMemBlocks.length; ++i) {
+            if (!assignedMemBlocks[i])
+                unassignedBlocks.add(i);
+        }
+
+        Integer[] intArr = new Integer[unassignedBlocks.size()];
+        return unassignedBlocks.toArray(intArr);
     }
 
     // write byte data to external memory file at specified position
