@@ -89,7 +89,7 @@ public class TableController implements Initializable {
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
-        previousLine.setText("We Started... " + counter);
+        previousLine.setText(currentLine.getText());
         try {
             process.exec();
         }catch(SystemInterrupt SI){
@@ -97,14 +97,12 @@ public class TableController implements Initializable {
         }catch(ProgramInterrupt PI){
 
         }
-
-        counter++;
-        currentLine.setText("We Started... " + counter);
+        currentLine.setText(getCommandString(process));
     }
 
     @FXML private void resetButtonAction(javafx.event.ActionEvent event){
         previousLine.setText("");
-        currentLine.setText("");
+        currentLine.setText("VM and RM have been wiped and reset!");
 
         resetRMRegister();
         resetVMRegister();
@@ -117,6 +115,26 @@ public class TableController implements Initializable {
             process.loadProgram();
         }catch(ProgramInterrupt PI) {
             // Overflow
+        }
+        previousLine.setText(currentLine.getText());
+        currentLine.setText(getCommandString(process));
+
+    }
+
+    public String getCommandString(VM vm){
+        String currCommand = vm.getValue(vm.getPc()).toString();
+        switch(currCommand) {
+            case "PUSH":
+            case "PSHC":
+            case "POPM":
+            case "JZ":
+            case "JP":
+            case "JN":
+            case "JMP":
+            case "TOP":
+                return(currCommand + ' ' + vm.getValue((byte)(vm.getPc()+1)).toString());
+            default:
+                return(currCommand);
         }
     }
 
