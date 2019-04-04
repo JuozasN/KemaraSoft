@@ -15,7 +15,6 @@ public class VM {
 			mem[i] = new Block();
 		pc = 0;
 		sp = Utils.intToByte(0xA0);
-
         this.controller = controller;
 	}
 
@@ -27,7 +26,11 @@ public class VM {
         return mem;
     }
 
-    public void incrementSP(){
+	public byte getPc() {return pc;}
+
+	public byte getSp(){return sp;}
+
+	public void incrementSP(){
 	    ++sp;
 	    controller.setVMRegValue(0, String.format("%02X", Utils.byteToInt(sp)));
     }
@@ -55,7 +58,7 @@ public class VM {
 		return mem[row].getWord(col);
 	}
 
-	public void loadProgram() {
+	public void loadProgram() throws ProgramInterrupt{
         BufferedReader br;
         String tempFilePath = "src/test.txt";
         try {
@@ -66,8 +69,7 @@ public class VM {
                 String[] strArray = line.split(" ");
                 for (String str : strArray) {
                     if (str.length() > 4) {
-                        // Invalid command interrupt?
-                        System.exit(0);
+						throw new ProgramInterrupt(2, "Overflow");
                     }
                     setValue(str.getBytes(), adr);
 //                    controller.setVMMemValue(adr, str);
@@ -84,7 +86,7 @@ public class VM {
     }
 	
 	
-	public void exec() throws SystemInterrupt{
+	public void exec() throws SystemInterrupt, ProgramInterrupt{
 		boolean running = true;
 		String command = read();
 		switch(command){
@@ -102,27 +104,21 @@ public class VM {
 			case "JP": jmp(2, read()); break;
 			case "JN": jmp(3, read()); break;
 			case "JMP": jmp(4,read()); break;
-			case "GET": get(read()); break;
-			case "PUT": put(read()); break;
+			case "GET": get(); break;
+			case "PUT": put(); break;
 			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
 			default:
-				System.err.println("Invalid command: " + command);
-				//throw new SystemInterrupt(2, "Invalid command");
-				System.exit(0);
+				throw new ProgramInterrupt(2, "Invalid command: " + command);
 		}
 		//System.out.format("Command %s executed successfully\n", command);
 	}
 	
-	public void get(String strAdr){
-		strAdr += "0";
-		byte adr = Utils.strToByte(strAdr);
-		// Do output stuff
+	public void get() throws SystemInterrupt{
+		throw new SystemInterrupt(1, "GET");
 	}
 	
-	public void put(String strAdr){
-		strAdr += "0";
-		byte adr = Utils.strToByte(strAdr);
-		// Do input stuff
+	public void put() throws SystemInterrupt{
+		throw new SystemInterrupt(2, "PUT");
 	}
 	
 	public String read(){
@@ -159,7 +155,7 @@ public class VM {
 		incrementSP();
 	}
 	
-	public void binOp(int op){
+	public void binOp(int op) throws ProgramInterrupt{
 		try{
 			int op2 = Integer.parseInt(pop().toString());
 			int op1 = Integer.parseInt(pop().toString());
@@ -179,8 +175,7 @@ public class VM {
 			}
 			pshc(String.valueOf(result));
 		} catch(NumberFormatException e){
-			// Invalid assign interrupt here
-			System.exit(0);
+			throw new ProgramInterrupt(3, "Invalid assign(Type missmatch)");
 		}
 	}
 	
