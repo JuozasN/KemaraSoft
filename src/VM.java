@@ -26,6 +26,14 @@ public class VM {
         return mem;
     }
 
+    public static byte strToByte(String str){
+        if(str.length() > 2); // Invalid adress interrupt here
+        if(str.length() == 1)
+            str = "0" + str;
+        return((byte) ((Character.digit(str.charAt(0), 16) << 4)
+                + Character.digit(str.charAt(1), 16)));
+    }
+
 	public byte getPc() {return pc;}
 
 	public byte getSp(){return sp;}
@@ -128,7 +136,7 @@ public class VM {
 	}
 	
 	public void push(String strAdr){
-		byte adr = Utils.strToByte(strAdr);
+		byte adr = strToByte(strAdr);
 		Word value = getValue(adr);
 		setValue(value.getBytes(), sp);
 		incrementSP();
@@ -145,7 +153,7 @@ public class VM {
 	}
 	
 	public void popm(String strAdr){
-		byte adr = Utils.strToByte(strAdr);
+		byte adr = strToByte(strAdr);
 		Word value = pop();
 		setValue(value.getBytes(), adr);
 	}
@@ -200,7 +208,7 @@ public class VM {
 				System.exit(0);
 		}
 		if(doJump){
-			byte adr = Utils.strToByte(strAdr);
+			byte adr = strToByte(strAdr);
 			setPC(adr);
 		}
 	}
