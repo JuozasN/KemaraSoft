@@ -65,17 +65,28 @@ public class TableController implements Initializable {
 
     @FXML private Label previousLine;
     @FXML private Label currentLine;
+    VM process = new VM(this);
     private int counter = 0;
 
-    @FXML private void runButtonAction(javafx.event.ActionEvent event){
+    @FXML private void runButtonAction(javafx.event.ActionEvent event) {
         previousLine.setText("We Starting!");
-        VM process = new VM(this);
         process.loadProgram();
-        process.exec();
+        while(true) {
+            try {
+                process.exec();
+            } catch (SystemInterrupt SI) {
+                int intCode = SI.getIntCode();
+                if (intCode == 3) break;
+            }
+        }
+        //} Handle interrupt
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
         previousLine.setText("We Started... " + counter);
+        try {
+            process.exec();
+        }catch(SystemInterrupt SI){}
         counter++;
         currentLine.setText("We Started... " + counter);
     }
@@ -91,7 +102,7 @@ public class TableController implements Initializable {
     }
 
     @FXML private void loadButtonAction(javafx.event.ActionEvent event){
-
+        process.loadProgram();
     }
 
     @Override

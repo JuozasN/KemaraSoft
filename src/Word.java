@@ -1,12 +1,13 @@
 public class Word {
 	private byte[] bytes;
-	private void resetBytes(){
-		byte[] empty = {0, 0, 0, 0};
-		bytes = empty;
-	}
 	
 	public Word(){
 		bytes = new byte[Utils.WORD_BYTE_COUNT];
+	}
+
+	private void resetBytes(){
+		byte[] empty = {0, 0, 0, 0};
+		bytes = empty;
 	}
 
 	public Word(byte[] bytes) {

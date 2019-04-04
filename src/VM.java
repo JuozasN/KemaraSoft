@@ -27,10 +27,20 @@ public class VM {
         return mem;
     }
 
-    public void incrementSP() {
+    public void incrementSP(){
 	    ++sp;
-	    controller.setVMRegValue(0, String.valueOf(sp));
+	    controller.setVMRegValue(0, String.format("%02X", Utils.byteToInt(sp)));
     }
+
+    public void decrementSP(){
+		--sp;
+		controller.setVMRegValue(0, String.format("%02X", Utils.byteToInt(sp)));
+	}
+
+	public void setPC(byte value){
+		pc = value;
+		controller.setVMRegValue(1, String.format("%02X", Utils.byteToInt(pc)));
+	}
 	
 	public void setValue(byte[] value, byte adr){
 		int row = Utils.byteToInt(adr)/0x10;
@@ -74,35 +84,33 @@ public class VM {
     }
 	
 	
-	public void exec(){
+	public void exec() throws SystemInterrupt{
 		boolean running = true;
-		while(running){
-			String command = read();		
-			switch(command){
-				case "PUSH": push(read()); break;
-				case "PSHC": pshc(read()); break;
-				case "POPM": popm(read()); break;
-				case "POP": pop(); break;
-				case "TOP": top(read()); break;
-				case "ADD": binOp(1); break;
-				case "SUB": binOp(2); break;
-				case "MULT": binOp(3); break;
-				case "DIV": binOp(4); break;
-				case "CMP": cmp(); break;
-				case "JZ": jmp(1, read()); break;
-				case "JP": jmp(2, read()); break;
-				case "JN": jmp(3, read()); break;
-				case "JMP": jmp(4,read()); break;
-				case "GET": get(read()); break;
-				case "PUT": put(read()); break;
-				case "HALT": running = false; break;
-				default:
-					System.err.println("Invalid command: " + command);
-					// Invalid command interrupt here
-					System.exit(0);
-			}
-			//System.out.format("Command %s executed successfully\n", command);
+		String command = read();
+		switch(command){
+			case "PUSH": push(read()); break;
+			case "PSHC": pshc(read()); break;
+			case "POPM": popm(read()); break;
+			case "POP": pop(); break;
+			case "TOP": top(read()); break;
+			case "ADD": binOp(1); break;
+			case "SUB": binOp(2); break;
+			case "MULT": binOp(3); break;
+			case "DIV": binOp(4); break;
+			case "CMP": cmp(); break;
+			case "JZ": jmp(1, read()); break;
+			case "JP": jmp(2, read()); break;
+			case "JN": jmp(3, read()); break;
+			case "JMP": jmp(4,read()); break;
+			case "GET": get(read()); break;
+			case "PUT": put(read()); break;
+			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
+			default:
+				System.err.println("Invalid command: " + command);
+				//throw new SystemInterrupt(2, "Invalid command");
+				System.exit(0);
 		}
+		//System.out.format("Command %s executed successfully\n", command);
 	}
 	
 	public void get(String strAdr){
@@ -119,7 +127,7 @@ public class VM {
 	
 	public String read(){
 		String value = getValue(pc).toString();
-		pc++;
+		setPC(++pc);
 		return value;
 	}
 	
@@ -127,16 +135,16 @@ public class VM {
 		byte adr = Utils.strToByte(strAdr);
 		Word value = getValue(adr);
 		setValue(value.getBytes(), sp);
-		sp++;
+		incrementSP();
 	}
 	
 	public void pshc(String strVal){
 		setValue(strVal.getBytes(), sp);
-		sp++;
+		incrementSP();
 	}
 	
 	public Word pop(){
-		sp--;
+		decrementSP();
 		return getValue(sp);
 	}
 	
@@ -148,7 +156,7 @@ public class VM {
 	
 	public void top(String strAdr){
 		popm(strAdr);
-		sp++;
+		incrementSP();
 	}
 	
 	public void binOp(int op){
@@ -191,14 +199,14 @@ public class VM {
 			case 1: if(val == 0) doJump = true; break;
 			case 2: if(val > 0) doJump = true; break;
 			case 3: if(val < 0) doJump = true; break;
-			case 4: doJump = true; sp++; break;
+			case 4: doJump = true; incrementSP(); break;
 			default:
 				System.err.println("Impossible error at VM.jmp() method");
 				System.exit(0);
 		}
 		if(doJump){
 			byte adr = Utils.strToByte(strAdr);
-			pc = adr;
+			setPC(adr);
 		}
 	}
 }
