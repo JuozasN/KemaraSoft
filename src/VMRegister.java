@@ -1,12 +1,20 @@
 import javafx.beans.property.SimpleStringProperty;
 
-public class VMStatus {
+public class VMRegister {
     private SimpleStringProperty registerName;
     private SimpleStringProperty registerValue;
 
-    public VMStatus(String registerName, String registerValue){
+    public VMRegister(String registerName, String registerValue){
         this.registerName = new SimpleStringProperty(registerName);
         this.registerValue = new SimpleStringProperty(registerValue);
+    }
+
+    public VMRegister(String registerName) {
+        this(registerName, "0");
+    }
+
+    public void setInitial() {
+        setRegisterValue("0");
     }
 
     public String getRegisterName() {

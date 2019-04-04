@@ -1,27 +1,26 @@
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 
 public class VM {
+	private final TableController controller;
 	private Block[] mem;
 	private byte pc;
 	private byte sp;
 
-	public VM(Block[] mem){
+	public VM(TableController controller, Block[] mem){
 		this.mem = mem;
 		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
 		pc = 0;
 		sp = Utils.intToByte(0xA0);
+
+        this.controller = controller;
 	}
 
-	public VM() {
-		this(new Block[Utils.VM_MEM_BLOCK_COUNT]);
+	public VM(TableController controller) {
+		this(controller, new Block[Utils.VM_MEM_BLOCK_COUNT]);
 	}
 
     public Block[] getMem() {
@@ -32,6 +31,7 @@ public class VM {
 		int row = Utils.byteToInt(adr)/0x10;
 		int col = Utils.byteToInt(adr)%0x10;
 		mem[row].setWord(value, col);
+		controller.setVMMemValue(row, col, new String(value));
 	}
 	
 	public Word getValue(byte adr){
@@ -46,11 +46,6 @@ public class VM {
         String tempFilePath = "src/test.txt";
         try {
             br = new BufferedReader(new FileReader(tempFilePath));
-            URL resource = getClass().getResource("OSViewer.fxml");
-            FXMLLoader loader = new FXMLLoader(resource);
-            Parent rootLoader = loader.load();
-            TableController controller = (TableController) loader.getController();
-
 
             byte adr = 0;
             for (String line; (line = br.readLine()) != null; ) {
@@ -61,8 +56,7 @@ public class VM {
                         System.exit(0);
                     }
                     setValue(str.getBytes(), adr);
-                    controller.setVMMemValue(adr/16, adr%16, str);
-
+//                    controller.setVMMemValue(adr, str);
                     adr++;
                 }
             }

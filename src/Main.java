@@ -8,7 +8,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("OSViewer.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("OSViewer.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("OS");
         primaryStage.setScene(new Scene(root, 1300, 900));
         primaryStage.show();
