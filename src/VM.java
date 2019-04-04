@@ -26,6 +26,11 @@ public class VM {
     public Block[] getMem() {
         return mem;
     }
+
+    public void incrementSP() {
+	    ++sp;
+	    controller.setVMRegValue(0, String.valueOf(sp));
+    }
 	
 	public void setValue(byte[] value, byte adr){
 		int row = Utils.byteToInt(adr)/0x10;
@@ -41,7 +46,6 @@ public class VM {
 	}
 
 	public void loadProgram() {
-
         BufferedReader br;
         String tempFilePath = "src/test.txt";
         try {
