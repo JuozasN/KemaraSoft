@@ -4,17 +4,18 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="955.0" prefWidth="1202.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TableController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="875.0" prefWidth="1202.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TableController">
    <children>
-      <Label layoutX="14.0" layoutY="23.0" prefWidth="119.0" text="RM Processor">
+      <Label layoutX="14.0" layoutY="23.0" prefWidth="119.0" text="RM Processor" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="23.0">
          <font>
             <Font name="System Bold" size="16.0" />
          </font>
       </Label>
-      <TableView fx:id="RMRegView" layoutX="14.0" layoutY="48.0" prefHeight="194.0" prefWidth="121.0">
+      <TableView fx:id="RMRegView" layoutX="14.0" layoutY="48.0" prefHeight="194.0" prefWidth="121.0" AnchorPane.leftAnchor="14.0">
         <columns>
           <TableColumn fx:id="RMRegisterNameColumn" prefWidth="54.0" text="Register" />
           <TableColumn fx:id="RMRegisterValueColumn" prefWidth="60.0" text="Value" />
@@ -99,9 +100,11 @@
       <Button fx:id="resetButton" layoutX="14.0" layoutY="589.0" mnemonicParsing="false" onAction="#resetButtonAction" prefHeight="25.0" prefWidth="45.0" text="Reset" />
       <Button fx:id="runButton" layoutX="14.0" layoutY="629.0" mnemonicParsing="false" onAction="#runButtonAction" prefHeight="25.0" prefWidth="45.0" text="Run" />
       <Button fx:id="loadButton" layoutX="14.0" layoutY="669.0" mnemonicParsing="false" onAction="#loadButtonAction" prefHeight="25.0" prefWidth="45.0" text="Load" />
-      <Label fx:id="previousLine" layoutX="149.0" layoutY="794.0" prefHeight="25.0" prefWidth="937.0" />
-      <Label fx:id="currentLine" layoutX="149.0" layoutY="826.0" prefHeight="25.0" prefWidth="937.0" />
+      <Label fx:id="previousLine" layoutX="149.0" layoutY="794.0" prefHeight="25.0" prefWidth="382.0" />
+      <Label fx:id="currentLine" layoutX="149.0" layoutY="826.0" prefHeight="25.0" prefWidth="382.0" />
       <Label layoutX="17.0" layoutY="794.0" prefHeight="25.0" prefWidth="112.0" text="Previous Command:" />
-      <Label layoutX="17.0" layoutY="826.0" prefHeight="25.0" prefWidth="101.0" text="Current Command:" />
+      <Label layoutX="17.0" layoutY="826.0" prefHeight="25.0" prefWidth="112.0" text="Current Command:" />
+      <Label layoutX="14.0" layoutY="709.0" prefHeight="17.0" prefWidth="112.0" text="Name of file to load:" />
+      <TextField fx:id="filename" layoutX="14.0" layoutY="733.0" prefHeight="17.0" prefWidth="112.0" promptText="Enter filename" />
    </children>
 </AnchorPane>

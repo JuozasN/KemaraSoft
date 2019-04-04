@@ -60,7 +60,7 @@ public class VM {
 
 	public void loadProgram() throws ProgramInterrupt{
         BufferedReader br;
-        String tempFilePath = "src/test.txt";
+        String tempFilePath = "src/" + controller.filename.getText();
         try {
             br = new BufferedReader(new FileReader(tempFilePath));
 
