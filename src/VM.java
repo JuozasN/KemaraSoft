@@ -21,6 +21,7 @@ public class VM {
 		pc = 0;
 		sp = Utils.intToByte(0xA0);
         this.controller = controller;
+        this.controller.assignRMMemoryBlocksForVM();
 	}
 
 	public VM(TableController controller) {
@@ -85,7 +86,6 @@ public class VM {
 						throw new ProgramInterrupt(2, "Overflow");
                     }
                     setValue(str.getBytes(), adr);
-//                    controller.setVMMemValue(adr, str);
                     adr++;
                 }
             }

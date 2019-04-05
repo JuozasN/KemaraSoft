@@ -11,18 +11,18 @@ public class Paging {
 //        return UMAddress;
 //    }
 
-    public static byte toUMAdr(RM realMachine, byte adr) {
+    public static int toUMAdr(RM realMachine, int adr) {
         int block = adr / Utils.BLOCK_WORD_COUNT;
         int word = adr % Utils.BLOCK_WORD_COUNT;
         byte[] pagingTable = realMachine.getPagingTable();
 
-        return Utils.intToByte(pagingTable[block] + word);
+        return pagingTable[block] + word;
     }
 
-    public static byte toWordAdr(int blockIndex) {
+    public static int toWordAdr(int blockIndex) {
         if (blockIndex < 0 || blockIndex > Utils.UM_BLOCK_COUNT)
             return -1;
 
-        return Utils.intToByte(blockIndex * Utils.BLOCK_WORD_COUNT);
+        return blockIndex * Utils.BLOCK_WORD_COUNT;
     }
 }
