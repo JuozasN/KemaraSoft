@@ -4,6 +4,11 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class VM {
+    public final class RegisterIndexes {
+        public static final int PC = 0;
+        public static final int SP = 1;
+    }
+
 	private final TableController controller;
 	private Block[] mem;
 	private byte pc;
@@ -54,15 +59,15 @@ public class VM {
 	}
 	
 	public void setValue(byte[] value, byte adr){
-		int row = Utils.byteToInt(adr)/0x10;
-		int col = Utils.byteToInt(adr)%0x10;
+		int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
+		int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
 		mem[row].setWord(value, col);
 		controller.setVMMemValue(row, col, new String(value));
 	}
 	
 	public Word getValue(byte adr){
-		int row = Utils.byteToInt(adr)/0x10;
-		int col = Utils.byteToInt(adr)%0x10;
+		int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
+		int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
 		return mem[row].getWord(col);
 	}
 
