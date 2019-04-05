@@ -65,6 +65,7 @@ public class TableController implements Initializable {
     @FXML private Label currentLine;
     @FXML public TextField filename;
 
+    private final RM realMachine = new RM(this);
     VM process = new VM(this);
 
     public boolean checkFilenameField(){
@@ -84,7 +85,7 @@ public class TableController implements Initializable {
         previousLine.setText("We Starting!");
         try {
             process.loadProgram();
-        }catch(ProgramInterrupt PI) {
+        } catch(ProgramInterrupt PI) {
             // Overflow
         }
         while(true){
@@ -104,9 +105,9 @@ public class TableController implements Initializable {
         previousLine.setText(currentLine.getText());
         try {
             process.exec();
-        }catch(SystemInterrupt SI){
+        } catch(SystemInterrupt SI){
 
-        }catch(ProgramInterrupt PI){
+        } catch(ProgramInterrupt PI){
 
         }
         currentLine.setText(getCommandString(process));
@@ -246,14 +247,14 @@ public class TableController implements Initializable {
     private void resetRMRegister() {
         ObservableList<RMRegister> rmRegisters = getRMRegValues();
         for(RMRegister register : rmRegisters) {
-
+            register.setInitial();
         }
     }
 
     private void resetVMRegister() {
         ObservableList<VMRegister> vmRegisters = getVMRegValues();
         for(VMRegister register : vmRegisters) {
-
+            register.setInitial();
         }
     }
 
@@ -331,5 +332,23 @@ public class TableController implements Initializable {
         VMMemoryBlock vmMemoryBlock = getVMMemValues().get(block);
 
         return vmMemoryBlock.set(word, value);
+    }
+
+    public void assignRMMemoryBlocksForVM() {
+        int pagingBlockIndex = assignRMMemoryBlock();
+        Integer[] memBlocks = assignRMMemoryBlocks(Utils.VM_MEM_BLOCK_COUNT);
+        realMachine.setPagingTable(Paging.toWordAdr(pagingBlockIndex), memBlocks);
+    }
+
+    public int assignRMMemoryBlock() {
+        int index = realMachine.getRandUnassignedBlockIndex();
+        realMachine.assignBlock(index);
+        return index;
+    }
+
+    public Integer[] assignRMMemoryBlocks(int blocks) {
+        Integer[] indexes = realMachine.getRandUnassignedBlocks(blocks);
+        realMachine.assignBlocks(indexes);
+        return indexes;
     }
 }
