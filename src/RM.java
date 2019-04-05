@@ -19,12 +19,12 @@ public class RM {
     private final TableController controller;
     private RandomAccessFile externalMemoryFile;
     private Block[] um;     // user memory
-    private byte ptr;       // puslapių lentelės registras
-    private byte sp;        // steko viršūnės žodžio indeksas
-    private byte pc;        // komandų skaitliukas
-    private byte pi;        // programinių pertraukimų registras
-    private byte si;        // supervizorinių pertraukimų registras
-    private byte ti;        // taimerio registras
+    private byte[] ptr = new byte[2];       // puslapių lentelės registras
+    private byte[] sp = new byte[2];        // steko viršūnės žodžio indeksas
+    private byte[] pc = new byte[2];        // komandų skaitliukas
+    private byte[] pi = new byte[2];        // programinių pertraukimų registras
+    private byte[] si = new byte[2];        // supervizorinių pertraukimų registras
+    private byte[] ti = new byte[2];        // taimerio registras
     private boolean isUserMode; // registras, kurio reikšmė nusako procesoriaus darbo režimą
     private boolean[] assignedMemBlocks;
 
@@ -33,12 +33,7 @@ public class RM {
         this.um = new Block[Utils.UM_BLOCK_COUNT];
         for(int i = 0; i < Utils.UM_BLOCK_COUNT; ++i)
             um[i] = new Block();
-        this.ptr = 0;
-        this.sp = 0;
-        this.pc = 0;
-        this.pi = 0;
-        this.si = 0;
-        this.ti = 0;
+
         this.isUserMode = true;
         this.assignedMemBlocks = new boolean[Utils.UM_BLOCK_COUNT];
 
@@ -65,39 +60,42 @@ public class RM {
         }
     }
 
-    public void setPTR(byte value){
-        ptr = value;
-        controller.setRMRegValue(RegisterIndexes.PTR, String.format("%02X", Utils.byteToInt(ptr)));
+    public void setPTR(int value){
+        ptr = Utils.intToByteArray(value);
+
+        System.out.println("int value: " + value + ", byte value: " + Utils.bytesToHexString(ptr,2));
+
+        controller.setRMRegValue(RegisterIndexes.PTR, Utils.bytesToHexString(ptr, 2));
     }
 
     public void incrementSP(){
-        ++sp;
-        controller.setRMRegValue(RegisterIndexes.SP, String.format("%02X", Utils.byteToInt(sp)));
+        sp = Utils.addToByteArray(sp, 1);
+        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 2));
     }
 
     public void decrementSP(){
-        --sp;
-        controller.setRMRegValue(RegisterIndexes.SP, String.format("%02X", Utils.byteToInt(sp)));
+        sp = Utils.addToByteArray(sp, -1);
+        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 2));
     }
 
     public void setPC(byte value){
-        pc = value;
-        controller.setRMRegValue(RegisterIndexes.PC, String.format("%02X", Utils.byteToInt(pc)));
+        pc = Utils.intToByteArray(value);
+        controller.setRMRegValue(RegisterIndexes.PC, Utils.bytesToHexString(ptr, 2));
     }
 
     public void setPI(byte value){
-        pi = value;
-        controller.setRMRegValue(RegisterIndexes.PI, String.format("%02X", Utils.byteToInt(pi)));
+        pi = Utils.intToByteArray(value);
+        controller.setRMRegValue(RegisterIndexes.PI, Utils.bytesToHexString(ptr, 2));
     }
 
     public void setSI(byte value){
-        si = value;
-        controller.setRMRegValue(RegisterIndexes.SI, String.format("%02X", Utils.byteToInt(si)));
+        si = Utils.intToByteArray(value);
+        controller.setRMRegValue(RegisterIndexes.SI, Utils.bytesToHexString(ptr, 2));
     }
 
     public void setTI(byte value){
-        ti = value;
-        controller.setRMRegValue(RegisterIndexes.TI, String.format("%02X", Utils.byteToInt(ti)));
+        ti = Utils.intToByteArray(value);
+        controller.setRMRegValue(RegisterIndexes.TI, Utils.bytesToHexString(ptr, 2));
     }
 
     public void toggleMode(){
@@ -111,16 +109,16 @@ public class RM {
 
     }
 
-    public void setValue(byte[] value, byte adr){
-        int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
-        int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
+    public void setValue(byte[] value, int adr){
+        int row = adr/Utils.BLOCK_WORD_COUNT;
+        int col = adr%Utils.BLOCK_WORD_COUNT;
         um[row].setWord(value, col);
-        controller.setRMMemValue(row, col, new String(value));
+        controller.setRMMemValue(row, col, Utils.bytesToHexString(value, 4));
     }
 
-    public Word getValue(byte adr){
-        int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
-        int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
+    public Word getValue(int adr){
+        int row = adr/Utils.BLOCK_WORD_COUNT;
+        int col = adr%Utils.BLOCK_WORD_COUNT;
         return um[row].getWord(col);
     }
 
@@ -131,7 +129,8 @@ public class RM {
 
     public int getRandUnassignedBlockIndex() {
         Integer[] unassignedMemBlocks = getUnassignedMemBlocks();
-        return Utils.getRandomInt(0, unassignedMemBlocks.length);
+        int index = Utils.getRandomInt(0, unassignedMemBlocks.length-1);
+        return unassignedMemBlocks[index];
     }
 
     public void assignBlocks(Integer[] indexes) {
@@ -155,14 +154,15 @@ public class RM {
         return unassignedBlocks.toArray(intArr);
     }
 
-    public void setPagingTable(byte tableAdr, Integer[] memBlocks) {
+    public void setPagingTable(int tableAdr, Integer[] memBlocks) {
         // if registers are not empty -> push RM state to stack (implement in MOS)
         setPTR(tableAdr);
 
-        byte[] value = new byte[1];
+        int tableWordAdr = Paging.toWordAdr(tableAdr);
+        byte[] value;
         for (int i = 0; i < memBlocks.length; ++i) {
-            value[0] = Paging.toWordAdr(memBlocks[i]);
-            setValue(value, Utils.intToByte(tableAdr + i));
+            value = Utils.intToByteArray(memBlocks[i]);
+            setValue(value, tableWordAdr + i);
         }
     }
 
@@ -170,7 +170,8 @@ public class RM {
         byte[] pagingTable = new byte[Utils.BLOCK_WORD_COUNT];
 
         for(int i = 0; i < pagingTable.length; ++i) {
-            pagingTable[i] = getValue(Utils.intToByte(ptr + i)).getBytes()[0];
+            pagingTable[i] = getValue(Utils.byteArrayToInt(ptr) + i).getBytes()[0];
+            System.out.println(pagingTable[i]);
         }
 
         return pagingTable;

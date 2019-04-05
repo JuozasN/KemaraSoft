@@ -66,7 +66,7 @@ public class TableController implements Initializable {
     @FXML public TextField filename;
 
     private final RM realMachine = new RM(this);
-    VM process = new VM(this);
+    VM process;
 
     public boolean checkFilenameField(){
         if(filename.getText().isEmpty()){
@@ -126,6 +126,7 @@ public class TableController implements Initializable {
     @FXML private void loadButtonAction(javafx.event.ActionEvent event){
         if(checkFilenameField()) {
             try {
+                process= new VM(this);
                 process.loadProgram();
             } catch (ProgramInterrupt PI) {
                 // Overflow
@@ -337,7 +338,7 @@ public class TableController implements Initializable {
     public void assignRMMemoryBlocksForVM() {
         int pagingBlockIndex = assignRMMemoryBlock();
         Integer[] memBlocks = assignRMMemoryBlocks(Utils.VM_MEM_BLOCK_COUNT);
-        realMachine.setPagingTable(Paging.toWordAdr(pagingBlockIndex), memBlocks);
+        realMachine.setPagingTable(pagingBlockIndex, memBlocks);
     }
 
     public int assignRMMemoryBlock() {
