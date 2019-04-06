@@ -19,9 +19,9 @@ public class Utils {
     public static byte intToByte(int value){return (byte)(value&0xFF);}
 
     public static String bytesToHexString(byte[] bytes, int strLen) {
-        char[] hexChars = new char[bytes.length * 2];
+        char[] hexChars = new char[bytes.length * 2]; // 1 byte has values in range [0, FF]
         for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
+            int v = byteToInt(bytes[j]);
             hexChars[j * 2] = hexArray[v >>> 4];
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
         }
@@ -30,7 +30,19 @@ public class Utils {
         for(int i = strLen; i > 0; --i) {
             str += String.valueOf(hexChars[hexChars.length-i]);
         }
+
         return str;
+    }
+
+    public static String bytesToHexString(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2]; // 1 byte has values in range [0, FF]
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = byteToInt(bytes[j]);
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+
+        return new String(hexChars);
     }
 
     public static int getRandomInt(int min, int max) {

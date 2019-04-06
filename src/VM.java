@@ -63,6 +63,7 @@ public class VM {
 		int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
 		int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
 		mem[row].setWord(value, col);
+		controller.setRMMemValuePaging(row, col, new String(value));
 		controller.setVMMemValue(row, col, new String(value));
 	}
 	

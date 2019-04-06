@@ -1,6 +1,7 @@
 import javafx.beans.property.SimpleStringProperty;
 
 public class VMRegister {
+    public static String INITIAL_REG_VAL_STR = "0000";
     private SimpleStringProperty registerName;
     private SimpleStringProperty registerValue;
 
@@ -10,11 +11,11 @@ public class VMRegister {
     }
 
     public VMRegister(String registerName) {
-        this(registerName, "0");
+        this(registerName, INITIAL_REG_VAL_STR);
     }
 
     public void setInitial() {
-        setRegisterValue("0");
+        setRegisterValue(INITIAL_REG_VAL_STR);
     }
 
     public String getRegisterName() {
