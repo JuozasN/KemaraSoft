@@ -11,12 +11,13 @@ public class Paging {
 //        return UMAddress;
 //    }
 
-    public static int toUMAdr(RM realMachine, int adr) {
-        int block = adr / Utils.BLOCK_WORD_COUNT;
-        int word = adr % Utils.BLOCK_WORD_COUNT;
-        byte[] pagingTable = realMachine.getPagingTable();
+    public static int toUMAdr(RM realMachine, int vmBlock, int vmWord) {
+        if (vmBlock < 0 || vmBlock > Utils.VM_MEM_BLOCK_COUNT ||
+            vmWord < 0 || vmWord > Utils.BLOCK_WORD_COUNT)
+            return -1;
 
-        return pagingTable[block] + word;
+        byte[] pagingTable = realMachine.getPagingTable();
+        return (pagingTable[vmBlock]) * Utils.BLOCK_WORD_COUNT + vmWord;
     }
 
     public static int toWordAdr(int blockIndex) {

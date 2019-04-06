@@ -1,4 +1,5 @@
 import javafx.scene.control.Tab;
+import jdk.jshell.execution.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,42 +61,75 @@ public class RM {
         }
     }
 
+    public void resetRM() {
+        resetRegisters();
+        resetUserMemory();
+    }
+
+    private void resetRegisters() {
+        setPTR(0);
+        resetSP();
+        setPC(0);
+        setPI(0);
+        setSI(0);
+        setTI(0);
+    }
+
+    private void resetUserMemory() {
+        // reset only assigned memory blocks
+        Integer[] assignedBlockIndexes = getAssignedMemBlocks();
+        for(int i = 0; i < assignedBlockIndexes.length; ++i) {
+            for(int j = 0; j < Utils.BLOCK_WORD_COUNT; ++j) {
+                setValue(0, assignedBlockIndexes[i], j);
+            }
+            assignedMemBlocks[i] = false;
+        }
+
+//        for(int i = 0; i < Utils.UM_BLOCK_COUNT; ++i) {
+//            for(int j = 0; j < Utils.BLOCK_WORD_COUNT; ++j) {
+//                setValue(0, i, j);
+//            }
+//        }
+    }
+
     public void setPTR(int value){
         ptr = Utils.intToByteArray(value);
-
-        System.out.println("int value: " + value + ", byte value: " + Utils.bytesToHexString(ptr,2));
-
-        controller.setRMRegValue(RegisterIndexes.PTR, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.PTR, Utils.bytesToHexString(ptr, 4));
     }
 
     public void incrementSP(){
         sp = Utils.addToByteArray(sp, 1);
-        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 4));
     }
 
     public void decrementSP(){
         sp = Utils.addToByteArray(sp, -1);
-        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 4));
     }
 
-    public void setPC(byte value){
+    private void resetSP() {
+        ptr = Utils.intToByteArray(0);
+        controller.setRMRegValue(RegisterIndexes.PTR, Utils.bytesToHexString(ptr, 4));
+    }
+
+    public void setPC(int value){
         pc = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.PC, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.PC, Utils.bytesToHexString(ptr, 4));
     }
 
-    public void setPI(byte value){
+    public void setPI(int value){
         pi = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.PI, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.PI, Utils.bytesToHexString(ptr, 4));
     }
 
-    public void setSI(byte value){
+    public void setSI(int value){
         si = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.SI, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.SI, Utils.bytesToHexString(ptr, 4));
     }
 
-    public void setTI(byte value){
+    public void setTI(int value){
         ti = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.TI, Utils.bytesToHexString(ptr, 2));
+        controller.setRMRegValue(RegisterIndexes.TI, Utils.bytesToHexString(ptr, 4));
     }
 
     public void toggleMode(){
@@ -116,10 +150,40 @@ public class RM {
         controller.setRMMemValue(row, col, Utils.bytesToHexString(value, 4));
     }
 
+    public void setValue(int value, int adr) {
+        setValue(Utils.intToByteArray(value), adr);
+    }
+
+    private void setValue(int value, int row, int col) {
+        byte[] byteValue = Utils.intToByteArray(value);
+        um[row].setWord(byteValue, col);
+        controller.setRMMemValue(row, col, Utils.bytesToHexString(byteValue, 4));
+    }
+
     public Word getValue(int adr){
         int row = adr/Utils.BLOCK_WORD_COUNT;
         int col = adr%Utils.BLOCK_WORD_COUNT;
         return um[row].getWord(col);
+    }
+
+    public void assignBlocks(Integer[] indexes) {
+        for(int i : indexes) {
+            assignedMemBlocks[i] = true;
+        }
+    }
+
+    public void freeBlocks(Integer[] indexes) {
+        for(int i : indexes) {
+            assignedMemBlocks[i] = false;
+        }
+    }
+
+    public void assignBlock(int index) {
+        assignedMemBlocks[index] = true;
+    }
+
+    public void freeBlock(int index) {
+        assignedMemBlocks[index] = false;
     }
 
     public Integer[] getRandUnassignedBlocks(int blocks) {
@@ -133,14 +197,15 @@ public class RM {
         return unassignedMemBlocks[index];
     }
 
-    public void assignBlocks(Integer[] indexes) {
-        for(int i : indexes) {
-            assignedMemBlocks[i] = true;
+    private Integer[] getAssignedMemBlocks() {
+        ArrayList<Integer> assignedBlocks = new ArrayList<>();
+        for(int i = 0; i < assignedMemBlocks.length; ++i) {
+            if(assignedMemBlocks[i])
+                assignedBlocks.add(i);
         }
-    }
 
-    public void assignBlock(int index) {
-        assignedMemBlocks[index] = true;
+        Integer[] intArr = new Integer[assignedBlocks.size()];
+        return assignedBlocks.toArray(intArr);
     }
 
     private Integer[] getUnassignedMemBlocks() {
@@ -156,9 +221,9 @@ public class RM {
 
     public void setPagingTable(int tableAdr, Integer[] memBlocks) {
         // if registers are not empty -> push RM state to stack (implement in MOS)
-        setPTR(tableAdr);
-
         int tableWordAdr = Paging.toWordAdr(tableAdr);
+        setPTR(tableWordAdr);
+
         byte[] value;
         for (int i = 0; i < memBlocks.length; ++i) {
             value = Utils.intToByteArray(memBlocks[i]);
@@ -169,9 +234,10 @@ public class RM {
     public byte[] getPagingTable() {
         byte[] pagingTable = new byte[Utils.BLOCK_WORD_COUNT];
 
+        int ptrInt = Utils.byteArrayToInt(ptr);
         for(int i = 0; i < pagingTable.length; ++i) {
-            pagingTable[i] = getValue(Utils.byteArrayToInt(ptr) + i).getBytes()[0];
-            System.out.println(pagingTable[i]);
+            // Last array byte holds block index because max value of index does not exceed 0xFF
+            pagingTable[i] = getValue(ptrInt + i).getBytes()[Utils.WORD_BYTE_COUNT-1];
         }
 
         return pagingTable;

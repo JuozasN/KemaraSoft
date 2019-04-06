@@ -66,7 +66,7 @@ public class TableController implements Initializable {
     @FXML public TextField filename;
 
     private final RM realMachine = new RM(this);
-    VM process;
+    private VM process;
 
     public boolean checkFilenameField(){
         if(filename.getText().isEmpty()){
@@ -117,10 +117,11 @@ public class TableController implements Initializable {
         previousLine.setText("");
         currentLine.setText("VM and RM have been wiped and reset!");
 
-        resetRMRegister();
-        resetVMRegister();
-        resetRMMemory();
-        resetVMMemory();
+        realMachine.resetRM();
+//        resetRMRegister();
+//        resetVMRegister();
+//        resetRMMemory();
+//        resetVMMemory();
     }
 
     @FXML private void loadButtonAction(javafx.event.ActionEvent event){
@@ -324,6 +325,18 @@ public class TableController implements Initializable {
 
         RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
         return rmMemoryBlock.set(word, value);
+    }
+
+    // uses paging mechanism
+    public boolean setRMMemValuePaging(int vmBlock, int vmWord, String value) {
+        if (vmBlock < 0x0 || vmBlock > Utils.UM_BLOCK_COUNT-1 || vmWord < 0x0 || vmWord > Utils.BLOCK_WORD_COUNT-1)
+            return false;
+
+        int adr = Paging.toUMAdr(realMachine, vmBlock, vmWord);
+        int rmBlock = adr/Utils.BLOCK_WORD_COUNT;
+        int rmWord = adr%Utils.BLOCK_WORD_COUNT;
+        RMMemoryBlock rmMemoryBlock = getRMMemValues().get(rmBlock);
+        return rmMemoryBlock.set(rmWord, value);
     }
 
     public boolean setVMMemValue(int block, int word, String value) {
