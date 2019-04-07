@@ -117,7 +117,8 @@ public class TableController implements Initializable {
         previousLine.setText("");
         currentLine.setText("VM and RM have been wiped and reset!");
 
-        realMachine.resetRM();
+        process.reset();
+        realMachine.reset();
 //        resetRMRegister();
 //        resetVMRegister();
 //        resetRMMemory();
@@ -210,7 +211,7 @@ public class TableController implements Initializable {
         RMColF.setCellValueFactory(new PropertyValueFactory<>("RMColF"));
 
         ObservableList<RMMemoryBlock> tableValues = FXCollections.observableArrayList();
-        for (int i = 0; i <= 0xFF; ++i){
+        for (int i = 0; i < Utils.UM_BLOCK_COUNT; ++i){
             String str = Integer.toHexString(i);
             tableValues.add(new RMMemoryBlock(str.toUpperCase()));
         }
@@ -238,40 +239,12 @@ public class TableController implements Initializable {
         VMColF.setCellValueFactory(new PropertyValueFactory<>("VMColF"));
 
         ObservableList<VMMemoryBlock> tableValues = FXCollections.observableArrayList();
-        for (int i = 0; i <= 0xF; ++i){
+        for (int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i){
             String str = Integer.toHexString(i);
             tableValues.add(new VMMemoryBlock(str.toUpperCase()));
         }
 
         VMMemView.setItems(tableValues);
-    }
-
-    private void resetRMRegister() {
-        ObservableList<RMRegister> rmRegisters = getRMRegValues();
-        for(RMRegister register : rmRegisters) {
-            register.setInitial();
-        }
-    }
-
-    private void resetVMRegister() {
-        ObservableList<VMRegister> vmRegisters = getVMRegValues();
-        for(VMRegister register : vmRegisters) {
-            register.setInitial();
-        }
-    }
-
-    private void resetRMMemory() {
-        ObservableList<RMMemoryBlock> rmMemoryBlocks = getRMMemValues();
-        for (RMMemoryBlock memoryBlock : rmMemoryBlocks) {
-            memoryBlock.setInitial();
-        }
-    }
-
-    private void resetVMMemory() {
-        ObservableList<VMMemoryBlock> vMMemoryBlocks = getVMMemValues();
-        for (VMMemoryBlock memoryBlock : vMMemoryBlocks) {
-            memoryBlock.setInitial();
-        }
     }
 
     public ObservableList<RMRegister> getRMRegValues(){

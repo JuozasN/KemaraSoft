@@ -1,13 +1,10 @@
-import javafx.scene.control.Tab;
-import jdk.jshell.execution.Util;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 public class RM {
-    public final class RegisterIndexes {
+    public final class RMRegIndexes {
         public static final int PTR = 0;
         public static final int SP = 1;
         public static final int PC = 2;
@@ -61,13 +58,14 @@ public class RM {
         }
     }
 
-    public void resetRM() {
+    public void reset() {
         resetRegisters();
-        resetUserMemory();
+        freeBlocks();
+        // resetAssignedMemory(); << user memory resets while reseting VM memory
     }
 
     private void resetRegisters() {
-        setPTR(0);
+        resetPTR();
         resetSP();
         setPC(0);
         setPI(0);
@@ -75,7 +73,7 @@ public class RM {
         setTI(0);
     }
 
-    private void resetUserMemory() {
+    private void resetAssignedMemory() {
         // reset only assigned memory blocks
         Integer[] assignedBlockIndexes = getAssignedMemBlocks();
         for(int i = 0; i < assignedBlockIndexes.length; ++i) {
@@ -84,80 +82,81 @@ public class RM {
             }
             assignedMemBlocks[i] = false;
         }
-
-//        for(int i = 0; i < Utils.UM_BLOCK_COUNT; ++i) {
-//            for(int j = 0; j < Utils.BLOCK_WORD_COUNT; ++j) {
-//                setValue(0, i, j);
-//            }
-//        }
     }
 
     public void setPTR(int value){
         ptr = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.PTR, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.PTR, Utils.bytesToHexString(ptr, 4));
+    }
+
+    private void resetPTR() {
+        for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
+            setValue(0, Utils.byteArrayToInt(ptr) + i);
+
+        setPTR(0);
     }
 
     public void incrementSP(){
         sp = Utils.addToByteArray(sp, 1);
-        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.SP, Utils.bytesToHexString(ptr, 4));
     }
 
     public void decrementSP(){
         sp = Utils.addToByteArray(sp, -1);
-        controller.setRMRegValue(RegisterIndexes.SP, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.SP, Utils.bytesToHexString(ptr, 4));
     }
 
     private void resetSP() {
-        ptr = Utils.intToByteArray(0);
-        controller.setRMRegValue(RegisterIndexes.PTR, Utils.bytesToHexString(ptr, 4));
+        sp = Utils.intToByteArray(0);
+        controller.setRMRegValue(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
     }
 
     public void setPC(int value){
         pc = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.PC, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.PC, Utils.bytesToHexString(ptr, 4));
     }
 
     public void setPI(int value){
         pi = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.PI, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.PI, Utils.bytesToHexString(ptr, 4));
     }
 
     public void setSI(int value){
         si = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.SI, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.SI, Utils.bytesToHexString(ptr, 4));
     }
 
     public void setTI(int value){
         ti = Utils.intToByteArray(value);
-        controller.setRMRegValue(RegisterIndexes.TI, Utils.bytesToHexString(ptr, 4));
+        controller.setRMRegValue(RMRegIndexes.TI, Utils.bytesToHexString(ptr, 4));
     }
 
     public void toggleMode(){
         if (this.isUserMode) {
             this.isUserMode = false;
-            controller.setRMRegValue(RegisterIndexes.MODE, "KRNL");
+            controller.setRMRegValue(RMRegIndexes.MODE, "KRNL");
         } else {
             this.isUserMode = true;
-            controller.setRMRegValue(RegisterIndexes.MODE, "USER");
+            controller.setRMRegValue(RMRegIndexes.MODE, "USER");
         }
 
     }
 
     public void setValue(byte[] value, int adr){
-        int row = adr/Utils.BLOCK_WORD_COUNT;
-        int col = adr%Utils.BLOCK_WORD_COUNT;
-        um[row].setWord(value, col);
-        controller.setRMMemValue(row, col, Utils.bytesToHexString(value, 4));
+        int block = adr/Utils.BLOCK_WORD_COUNT;
+        int word = adr%Utils.BLOCK_WORD_COUNT;
+        um[block].setWord(value, word);
+        controller.setRMMemValue(block, word, Utils.bytesToHexString(value, 4));
     }
 
     public void setValue(int value, int adr) {
         setValue(Utils.intToByteArray(value), adr);
     }
 
-    private void setValue(int value, int row, int col) {
+    private void setValue(int value, int block, int word) {
         byte[] byteValue = Utils.intToByteArray(value);
-        um[row].setWord(byteValue, col);
-        controller.setRMMemValue(row, col, Utils.bytesToHexString(byteValue, 4));
+        um[block].setWord(byteValue, word);
+        controller.setRMMemValue(block, word, Utils.bytesToHexString(byteValue, 4));
     }
 
     public Word getValue(int adr){
@@ -172,9 +171,15 @@ public class RM {
         }
     }
 
-    public void freeBlocks(Integer[] indexes) {
+    private void freeBlocks(Integer[] indexes) {
         for(int i : indexes) {
-            assignedMemBlocks[i] = false;
+            freeBlock(i);
+        }
+    }
+
+    private void freeBlocks() {
+        for(int i = 0; i < assignedMemBlocks.length; ++i) {
+            freeBlock(i);
         }
     }
 
@@ -182,7 +187,7 @@ public class RM {
         assignedMemBlocks[index] = true;
     }
 
-    public void freeBlock(int index) {
+    private void freeBlock(int index) {
         assignedMemBlocks[index] = false;
     }
 
