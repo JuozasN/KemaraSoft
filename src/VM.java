@@ -4,9 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class VM {
-    public final class RegisterIndexes {
-        public static final int PC = 0;
-        public static final int SP = 1;
+    public final class VMRegIndexes {
+        public static final int PC = 1;
+        public static final int SP = 0;
     }
 
 	private final TableController controller;
@@ -32,8 +32,25 @@ public class VM {
         return mem;
     }
 
+    public void reset() {
+        resetRegisters();
+        resetMemory();
+    }
+
+    private void resetRegisters() {
+        resetSP();
+        setPC(Utils.intToByte(0));
+    }
+
+    private void resetMemory() {
+        // reset only assigned memory blocks
+        for(int i = 0; i < mem.length; ++i)
+            for(int j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
+                setValue(0, i, j);
+    }
+
     public static byte strToByte(String str){
-        if(str.length() > 2); // Invalid adress interrupt here
+        if(str.length() > 2); // Invalid address interrupt here
         if(str.length() == 1)
             str = "0" + str;
         return((byte) ((Character.digit(str.charAt(0), 16) << 4)
@@ -46,27 +63,42 @@ public class VM {
 
 	public void incrementSP(){
 	    ++sp;
-	    controller.setVMRegValue(0, String.format("%02X", Utils.byteToInt(sp)));
+	    controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
     public void decrementSP(){
 		--sp;
-		controller.setVMRegValue(0, String.format("%02X", Utils.byteToInt(sp)));
+		controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
 	}
+
+	private void resetSP() {
+        sp = Utils.intToByte(0);
+        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+    }
 
 	public void setPC(byte value){
 		pc = value;
-		controller.setVMRegValue(1, String.format("%02X", Utils.byteToInt(pc)));
+		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
 	}
-	
+
 	public void setValue(byte[] value, byte adr){
-		int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
-		int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
-		mem[row].setWord(value, col);
-		controller.setRMMemValuePaging(row, col, new String(value));
-		controller.setVMMemValue(row, col, new String(value));
+		int block = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
+		int word = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
+		mem[block].setWord(value, word);
+		setUITableValues(block, word, Utils.bytesToHexString(value, 4));
 	}
-	
+
+    private void setValue(int value, int block, int word) {
+        byte[] byteValue = Utils.intToByteArray(value);
+        mem[block].setWord(byteValue, word);
+        setUITableValues(block, word, Utils.bytesToHexString(byteValue, 4));
+    }
+
+	private void setUITableValues(int block, int word, String value) {
+        controller.setRMMemValuePaging(block, word, value);
+        controller.setVMMemValue(block, word, value);
+    }
+
 	public Word getValue(byte adr){
 		int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
 		int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
