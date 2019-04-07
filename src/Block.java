@@ -18,15 +18,16 @@ public class Block {
 	    System.arraycopy(words, 0, this.words, 0, words.length);
 	}
 
-	public void setWord(byte[] block, int index){
-		words[index].setBytes(block);
+	public void setWord(int word, int index){
+		words[index].setValue(word);
 	}
 	
-	public String toString(){
-		String str = "|";
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("|");
 		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i){
-			str += String.format("%-4s|", words[i]);
+			sb.append(String.format("%-4s|", words[i]));
 		}
-		return str;
+		return sb.toString();
 	}
 }

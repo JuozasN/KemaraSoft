@@ -5,8 +5,8 @@ import java.io.IOException;
 
 public class VM {
     public final class VMRegIndexes {
-        public static final int PC = 1;
-        public static final int SP = 0;
+        public static final byte PC = 1;
+        public static final byte SP = 0;
     }
 
 	private final TableController controller;
@@ -44,8 +44,8 @@ public class VM {
 
     private void resetMemory() {
         // reset only assigned memory blocks
-        for(int i = 0; i < mem.length; ++i)
-            for(int j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
+        for(byte i = 0; i < mem.length; ++i)
+            for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
                 setValue(0, i, j);
     }
 
@@ -63,38 +63,55 @@ public class VM {
 
 	public void incrementSP(){
 	    ++sp;
-	    controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+	    setRegValue(VMRegIndexes.SP, sp);
+//	    controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
     public void decrementSP(){
 		--sp;
-		controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+        setRegValue(VMRegIndexes.SP, sp);
+//		controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+
 	}
 
 	private void resetSP() {
         sp = Utils.intToByte(0);
-        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+        setRegValue(VMRegIndexes.SP, sp);
+//        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
 	public void setPC(byte value){
 		pc = value;
-		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
+        setRegValue(VMRegIndexes.PC, pc);
+//		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
+	}
+
+	public void setRegValue(byte register, byte value) {
+	    controller.setVMRegValue(register, Utils.byteToHexString(value));
+	    // use paging mechanism to change RM registers
+	    controller.setRMRegValue(Paging.getRMRegIndex(register), Utils.shortToHexString(Paging.getUMAdr(Utils.byteToInt(value))));
+    }
+
+    private void setValue(int value, byte block, byte word) {
+        mem[block].setWord(value, word);
+//        setUITableValues(block, word, Utils.intToHexString(value));
+        setUITableValues(block, word, mem[block].getWord(word).getValueString());
+    }
+
+	public void setValue(int value, byte adr){
+        byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
+        byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
+		setValue(value, block, word);
 	}
 
 	public void setValue(byte[] value, byte adr){
-		int block = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
-		int word = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
-		mem[block].setWord(value, word);
-		setUITableValues(block, word, Utils.bytesToHexString(value, 4));
+        byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
+        byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
+        mem[block].setWord(Utils.byteArrayToInt(value), word);
+        setUITableValues(block, word, Utils.bytesToString(value));
 	}
 
-    private void setValue(int value, int block, int word) {
-        byte[] byteValue = Utils.intToByteArray(value);
-        mem[block].setWord(byteValue, word);
-        setUITableValues(block, word, Utils.bytesToHexString(byteValue, 4));
-    }
-
-	private void setUITableValues(int block, int word, String value) {
+	private void setUITableValues(byte block, byte word, String value) {
         controller.setRMMemValuePaging(block, word, value);
         controller.setVMMemValue(block, word, value);
     }
@@ -176,7 +193,7 @@ public class VM {
 	public void push(String strAdr){
 		byte adr = strToByte(strAdr);
 		Word value = getValue(adr);
-		setValue(value.getBytes(), sp);
+		setValue(value.getValue(), sp);
 		incrementSP();
 	}
 	
@@ -193,7 +210,7 @@ public class VM {
 	public void popm(String strAdr){
 		byte adr = strToByte(strAdr);
 		Word value = pop();
-		setValue(value.getBytes(), adr);
+		setValue(value.getValue(), adr);
 	}
 	
 	public void top(String strAdr){

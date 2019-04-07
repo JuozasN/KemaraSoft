@@ -68,19 +68,6 @@ public class TableController implements Initializable {
     private final RM realMachine = new RM(this);
     private VM process;
 
-    public boolean checkFilenameField(){
-        if(filename.getText().isEmpty()){
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Filename cannot be blank! Please enter a valid filename.", ButtonType.OK);
-            Optional<ButtonType> result = alert.showAndWait();
-            if(result.get() == ButtonType.OK){
-                alert.close();
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     @FXML private void runButtonAction(javafx.event.ActionEvent event) {
         previousLine.setText("We Starting!");
         try {
@@ -137,23 +124,6 @@ public class TableController implements Initializable {
             currentLine.setText(getCommandString(process));
         }
 
-    }
-
-    public String getCommandString(VM vm){
-        String currCommand = vm.getValue(vm.getPc()).toString();
-        switch(currCommand) {
-            case "PUSH":
-            case "PSHC":
-            case "POPM":
-            case "JZ":
-            case "JP":
-            case "JN":
-            case "JMP":
-            case "TOP":
-                return(currCommand + ' ' + vm.getValue((byte)(vm.getPc()+1)).toString());
-            default:
-                return(currCommand);
-        }
     }
 
     @Override
@@ -247,6 +217,10 @@ public class TableController implements Initializable {
         VMMemView.setItems(tableValues);
     }
 
+    public RM getRealMachine() {
+        return realMachine;
+    }
+
     public ObservableList<RMRegister> getRMRegValues(){
         return RMRegView.getItems();
     }
@@ -263,6 +237,36 @@ public class TableController implements Initializable {
         return VMMemView.getItems();
     }
 
+
+    public boolean checkFilenameField(){
+        if(filename.getText().isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Filename cannot be blank! Please enter a valid filename.", ButtonType.OK);
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK){
+                alert.close();
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public String getCommandString(VM vm){
+        String currCommand = vm.getValue(vm.getPc()).getValueString();
+        switch(currCommand) {
+            case "PUSH":
+            case "PSHC":
+            case "POPM":
+            case "JZ":
+            case "JP":
+            case "JN":
+            case "JMP":
+            case "TOP":
+                return(currCommand + ' ' + vm.getValue((byte)(vm.getPc()+1)).getValueString());
+            default:
+                return(currCommand);
+        }
+    }
     // registerIndex:
     // [0] -> PTR
     // [1] -> SP
@@ -271,28 +275,38 @@ public class TableController implements Initializable {
     // [4] -> SI
     // [5] -> TI
     // [6] -> MODE
-    public boolean setRMRegValue(int registerIndex, String value) {
+    public boolean setRMRegValue(byte registerIndex, String value) {
         if (registerIndex < 0 || registerIndex > 6)
             return false;
 
+        realMachine.setReg(registerIndex, Utils.byteArrayToShort(value.getBytes()));
         getRMRegValues().get(registerIndex).setRegisterValue(value);
         return true;
+    }
+
+    private boolean setRMRegValuePaging(byte vmRegInd, String value) {
+        byte rmRegIndex = Paging.getRMRegIndex(vmRegInd);
+        if (rmRegIndex == -1)
+            return false;
+
+        return setRMRegValue(rmRegIndex, value);
     }
 
     // registerIndex:
     // [0] -> SP
     // [1] -> PC
-    public boolean setVMRegValue(int registerIndex, String value) {
+    public boolean setVMRegValue(byte registerIndex, String value) {
         if (registerIndex < 0 || registerIndex > 1)
             return false;
 
         getVMRegValues().get(registerIndex).setRegisterValue(value);
         return true;
+//        return setRMRegValuePaging(registerIndex, value);
     }
 
     // block - memory block number (hex)
     // word - block word number (hex)
-    public boolean setRMMemValue(int block, int word, String value) {
+    public boolean setRMMemValue(byte block, byte word, String value) {
         if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
@@ -301,18 +315,22 @@ public class TableController implements Initializable {
     }
 
     // uses paging mechanism
-    public boolean setRMMemValuePaging(int vmBlock, int vmWord, String value) {
+    public boolean setRMMemValuePaging(byte vmBlock, byte vmWord, String value) {
         if (vmBlock < 0x0 || vmBlock > Utils.UM_BLOCK_COUNT-1 || vmWord < 0x0 || vmWord > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
-        int adr = Paging.toUMAdr(realMachine, vmBlock, vmWord);
-        int rmBlock = adr/Utils.BLOCK_WORD_COUNT;
-        int rmWord = adr%Utils.BLOCK_WORD_COUNT;
-        RMMemoryBlock rmMemoryBlock = getRMMemValues().get(rmBlock);
-        return rmMemoryBlock.set(rmWord, value);
+        Short adr = Paging.getUMAdr(vmBlock, vmWord);
+        if (adr == null) {
+            System.err.println("ERROR converting VM memory address to RM memory address in methord setRMMemValuePaging()");
+            return false;
+        }
+
+        byte rmBlock = (byte) (adr / Utils.BLOCK_WORD_COUNT);
+        byte rmWord = (byte) (adr / Utils.BLOCK_WORD_COUNT);
+        return setRMMemValue(rmBlock, rmWord, value);
     }
 
-    public boolean setVMMemValue(int block, int word, String value) {
+    public boolean setVMMemValue(byte block, byte word, String value) {
         if (block < 0x0 || block > Utils.VM_MEM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
@@ -321,20 +339,21 @@ public class TableController implements Initializable {
         return vmMemoryBlock.set(word, value);
     }
 
+    // TODO: move to kernel
     public void assignRMMemoryBlocksForVM() {
-        int pagingBlockIndex = assignRMMemoryBlock();
-        Integer[] memBlocks = assignRMMemoryBlocks(Utils.VM_MEM_BLOCK_COUNT);
+        byte pagingBlockIndex = assignRMMemoryBlock();
+        Byte[] memBlocks = assignRMMemoryBlocks(Utils.VM_MEM_BLOCK_COUNT);
         realMachine.setPagingTable(pagingBlockIndex, memBlocks);
     }
 
-    public int assignRMMemoryBlock() {
-        int index = realMachine.getRandUnassignedBlockIndex();
+    public byte assignRMMemoryBlock() {
+        byte index = realMachine.getRandUnassignedBlockIndex();
         realMachine.assignBlock(index);
         return index;
     }
 
-    public Integer[] assignRMMemoryBlocks(int blocks) {
-        Integer[] indexes = realMachine.getRandUnassignedBlocks(blocks);
+    public Byte[] assignRMMemoryBlocks(byte blocks) {
+        Byte[] indexes = realMachine.getRandUnassignedBlocks(blocks);
         realMachine.assignBlocks(indexes);
         return indexes;
     }
