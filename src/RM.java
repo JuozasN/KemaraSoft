@@ -182,7 +182,7 @@ public class RM {
 
     public void assignBlocks(Byte[] indexes) {
         for(int i : indexes) {
-            assignedMemBlocks[i] = true;
+            assignBlock(i);
         }
     }
 

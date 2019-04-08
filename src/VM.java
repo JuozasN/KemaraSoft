@@ -11,17 +11,17 @@ public class VM {
 
 	private final TableController controller;
 	private Block[] mem;
-	private byte pc;
-	private byte sp;
+	private Short pc;
+	private Short sp;
 
 	public VM(TableController controller, Block[] mem){
 		this.mem = mem;
 		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
-		pc = 0;
-		sp = Utils.intToByte(0xA0);
         this.controller = controller;
         this.controller.assignRMMemoryBlocksForVM();
+        setPC((short) 0);
+        setSP((short) 0xA0);
 	}
 
 	public VM(TableController controller) {
@@ -39,7 +39,7 @@ public class VM {
 
     private void resetRegisters() {
         resetSP();
-        setPC(Utils.intToByte(0));
+        setPC((short) 0);
     }
 
     private void resetMemory() {
@@ -47,6 +47,14 @@ public class VM {
         for(byte i = 0; i < mem.length; ++i)
             for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
                 setValue(0, i, j);
+    }
+
+    public static short strToShort(String str){
+        if(str.length() > 2); // Invalid address interrupt here
+        if(str.length() == 1)
+            str = "0" + str;
+        return((short) ((Character.digit(str.charAt(0), 16) << 4)
+                + Character.digit(str.charAt(1), 16)));
     }
 
     public static byte strToByte(String str){
@@ -57,9 +65,9 @@ public class VM {
                 + Character.digit(str.charAt(1), 16)));
     }
 
-	public byte getPc() {return pc;}
+	public Short getPc() {return pc;}
 
-	public byte getSp(){return sp;}
+	public Short getSp(){return sp;}
 
 	public void incrementSP(){
 	    ++sp;
@@ -74,41 +82,46 @@ public class VM {
 
 	}
 
+	private void setSP(Short value) {
+	    sp = value;
+	    setRegValue(VMRegIndexes.SP, sp);
+    }
+
 	private void resetSP() {
-        sp = Utils.intToByte(0);
+        sp = (byte) 0;
         setRegValue(VMRegIndexes.SP, sp);
 //        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
-	public void setPC(byte value){
+	public void setPC(Short value){
 		pc = value;
         setRegValue(VMRegIndexes.PC, pc);
 //		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
 	}
 
-	public void setRegValue(byte register, byte value) {
-	    controller.setVMRegValue(register, Utils.byteToHexString(value));
+	public void setRegValue(byte register, Short value) {
+	    controller.setVMRegValue(register, Utils.shortToHexString(value));
 	    // use paging mechanism to change RM registers
-	    controller.setRMRegValue(Paging.getRMRegIndex(register), Utils.shortToHexString(Paging.getUMAdr(Utils.byteToInt(value))));
+	    controller.setRMRegValue(Paging.getRMRegIndex(register), Utils.shortToHexString(Paging.getUMAdr(value)));
     }
 
     private void setValue(int value, byte block, byte word) {
         mem[block].setWord(value, word);
 //        setUITableValues(block, word, Utils.intToHexString(value));
-        setUITableValues(block, word, mem[block].getWord(word).getValueString());
+        setUITableValues(block, word, mem[block].getWordString(word));
     }
 
-	public void setValue(int value, byte adr){
+	public void setValue(int value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
 		setValue(value, block, word);
 	}
 
-	public void setValue(byte[] value, byte adr){
+	public void setValue(byte[] value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
-        mem[block].setWord(Utils.byteArrayToInt(value), word);
-        setUITableValues(block, word, Utils.bytesToString(value));
+        mem[block].setWord(value, word);
+        setUITableValues(block, word, mem[block].getWordString(word));
 	}
 
 	private void setUITableValues(byte block, byte word, String value) {
@@ -116,10 +129,10 @@ public class VM {
         controller.setVMMemValue(block, word, value);
     }
 
-	public Word getValue(byte adr){
-		int row = Utils.byteToInt(adr)/Utils.BLOCK_WORD_COUNT;
-		int col = Utils.byteToInt(adr)%Utils.BLOCK_WORD_COUNT;
-		return mem[row].getWord(col);
+	public Word getValue(Short adr){
+		byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
+		byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
+		return mem[block].getWord(word);
 	}
 
 	public void loadProgram() throws ProgramInterrupt{
@@ -135,7 +148,7 @@ public class VM {
                     if (str.length() > 4) {
 						throw new ProgramInterrupt(2, "Overflow");
                     }
-                    setValue(str.getBytes(), adr);
+                    setValue(str.getBytes(), (short) adr);
                     adr++;
                 }
             }
@@ -191,7 +204,7 @@ public class VM {
 	}
 	
 	public void push(String strAdr){
-		byte adr = strToByte(strAdr);
+		Short adr = strToShort(strAdr);
 		Word value = getValue(adr);
 		setValue(value.getValue(), sp);
 		incrementSP();
@@ -203,12 +216,13 @@ public class VM {
 	}
 	
 	public Word pop(){
+		setValue(0, sp);
 		decrementSP();
 		return getValue(sp);
 	}
 	
 	public void popm(String strAdr){
-		byte adr = strToByte(strAdr);
+		Short adr = strToShort(strAdr);
 		Word value = pop();
 		setValue(value.getValue(), adr);
 	}
@@ -263,7 +277,7 @@ public class VM {
 				System.exit(0);
 		}
 		if(doJump){
-			byte adr = strToByte(strAdr);
+			Short adr = strToShort(strAdr);
 			setPC(adr);
 		}
 	}

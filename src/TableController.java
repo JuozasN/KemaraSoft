@@ -252,7 +252,7 @@ public class TableController implements Initializable {
     }
 
     public String getCommandString(VM vm){
-        String currCommand = vm.getValue(vm.getPc()).getValueString();
+        String currCommand = vm.getValue(vm.getPc()).getStringValue();
         switch(currCommand) {
             case "PUSH":
             case "PSHC":
@@ -262,7 +262,7 @@ public class TableController implements Initializable {
             case "JN":
             case "JMP":
             case "TOP":
-                return(currCommand + ' ' + vm.getValue((byte)(vm.getPc()+1)).getValueString());
+                return(currCommand + ' ' + vm.getValue((short) (vm.getPc() + 1)).getStringValue());
             default:
                 return(currCommand);
         }
@@ -326,7 +326,7 @@ public class TableController implements Initializable {
         }
 
         byte rmBlock = (byte) (adr / Utils.BLOCK_WORD_COUNT);
-        byte rmWord = (byte) (adr / Utils.BLOCK_WORD_COUNT);
+        byte rmWord = (byte) (adr % Utils.BLOCK_WORD_COUNT);
         return setRMMemValue(rmBlock, rmWord, value);
     }
 
@@ -339,7 +339,7 @@ public class TableController implements Initializable {
         return vmMemoryBlock.set(word, value);
     }
 
-    // TODO: move to kernel
+    // TODO: move to kernel?
     public void assignRMMemoryBlocksForVM() {
         byte pagingBlockIndex = assignRMMemoryBlock();
         Byte[] memBlocks = assignRMMemoryBlocks(Utils.VM_MEM_BLOCK_COUNT);

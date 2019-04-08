@@ -14,11 +14,19 @@ public class Block {
 	    return words[index];
 	}
 
+	public String getWordString(int index) {
+		return words[index].toString();
+	}
+
 	public void setWords(Word[] words){
 	    System.arraycopy(words, 0, this.words, 0, words.length);
 	}
 
 	public void setWord(int word, int index){
+		words[index].setValue(word);
+	}
+
+	public void setWord(byte[] word, int index) {
 		words[index].setValue(word);
 	}
 	

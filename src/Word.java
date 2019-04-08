@@ -24,7 +24,7 @@ public class Word {
 		return Utils.bytesToHexString(Utils.intToByteArray(value));
 	}
 
-	public String getValueString() {
+	public String getStringValue() {
 		return Utils.bytesToString(Utils.intToByteArray(value));
 	}
 
@@ -34,10 +34,18 @@ public class Word {
 //	public void setValue(byte[] value){
 //		resetValue(); System.arraycopy(value, 0, this.value, 0, value.length);
 //	}
+
+	public void setValue(byte[] value) {
+		this.value = Utils.byteArrayToInt(value);
+	}
 	
 	public String toString(){
-		String str = String.valueOf(value);
-		str = str.replaceAll("\0", "");
-		return str;
+	    if (value == 0)
+	        return "0000";
+        else
+            return Utils.bytesToString(Utils.intToByteArray(value));
+//		String str = String.valueOf(value);
+//		str = str.replaceAll("\0", "");
+//		return str;
 	}
 }
