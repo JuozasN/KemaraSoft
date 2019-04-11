@@ -5,3 +5,23 @@ Antrai Uzduociai ND2:
 - Reikalavimai UI: Patogus, kad butu galima parodyti destytojui (?:D)
 - start -> nereikia, imame bet kokia busena ir rodome kas gaunasi atlikus veiksmus/zingsnius.
 - geriau daugiau mazu programu negu viena didele.
+
+
+// AR 190411 >>
+
+pagrindiniai update'ai: įrašius reikšmės į vm'ą - viskas atsivaizduoja ir rm'e; suvienodinti
+data type'ai; naujos Utils funkcijos ir t.t.
+
+Reikia padirbėt ties vm'o operacijomis, interupt'ais, kanalų įrenginiu (?), user-kernel mode'u etc.
+
+NOTE:
+	* suvienodinau data type'us:
+		- Word'as vietoj byte masyvo dabar laiko int'ą
+		(integer'is irgi užima lygiai 4 baitus; mažesnių ar didesnių reikšmių į Word
+		objektą vis tiek neįrašinėsim).
+		- registrų data type'as dabar yra short'as (2 baitai)
+	* parašiau keletą Utils funkcijų;
+	* tikrinti, kaip konvertuojamos reikšmės iš String į int, int į String ir t.t.;
+	kaip gaunamas String'as iš Word objekto
+
+// <<
