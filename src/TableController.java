@@ -181,7 +181,7 @@ public class TableController implements Initializable {
         RMColF.setCellValueFactory(new PropertyValueFactory<>("RMColF"));
 
         ObservableList<RMMemoryBlock> tableValues = FXCollections.observableArrayList();
-        for (int i = 0; i < Utils.UM_BLOCK_COUNT; ++i){
+        for (int i = 0; i < Utils.UM_BLOCK_COUNT + 2; ++i){
             String str = Integer.toHexString(i);
             tableValues.add(new RMMemoryBlock(str.toUpperCase()));
         }
@@ -356,5 +356,47 @@ public class TableController implements Initializable {
         Byte[] indexes = realMachine.getRandUnassignedBlocks(blocks);
         realMachine.assignBlocks(indexes);
         return indexes;
+    }
+
+//    public void processInterrupt() {
+//
+//    }
+
+    public void halt() {
+        setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 3));
+        setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
+        executeInterrupt();
+    }
+
+    private void executeInterrupt() {
+        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 0, getRMRegValues()
+                .get(RM.RMRegIndexes.PTR).getRegisterValue());
+        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 1, getRMRegValues()
+                .get(RM.RMRegIndexes.SP).getRegisterValue());
+        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 2, getRMRegValues()
+                .get(RM.RMRegIndexes.PC).getRegisterValue());
+
+
+
+        process.clear();
+
+        String reg = getRMRegValues().get(RM.RMRegIndexes.SI).getRegisterName();
+        int si = Integer.parseInt(reg);
+
+        switch(si) {
+            case 1:
+                // put
+                break;
+            case 2:
+                // get
+                break;
+            case 3:
+                // halt
+                realMachine.resetPTR();
+                process.reset();
+                return;
+        }
+
+        process.load();
     }
 }

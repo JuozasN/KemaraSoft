@@ -7,6 +7,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -15,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TableController">
+<SplitPane dividerPositions="0.5" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="TableController">
    <items>
       <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="300.0" minWidth="125.0">
          <content>
@@ -190,6 +191,12 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <TextArea prefHeight="200.0" prefWidth="200.0" />
+                        <TextField />
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </content>
