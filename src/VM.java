@@ -58,7 +58,7 @@ public class VM {
 
     private void resetRegisters() {
         resetSP();
-        setPC((short) 0);
+        resetPC();
     }
 
     private void resetMemory() {
@@ -108,7 +108,9 @@ public class VM {
 
 	private void resetSP() {
         sp = (byte) 0;
-        setRegValue(VMRegIndexes.SP, sp);
+		controller.setVMRegValue(VMRegIndexes.SP, Utils.INITIAL_REG_VAL_STR);
+		controller.setRMRegValue(Paging.getRMRegIndex(VMRegIndexes.SP), Utils.INITIAL_REG_VAL_STR);
+//        setRegValue(VMRegIndexes.SP, sp);
 //        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
@@ -116,6 +118,12 @@ public class VM {
 		pc = value;
         setRegValue(VMRegIndexes.PC, pc);
 //		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
+	}
+
+	private void resetPC() {
+		pc = (byte) 0;
+		controller.setVMRegValue(VMRegIndexes.PC, Utils.INITIAL_REG_VAL_STR);
+		controller.setRMRegValue(Paging.getRMRegIndex(VMRegIndexes.PC), Utils.INITIAL_REG_VAL_STR);
 	}
 
 	public void setRegValue(byte register, Short value) {

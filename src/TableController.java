@@ -281,7 +281,12 @@ public class TableController implements Initializable {
         if (registerIndex < 0 || registerIndex > 6)
             return false;
 
-        realMachine.setReg(registerIndex, Utils.byteArrayToShort(value.getBytes()));
+        if (value.equals("0000") || value.equals("0")) {
+            realMachine.setReg(registerIndex, (short) 0);
+        } else {
+            realMachine.setReg(registerIndex, Utils.byteArrayToShort(value.getBytes()));
+        }
+
         getRMRegValues().get(registerIndex).setRegisterValue(value);
         return true;
     }
@@ -391,8 +396,6 @@ public class TableController implements Initializable {
                 .get(RM.RMRegIndexes.SP).getRegisterValue());
         setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 2, getRMRegValues()
                 .get(RM.RMRegIndexes.PC).getRegisterValue());
-
-
 
         process.clear();
 
