@@ -64,6 +64,8 @@ public class TableController implements Initializable {
     @FXML private Label previousLine;
     @FXML private Label currentLine;
     @FXML public TextField filename;
+    @FXML public TextField inputField;
+    @FXML public TextField outputField;
 
     private final RM realMachine = new RM(this);
     private VM process;
@@ -362,6 +364,20 @@ public class TableController implements Initializable {
 //
 //    }
 
+    public void getCommand() {
+        setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 1));
+        setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
+        //copy data from inputfield into static RM IO Index line;
+        executeInterrupt();
+    }
+
+    public void putCommand() {
+        setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 2));
+        setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
+        //copy data from VM output line into static RM IO Index line;
+        executeInterrupt();
+    }
+
     public void halt() {
         setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 3));
         setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
@@ -380,7 +396,7 @@ public class TableController implements Initializable {
 
         process.clear();
 
-        String reg = getRMRegValues().get(RM.RMRegIndexes.SI).getRegisterName();
+        String reg = getRMRegValues().get(RM.RMRegIndexes.SI).getRegisterValue();
         int si = Integer.parseInt(reg);
 
         switch(si) {

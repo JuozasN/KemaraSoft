@@ -7,7 +7,6 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -167,7 +166,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <TableView fx:id="VMMemView" maxWidth="1.7976931348623157E308">
+                  <TableView fx:id="VMMemView" maxWidth="1.7976931348623157E308" prefHeight="399.0" prefWidth="937.0">
                      <columns>
                         <TableColumn fx:id="VMLineNo" prefWidth="55.0" />
                         <TableColumn fx:id="VMCol0" prefWidth="55.0" text="0" />
@@ -193,8 +192,8 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextArea prefHeight="200.0" prefWidth="200.0" />
-                        <TextField />
+                        <TextField fx:id="inputField" alignment="TOP_LEFT" prefHeight="200.0" prefWidth="200.0" promptText="Input" />
+                        <TextField fx:id="outputField" alignment="TOP_LEFT" prefHeight="200.0" prefWidth="200.0" promptText="Output" />
                      </children>
                   </HBox>
                </children>
