@@ -8,7 +8,7 @@ public class Word {
 		    this.value = 0;
 	}
 
-    public Word(){
+    public Word() {
         this(0);
     }
 

@@ -4,7 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class VM {
-    public final class VMRegIndexes {
+
+	public final class VMRegIndexes {
         public static final byte PC = 1;
         public static final byte SP = 0;
     }
@@ -31,6 +32,24 @@ public class VM {
     public Block[] getMem() {
         return mem;
     }
+
+	public void clear() {
+		setRegValue(VMRegIndexes.SP, (short) 0);
+		setRegValue(VMRegIndexes.PC, (short) 0);
+
+		for(byte i = 0; i < mem.length; ++i)
+			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
+				setUITableValues(i, j, "0000");
+	}
+
+	public void load() {
+		setRegValue(VMRegIndexes.SP, sp);
+		setRegValue(VMRegIndexes.PC, pc);
+
+		for(byte i = 0; i < mem.length; ++i)
+			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
+				setUITableValues(i, j, mem[i].getWordString(j));
+	}
 
     public void reset() {
         resetRegisters();
@@ -182,7 +201,8 @@ public class VM {
 			case "JMP": jmp(4,read()); break;
 			case "GET": get(); break;
 			case "PUT": put(); break;
-			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
+			case "HALT": controller.halt(); break;
+//			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
 			default:
 				throw new ProgramInterrupt(2, "Invalid command: " + command);
 		}

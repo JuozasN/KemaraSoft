@@ -89,7 +89,7 @@ public class RM {
         controller.setRMRegValue(RMRegIndexes.PTR, Utils.shortToHexString(ptr));
     }
 
-    private void resetPTR() {
+    public void resetPTR() {
         for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
             setValue(0, (short) (ptr + i));
 
