@@ -21,11 +21,17 @@ public class Word {
 	}
 
 	public String getValueHexString() {
-		return Utils.bytesToHexString(Utils.intToByteArray(value));
+		if (this.value == 0)
+			return "0000";
+		else
+			return Utils.bytesToHexString(Utils.intToByteArray(value));
 	}
 
 	public String getStringValue() {
-		return Utils.bytesToString(Utils.intToByteArray(value));
+		if (this.value == 0)
+			return "0000";
+		else
+			return Utils.bytesToString(Utils.intToByteArray(value));
 	}
 
 	public void setValue(int value) {

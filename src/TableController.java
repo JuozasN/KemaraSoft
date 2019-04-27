@@ -176,7 +176,13 @@ public class TableController implements Initializable {
     }
 
     private void getInterrupt(){
-        currentLine.setText(inputText);
+        try {
+            setIOBlock(Block.getBlockFromString(inputText));
+//        IOBlock.setWords(inputText);
+        }catch(ProgramInterrupt e){
+            realMachine.setPI(e.getIntCode());
+            programInterrupt(e.getIntCode());
+        }
         inputConfirm.setDisable(true);
         inputField.setDisable(true);
     }
@@ -390,7 +396,7 @@ public class TableController implements Initializable {
     // block - memory block number (hex)
     // word - block word number (hex)
     public boolean setRMMemValue(byte block, byte word, String value) {
-        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
+        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 + 2 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
         RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
@@ -398,7 +404,7 @@ public class TableController implements Initializable {
     }
 
     public boolean setRMMemValue(byte block, byte word, Short value) {
-        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
+        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 + 2 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
         RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
@@ -472,7 +478,10 @@ public class TableController implements Initializable {
 //    }
 
     private void setIOBlock(Block block) {
-
+        this.IOBlock.setWords(block.getWords());
+        for (byte i = 0; i < Utils.BLOCK_WORD_COUNT; ++i) {
+            setRMMemValue(IO_BLOCK_INDEX, i, block.getWord(i).getStringValue());
+        }
     }
 
     private void setIOBlock(int[] block) {

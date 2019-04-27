@@ -17,6 +17,24 @@ public class Block {
 			words[i] = new Word(block[i]);
 	}
 
+	public static Block getBlockFromString(String text) throws ProgramInterrupt{
+		if (text == null) {
+			return new Block();
+		}
+
+		List<String> words = Arrays.asList(text.split("(?<=\\G....)"));
+		if (words.size() > Utils.BLOCK_WORD_COUNT) {
+			throw new ProgramInterrupt((byte)4, "OVERFLOW!@!");
+		}
+
+		Block block = new Block();
+		for (int i = 0; i < words.size(); ++i) {
+			block.setWord(i, words.get(i));
+		}
+
+		return block;
+	}
+
 	public Word[] getWords(){
 	    return words;
 	}
