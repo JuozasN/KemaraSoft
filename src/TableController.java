@@ -283,15 +283,17 @@ public class TableController implements Initializable {
     }
 
     public void programInterrupt(byte intCode){
+        String alertText = "";
         switch(intCode){
-            case 1: break;  // INVALID ADDRESS
-            case 2: break;  // INVALID OP CODE
-            case 3: break;  // INVALID ASSIGN
-            case 4: break;  // OVERFLOW
+            case 1: alertText = "INVALID ADDRESS"; break;  // INVALID ADDRESS
+            case 2: alertText = "INVALID OP CODE"; break;  // INVALID OP CODE
+            case 3: alertText = "INVALID ASSIGN"; break;  // INVALID ASSIGN
+            case 4: alertText = "OVERFLOW"; break;  // OVERFLOW
             default:
                 System.err.println("Internal error in programInterrupt()");
                 System.exit(0);
         }
+        popAlert("Program Interrupt. Reason: " + alertText); System.exit(0);
     }
 
     public void systemInterrupt(byte intCode){
@@ -503,6 +505,14 @@ public class TableController implements Initializable {
         setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 3));
         setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
         executeInterrupt();
+    }
+
+    public void popAlert(String alertText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, alertText, ButtonType.OK);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK){
+            alert.close();
+        }
     }
 
     private void executeInterrupt() {
