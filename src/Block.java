@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Block {
 	private Word[] words;
 	
@@ -25,17 +29,33 @@ public class Block {
 		return words[index].toString();
 	}
 
+	public void setWords(String text) {
+		if (text == null) {
+			return;
+		}
+
+		List<String> words = Arrays.asList(text.split("(?<=\\G....)"));
+		if (words.size() > Utils.BLOCK_WORD_COUNT) {
+			return;
+		}
+
+		for (int i = 0; i < words.size(); ++i) {
+			setWord(i, words.get(i));
+		}
+	}
+
 	public void setWords(Word[] words){
 	    System.arraycopy(words, 0, this.words, 0, words.length);
 	}
 
 	public void setWords(int[] words){
-		if (words == null || words.length > 16) {
+		if (words == null || words.length > Utils.BLOCK_WORD_COUNT) {
 			return;
 		}
 
 		for(int i = 0; i < words.length; ++i) {
-			this.words[i].setValue(words[i]);
+			setWord(i, words[i]);
+//			this.words[i].setValue(words[i]);
 		}
 	}
 
@@ -44,11 +64,15 @@ public class Block {
 	}
 
 	public void setWord(int index, Word word) {
-		words[index].setValue(word.getValue());
+		setWord(index, word.getValue());
 	}
 
 	public void setWord(int index, byte[] word) {
 		words[index].setValue(word);
+	}
+
+	public void setWord(int index, String word) {
+		setWord(index, word.getBytes());
 	}
 	
 	public String toString() {
