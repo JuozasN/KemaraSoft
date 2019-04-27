@@ -68,16 +68,18 @@ public class VM {
                 setValue(0, i, j);
     }
 
-    public static short strToShort(String str){
-        if(str.length() > 2); // Invalid address interrupt here
+    public static short strToShort(String str) throws ProgramInterrupt{
+        if(str.length() > 2)
+        	throw new ProgramInterrupt((byte)1, "Invalid address");
         if(str.length() == 1)
             str = "0" + str;
         return((short) ((Character.digit(str.charAt(0), 16) << 4)
                 + Character.digit(str.charAt(1), 16)));
     }
 
-    public static byte strToByte(String str){
-        if(str.length() > 2); // Invalid address interrupt here
+    public static byte strToByte(String str) throws ProgramInterrupt{
+        if(str.length() > 2)
+			throw new ProgramInterrupt((byte)1, "Invalid address");
         if(str.length() == 1)
             str = "0" + str;
         return((byte) ((Character.digit(str.charAt(0), 16) << 4)
@@ -173,7 +175,7 @@ public class VM {
                 String[] strArray = line.split(" ");
                 for (String str : strArray) {
                     if (str.length() > 4) {
-						throw new ProgramInterrupt(2, "Overflow");
+						throw new ProgramInterrupt((byte)4, "Overflow");
                     }
                     setValue(str.getBytes(), (short) adr);
                     adr++;
@@ -212,17 +214,17 @@ public class VM {
 			case "HALT": controller.halt(); break;
 //			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
 			default:
-				throw new ProgramInterrupt(2, "Invalid command: " + command);
+				throw new ProgramInterrupt((byte)2, "Invalid command: " + command);
 		}
 		//System.out.format("Command %s executed successfully\n", command);
 	}
 	
 	public void get() throws SystemInterrupt{
-		throw new SystemInterrupt(1, "GET");
+		throw new SystemInterrupt((byte)1, "GET");
 	}
 	
 	public void put() throws SystemInterrupt{
-		throw new SystemInterrupt(2, "PUT");
+		throw new SystemInterrupt((byte)2, "PUT");
 	}
 	
 	public String read(){
@@ -231,7 +233,7 @@ public class VM {
 		return value;
 	}
 	
-	public void push(String strAdr){
+	public void push(String strAdr) throws ProgramInterrupt{
 		Short adr = strToShort(strAdr);
 		Word value = getValue(adr);
 		setValue(value.getValue(), sp);
@@ -249,13 +251,13 @@ public class VM {
 		return getValue(sp);
 	}
 	
-	public void popm(String strAdr){
+	public void popm(String strAdr) throws ProgramInterrupt{
 		Short adr = strToShort(strAdr);
 		Word value = pop();
 		setValue(value.getValue(), adr);
 	}
 	
-	public void top(String strAdr){
+	public void top(String strAdr) throws ProgramInterrupt{
 		popm(strAdr);
 		incrementSP();
 	}
@@ -280,7 +282,7 @@ public class VM {
 			}
 			pshc(String.valueOf(result));
 		} catch(NumberFormatException e){
-			throw new ProgramInterrupt(3, "Invalid assign(Type missmatch)");
+			throw new ProgramInterrupt((byte)3, "Invalid assign(Type missmatch)");
 		}
 	}
 	
@@ -292,7 +294,7 @@ public class VM {
 		else pshc("-1");
 	}
 	
-	public void jmp(int cond, String strAdr){
+	public void jmp(int cond, String strAdr) throws ProgramInterrupt{
 		int val = Integer.parseInt(pop().toString());
 		boolean doJump = false;
 		switch(cond){

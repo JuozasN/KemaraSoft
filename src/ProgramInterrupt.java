@@ -1,10 +1,10 @@
 public class ProgramInterrupt extends Exception{
-    int intCode;
+    byte intCode;
 
-    ProgramInterrupt(int intCode, String message){
+    ProgramInterrupt(byte intCode, String message){
         super(message);
         this.intCode = intCode;
     }
 
-    public int getIntCode(){return intCode;}
+    public byte getIntCode(){return this.intCode;}
 }
