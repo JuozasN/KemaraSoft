@@ -6,6 +6,13 @@ public class Block {
 		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
 			words[i] = new Word();
 	}
+
+	public Block(int[] block){
+		words = new Word[Utils.BLOCK_WORD_COUNT];
+		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
+			words[i] = new Word(block[i]);
+	}
+
 	public Word[] getWords(){
 	    return words;
 	}
@@ -22,11 +29,25 @@ public class Block {
 	    System.arraycopy(words, 0, this.words, 0, words.length);
 	}
 
-	public void setWord(int word, int index){
+	public void setWords(int[] words){
+		if (words == null || words.length > 16) {
+			return;
+		}
+
+		for(int i = 0; i < words.length; ++i) {
+			this.words[i].setValue(words[i]);
+		}
+	}
+
+	public void setWord(int index, int word){
 		words[index].setValue(word);
 	}
 
-	public void setWord(byte[] word, int index) {
+	public void setWord(int index, Word word) {
+		words[index].setValue(word.getValue());
+	}
+
+	public void setWord(int index, byte[] word) {
 		words[index].setValue(word);
 	}
 	

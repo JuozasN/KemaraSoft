@@ -4,7 +4,8 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class VM {
-    public final class VMRegIndexes {
+
+	public final class VMRegIndexes {
         public static final byte PC = 1;
         public static final byte SP = 0;
     }
@@ -32,6 +33,24 @@ public class VM {
         return mem;
     }
 
+	public void clear() {
+		setRegValue(VMRegIndexes.SP, (short) 0);
+		setRegValue(VMRegIndexes.PC, (short) 0);
+
+		for(byte i = 0; i < mem.length; ++i)
+			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
+				setUITableValues(i, j, "0000");
+	}
+
+	public void load() {
+		setRegValue(VMRegIndexes.SP, sp);
+		setRegValue(VMRegIndexes.PC, pc);
+
+		for(byte i = 0; i < mem.length; ++i)
+			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
+				setUITableValues(i, j, mem[i].getWordString(j));
+	}
+
     public void reset() {
         resetRegisters();
         resetMemory();
@@ -39,7 +58,7 @@ public class VM {
 
     private void resetRegisters() {
         resetSP();
-        setPC((short) 0);
+        resetPC();
     }
 
     private void resetMemory() {
@@ -89,7 +108,9 @@ public class VM {
 
 	private void resetSP() {
         sp = (byte) 0;
-        setRegValue(VMRegIndexes.SP, sp);
+		controller.setVMRegValue(VMRegIndexes.SP, Utils.INITIAL_REG_VAL_STR);
+		controller.setRMRegValue(Paging.getRMRegIndex(VMRegIndexes.SP), Utils.INITIAL_REG_VAL_STR);
+//        setRegValue(VMRegIndexes.SP, sp);
 //        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
@@ -99,6 +120,12 @@ public class VM {
 //		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
 	}
 
+	private void resetPC() {
+		pc = (byte) 0;
+		controller.setVMRegValue(VMRegIndexes.PC, Utils.INITIAL_REG_VAL_STR);
+		controller.setRMRegValue(Paging.getRMRegIndex(VMRegIndexes.PC), Utils.INITIAL_REG_VAL_STR);
+	}
+
 	public void setRegValue(byte register, Short value) {
 	    controller.setVMRegValue(register, Utils.shortToHexString(value));
 	    // use paging mechanism to change RM registers
@@ -106,7 +133,7 @@ public class VM {
     }
 
     private void setValue(int value, byte block, byte word) {
-        mem[block].setWord(value, word);
+        mem[block].setWord(word, value);
 //        setUITableValues(block, word, Utils.intToHexString(value));
         setUITableValues(block, word, mem[block].getWordString(word));
     }
@@ -120,7 +147,7 @@ public class VM {
 	public void setValue(byte[] value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
-        mem[block].setWord(value, word);
+        mem[block].setWord(word, value);
         setUITableValues(block, word, mem[block].getWordString(word));
 	}
 
@@ -182,7 +209,8 @@ public class VM {
 			case "JMP": jmp(4,read()); break;
 			case "GET": get(); break;
 			case "PUT": put(); break;
-			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
+			case "HALT": controller.halt(); break;
+//			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
 			default:
 				throw new ProgramInterrupt(2, "Invalid command: " + command);
 		}

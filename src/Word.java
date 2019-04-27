@@ -8,7 +8,7 @@ public class Word {
 		    this.value = 0;
 	}
 
-    public Word(){
+    public Word() {
         this(0);
     }
 
@@ -31,6 +31,7 @@ public class Word {
 	public void setValue(int value) {
 	    this.value = value;
     }
+
 //	public void setValue(byte[] value){
 //		resetValue(); System.arraycopy(value, 0, this.value, 0, value.length);
 //	}
