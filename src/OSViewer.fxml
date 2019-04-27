@@ -192,9 +192,9 @@
                   </TableView>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="inputField" alignment="TOP_LEFT" prefHeight="200.0" prefWidth="200.0" promptText="Input" />
-                        <TextField fx:id="outputField" alignment="TOP_LEFT" prefHeight="200.0" prefWidth="200.0" promptText="Output" />
-                        <Button fx:id="inputConfirm" mnemonicParsing="false" text="Enter" />
+                        <TextField fx:id="inputField" alignment="TOP_LEFT" prefHeight="200.0" prefWidth="200.0" promptText="Input" disable="true" />
+                        <TextField fx:id="outputField" alignment="TOP_LEFT" prefHeight="200.0" prefWidth="200.0" promptText="Output" disable="true" />
+                        <Button fx:id="inputConfirm" mnemonicParsing="false" onAction="#inputConfirmAction" text="Enter" disable="true" />
                      </children>
                   </HBox>
                </children>

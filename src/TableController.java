@@ -145,7 +145,10 @@ public class TableController implements Initializable {
     }
 
     @FXML private void inputConfirmAction(javafx.event.ActionEvent event){
-        inputText = inputField.getText();
+        if (realMachine.getSI() == 1){
+            inputText = inputField.getText();
+            this.getInterrupt();
+        }
     }
 
     @Override
@@ -173,14 +176,9 @@ public class TableController implements Initializable {
     }
 
     private void getInterrupt(){
-        while(true){
-            if (!inputText.isEmpty()) {
-                currentLine.setText("ivede kazka");
-                break;
-                //kopijuojam inputText i RM IO bloka.
-                //atstatom VM. Kopijuojam is RM IO bloko i VM Input bloka.
-            }
-        }
+        currentLine.setText(inputText);
+        inputConfirm.setDisable(true);
+        inputField.setDisable(true);
     }
 
     private void putInterrupt(){
@@ -298,7 +296,7 @@ public class TableController implements Initializable {
 
     public void systemInterrupt(byte intCode){
         switch(intCode){
-            case 1: getInterrupt(); break;
+            case 1: inputConfirm.setDisable(false); inputField.setDisable(false);break;
             case 2: putInterrupt(); break;
             case 3: break; // HALT
             default:
