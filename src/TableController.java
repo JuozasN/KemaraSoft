@@ -390,20 +390,21 @@ public class TableController implements Initializable {
         return indexes;
     }
 
-
-
     private void setProcessStateBlock() {
         Short ptr = realMachine.getPTR();
         this.processStateBlock.setWord(PROCESS_STATE_PTR_INDEX, ptr);
         setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PTR_INDEX, ptr);
+        setRMRegValue(RM.RMRegIndexes.PTR, (short) 0);
 
         Short sp = realMachine.getSP();
         this.processStateBlock.setWord(PROCESS_STATE_SP_INDEX, sp);
         setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_SP_INDEX, sp);
+        setRMRegValue(RM.RMRegIndexes.SP, (short) 0);
 
         Short pc = realMachine.getPC();
         this.processStateBlock.setWord(PROCESS_STATE_PC_INDEX, pc);
         setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PC_INDEX, pc);
+        setRMRegValue(RM.RMRegIndexes.PC, (short) 0);
     }
 
     // Returns process state block object and removes its data from kernel memory
@@ -449,13 +450,7 @@ public class TableController implements Initializable {
     }
 
     private void executeInterrupt() {
-//        setRMMemValue(Utils.KERNEL_PROCESS_STATE_BLOCK_INDEX, (byte) 0, getRMRegValues()
-//                .get(RM.RMRegIndexes.PTR).getRegisterValue());
-//        setRMMemValue(Utils.KERNEL_PROCESS_STATE_BLOCK_INDEX, (byte) 1, getRMRegValues()
-//                .get(RM.RMRegIndexes.SP).getRegisterValue());
-//        setRMMemValue(Utils.KERNEL_PROCESS_STATE_BLOCK_INDEX, (byte) 2, getRMRegValues()
-//                .get(RM.RMRegIndexes.PC).getRegisterValue());
-
+        // save process state and reset RM registers
         setProcessStateBlock();
         process.clear();
 
@@ -471,9 +466,10 @@ public class TableController implements Initializable {
                 break;
             case 3:
                 // halt
-                realMachine.resetPTR();
-                process.reset();
-                return;
+                // realMachine.resetPTR();
+                // process.reset();
+                //return;
+                break;
         }
 
         process.load();
