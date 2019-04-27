@@ -36,6 +36,10 @@ public class Word {
 //		resetValue(); System.arraycopy(value, 0, this.value, 0, value.length);
 //	}
 
+	public void setValue(String value) {
+		this.value = Utils.byteArrayToInt(value.getBytes());
+	}
+
 	public void setValue(byte[] value) {
 		this.value = Utils.byteArrayToInt(value);
 	}

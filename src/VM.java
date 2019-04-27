@@ -39,7 +39,8 @@ public class VM {
 
 		for(byte i = 0; i < mem.length; ++i)
 			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
-				setUITableValues(i, j, "0000");
+				controller.setVMMemValue(i, j, "0000");
+				//setUITableValues(i, j, "0000");
 	}
 
 	public void load() {
@@ -48,7 +49,8 @@ public class VM {
 
 		for(byte i = 0; i < mem.length; ++i)
 			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
-				setUITableValues(i, j, mem[i].getWordString(j));
+				controller.setVMMemValue(i, j, mem[i].getWordString(j));
+//				setUITableValues(i, j, mem[i].getWordString(j));
 	}
 
     public void reset() {
