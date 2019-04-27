@@ -102,10 +102,16 @@ public class TableController implements Initializable {
         previousLine.setText(currentLine.getText());
         try {
             process.exec();
+            realMachine.decrementTI();
         } catch(SystemInterrupt SI){
-
+            realMachine.setSI(SI.getIntCode());
+            realMachine.toggleMode();
         } catch(ProgramInterrupt PI){
-
+            realMachine.setPI(PI.getIntCode());
+            realMachine.toggleMode();
+        } finally {
+            test();
+            realMachine.toggleMode();
         }
         currentLine.setText(getCommandString(process));
     }
@@ -247,6 +253,38 @@ public class TableController implements Initializable {
         return VMMemView.getItems();
     }
 
+
+    public void test(){
+        if(realMachine.getPI() != 0)
+            programInterrupt(realMachine.getPI());
+        if(realMachine.getSI() != 0)
+            systemInterrupt(realMachine.getSI());
+        if(realMachine.getTI() == 0);
+            // HANDLE TIMER INTERRUPT
+    }
+
+    public void programInterrupt(byte intCode){
+        switch(intCode){
+            case 1: break;  // INVALID ADDRESS
+            case 2: break;  // INVALID OP CODE
+            case 3: break;  // INVALID ASSIGN
+            case 4: break;  // OVERFLOW
+            default:
+                System.err.println("Internal error in programInterrupt()");
+                System.exit(0);
+        }
+    }
+
+    public void systemInterrupt(byte intCode){
+        switch(intCode){
+            case 1: getInterrupt(); break;
+            case 2: putInterrupt(); break;
+            case 3: break; // HALT
+            default:
+                System.err.println("Internal error in systemInterrupt()");
+                System.exit(0);
+        }
+    }
 
     public boolean checkFilenameField(){
         if(filename.getText().isEmpty()){
