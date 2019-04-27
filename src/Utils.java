@@ -11,8 +11,6 @@ public class Utils {
     public static final byte UM_BLOCK_COUNT = 0x40;          // user memory block count
     public static final byte BLOCK_WORD_COUNT = 0x10;        // word count in block
     public static final byte WORD_BYTE_COUNT = 0x4;               // byte count in word
-    public static final byte KERNEL_IO_BLOCK_INDEX = 0x40;
-    public static final byte KERNEL_STACK_BLOCK_INDEX = 0x41;
     public static String INITIAL_REG_VAL_STR = "0000";
     public static final String TASK_BEGIN = "$BGN";
     public static final String TASK_END = "$END";

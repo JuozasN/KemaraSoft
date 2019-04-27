@@ -67,8 +67,16 @@ public class TableController implements Initializable {
     @FXML public TextField inputField;
     @FXML public TextField outputField;
 
+    public static final byte IO_BLOCK_INDEX = 0x40;
+    public static final byte PROCESS_STATE_BLOCK_INDEX = 0x41;
+    private static final byte PROCESS_STATE_PTR_INDEX = 0;
+    private static final byte PROCESS_STATE_SP_INDEX = 1;
+    private static final byte PROCESS_STATE_PC_INDEX = 2;
+
     private final RM realMachine = new RM(this);
     private VM process;
+    private Block IOBlock = new Block();
+    private Block processStateBlock = new Block();
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event) {
         previousLine.setText("We Starting!");
@@ -291,6 +299,10 @@ public class TableController implements Initializable {
         return true;
     }
 
+    public boolean setRMRegValue(byte registerIndex, Short value) {
+        return setRMRegValue(registerIndex, Utils.shortToHexString(value));
+    }
+
     private boolean setRMRegValuePaging(byte vmRegInd, String value) {
         byte rmRegIndex = Paging.getRMRegIndex(vmRegInd);
         if (rmRegIndex == -1)
@@ -311,6 +323,11 @@ public class TableController implements Initializable {
 //        return setRMRegValuePaging(registerIndex, value);
     }
 
+    public boolean setVMRegValue(byte registerIndex, Short value) {
+        return setVMRegValue(registerIndex, Utils.shortToHexString(value));
+//        return setRMRegValuePaging(registerIndex, value);
+    }
+
     // block - memory block number (hex)
     // word - block word number (hex)
     public boolean setRMMemValue(byte block, byte word, String value) {
@@ -319,6 +336,14 @@ public class TableController implements Initializable {
 
         RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
         return rmMemoryBlock.set(word, value);
+    }
+
+    public boolean setRMMemValue(byte block, byte word, Short value) {
+        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
+            return false;
+
+        RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
+        return rmMemoryBlock.set(word, Utils.shortToHexString(value));
     }
 
     // uses paging mechanism
@@ -365,7 +390,41 @@ public class TableController implements Initializable {
         return indexes;
     }
 
-//    public void processInterrupt() {
+
+
+    private void setProcessStateBlock() {
+        Short ptr = realMachine.getPTR();
+        this.processStateBlock.setWord(PROCESS_STATE_PTR_INDEX, ptr);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PTR_INDEX, ptr);
+
+        Short sp = realMachine.getSP();
+        this.processStateBlock.setWord(PROCESS_STATE_SP_INDEX, sp);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_SP_INDEX, sp);
+
+        Short pc = realMachine.getPC();
+        this.processStateBlock.setWord(PROCESS_STATE_PC_INDEX, pc);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PC_INDEX, pc);
+    }
+
+    // Returns process state block object and removes its data from kernel memory
+//    private Block getProcessStateBlock() {
+//
+//    }
+
+    private void setIOBlock(Block block) {
+
+    }
+
+    private void setIOBlock(int[] block) {
+        if (block == null || block.length > 16) {
+            return;
+        }
+
+        this.setIOBlock(new Block(block));
+    }
+
+    // Returns IO block object and removes its data from kernel memory
+//    private Block getIOBlock() {
 //
 //    }
 
@@ -390,13 +449,14 @@ public class TableController implements Initializable {
     }
 
     private void executeInterrupt() {
-        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 0, getRMRegValues()
-                .get(RM.RMRegIndexes.PTR).getRegisterValue());
-        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 1, getRMRegValues()
-                .get(RM.RMRegIndexes.SP).getRegisterValue());
-        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 2, getRMRegValues()
-                .get(RM.RMRegIndexes.PC).getRegisterValue());
+//        setRMMemValue(Utils.KERNEL_PROCESS_STATE_BLOCK_INDEX, (byte) 0, getRMRegValues()
+//                .get(RM.RMRegIndexes.PTR).getRegisterValue());
+//        setRMMemValue(Utils.KERNEL_PROCESS_STATE_BLOCK_INDEX, (byte) 1, getRMRegValues()
+//                .get(RM.RMRegIndexes.SP).getRegisterValue());
+//        setRMMemValue(Utils.KERNEL_PROCESS_STATE_BLOCK_INDEX, (byte) 2, getRMRegValues()
+//                .get(RM.RMRegIndexes.PC).getRegisterValue());
 
+        setProcessStateBlock();
         process.clear();
 
         String reg = getRMRegValues().get(RM.RMRegIndexes.SI).getRegisterValue();

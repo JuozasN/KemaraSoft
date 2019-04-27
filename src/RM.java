@@ -89,11 +89,19 @@ public class RM {
         controller.setRMRegValue(RMRegIndexes.PTR, Utils.shortToHexString(ptr));
     }
 
+    public Short getPTR() {
+        return this.ptr;
+    }
+
     public void resetPTR() {
         for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
             setValue(0, (short) (ptr + i));
 
         setPTR((short) 0);
+    }
+
+    public Short getSP() {
+        return this.sp;
     }
 
     public void incrementSP(){
@@ -113,6 +121,10 @@ public class RM {
 
     private void setSP(Short value) {
         sp = value;
+    }
+
+    public Short getPC() {
+        return this.pc;
     }
 
     public void setPC(Short value){
@@ -165,12 +177,12 @@ public class RM {
     public void setValue(Integer value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
-        um[block].setWord(value, word);
+        um[block].setWord(word, value);
         controller.setRMMemValue(block, word, Utils.intToHexString(value));
     }
 
     private void setValue(Integer value, byte block, byte word) {
-        um[block].setWord(value, word);
+        um[block].setWord(word, value);
         controller.setRMMemValue(block, word, Utils.intToHexString(value));
     }
 

@@ -133,7 +133,7 @@ public class VM {
     }
 
     private void setValue(int value, byte block, byte word) {
-        mem[block].setWord(value, word);
+        mem[block].setWord(word, value);
 //        setUITableValues(block, word, Utils.intToHexString(value));
         setUITableValues(block, word, mem[block].getWordString(word));
     }
@@ -147,7 +147,7 @@ public class VM {
 	public void setValue(byte[] value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
-        mem[block].setWord(value, word);
+        mem[block].setWord(word, value);
         setUITableValues(block, word, mem[block].getWordString(word));
 	}
 
