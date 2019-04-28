@@ -17,6 +17,12 @@ public class Block {
 			words[i] = new Word(block[i]);
 	}
 
+	public Block(Block block){
+		words = new Word[Utils.BLOCK_WORD_COUNT];
+		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
+			words[i] = new Word(block.getWord(i));
+	}
+
 	public static Block getBlockFromString(String text) throws ProgramInterrupt{
 		if (text == null) {
 			return new Block();

@@ -156,7 +156,32 @@ public class RM {
     public byte getSI(){return this.si;}
     public byte getTI(){return this.ti;}
 
+    public Short getReg(byte regIndex) {
+        if (regIndex < 0 || regIndex > 5)
+            return -1;
+
+        switch(regIndex) {
+            case RMRegIndexes.PTR:
+                return getPTR();
+            case RMRegIndexes.SP:
+                return getSP();
+            case RMRegIndexes.PC:
+                return getPC();
+            case RMRegIndexes.PI:
+                return (short) getPI();
+            case RMRegIndexes.SI:
+                return (short) getSI();
+            case RMRegIndexes.TI:
+                return (short) getTI();
+        }
+
+        return -1;
+    }
+
     public void setReg(byte regIndex, Short value) {
+        if (regIndex < 0 || regIndex > 5)
+            return;
+
         switch(regIndex) {
             //case RMRegIndexes.PTR:
             //    setPTR(value);

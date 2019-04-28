@@ -159,6 +159,10 @@ public class TableController implements Initializable {
         initializeVMMemTable();
     }
 
+    /**
+     * UI INITIALIZATION METHODS
+     */
+
     private void initializeRMRegTable() {
         RMRegisterNameColumn.setCellValueFactory(new PropertyValueFactory<>("registerName"));
         RMRegisterValueColumn.setCellValueFactory(new PropertyValueFactory<>("registerValue"));
@@ -173,22 +177,6 @@ public class TableController implements Initializable {
         tableValues.add(new RMRegister("MODE"));
 
         RMRegView.setItems(tableValues);
-    }
-
-    private void getInterrupt(){
-        try {
-            setIOBlock(Block.getBlockFromString(inputText));
-//        IOBlock.setWords(inputText);
-        }catch(ProgramInterrupt e){
-            realMachine.setPI(e.getIntCode());
-            programInterrupt(e.getIntCode());
-        }
-        inputConfirm.setDisable(true);
-        inputField.setDisable(true);
-    }
-
-    private void putInterrupt(){
-        //kopijuojam
     }
 
     private void initializeVMRegTable() {
@@ -258,6 +246,9 @@ public class TableController implements Initializable {
         VMMemView.setItems(tableValues);
     }
 
+    /**
+     * GETTERS AND SETTERS
+     */
     public RM getRealMachine() {
         return realMachine;
     }
@@ -278,40 +269,9 @@ public class TableController implements Initializable {
         return VMMemView.getItems();
     }
 
-
-    public void test(){
-        if(realMachine.getPI() != 0)
-            programInterrupt(realMachine.getPI());
-        if(realMachine.getSI() != 0)
-            systemInterrupt(realMachine.getSI());
-        if(realMachine.getTI() == 0);
-            // HANDLE TIMER INTERRUPT
-    }
-
-    public void programInterrupt(byte intCode){
-        String alertText = "";
-        switch(intCode){
-            case 1: alertText = "INVALID ADDRESS"; break;  // INVALID ADDRESS
-            case 2: alertText = "INVALID OP CODE"; break;  // INVALID OP CODE
-            case 3: alertText = "INVALID ASSIGN"; break;  // INVALID ASSIGN
-            case 4: alertText = "OVERFLOW"; break;  // OVERFLOW
-            default:
-                System.err.println("Internal error in programInterrupt()");
-                System.exit(0);
-        }
-        popAlert("Program Interrupt. Reason: " + alertText); System.exit(0);
-    }
-
-    public void systemInterrupt(byte intCode){
-        switch(intCode){
-            case 1: inputConfirm.setDisable(false); inputField.setDisable(false);break;
-            case 2: putInterrupt(); break;
-            case 3: break; // HALT
-            default:
-                System.err.println("Internal error in systemInterrupt()");
-                System.exit(0);
-        }
-    }
+    /**
+     * UI METHODS
+     */
 
     public boolean checkFilenameField(){
         if(filename.getText().isEmpty()){
@@ -342,6 +302,11 @@ public class TableController implements Initializable {
                 return(currCommand);
         }
     }
+
+    /**
+     * SET REAL MACHINE AND VIRTUAL MACHINE REGISTERS
+     */
+
     // registerIndex:
     // [0] -> PTR
     // [1] -> SP
@@ -393,6 +358,10 @@ public class TableController implements Initializable {
 //        return setRMRegValuePaging(registerIndex, value);
     }
 
+    /**
+     * SET REAL MACHINE AND VIRTUAL MACHINE MEMORY
+     */
+
     // block - memory block number (hex)
     // word - block word number (hex)
     public boolean setRMMemValue(byte block, byte word, String value) {
@@ -436,7 +405,10 @@ public class TableController implements Initializable {
         return vmMemoryBlock.set(word, value);
     }
 
-    // TODO: move to kernel?
+    /**
+     * RANDOM RM MEMORY ASSIGNMENT MECHANISM
+     */
+
     public void assignRMMemoryBlocksForVM() {
         byte pagingBlockIndex = assignRMMemoryBlock();
         Byte[] memBlocks = assignRMMemoryBlocks(Utils.VM_MEM_BLOCK_COUNT);
@@ -455,63 +427,89 @@ public class TableController implements Initializable {
         return indexes;
     }
 
-    private void setProcessStateBlock() {
-        Short ptr = realMachine.getPTR();
-        this.processStateBlock.setWord(PROCESS_STATE_PTR_INDEX, ptr);
-        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PTR_INDEX, ptr);
-        setRMRegValue(RM.RMRegIndexes.PTR, (short) 0);
+    /**
+     * INPUT/OUTPUT AND PROCESS STATE MEMORY ASSIGNMENT
+     */
 
-        Short sp = realMachine.getSP();
-        this.processStateBlock.setWord(PROCESS_STATE_SP_INDEX, sp);
-        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_SP_INDEX, sp);
-        setRMRegValue(RM.RMRegIndexes.SP, (short) 0);
-
-        Short pc = realMachine.getPC();
-        this.processStateBlock.setWord(PROCESS_STATE_PC_INDEX, pc);
-        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PC_INDEX, pc);
-        setRMRegValue(RM.RMRegIndexes.PC, (short) 0);
+    // loads process state from registers to kernel memory
+    // real machine registers are set to zero after load
+    private void loadPSBlockToKernel() {
+        movePSRegToKernel(RM.RMRegIndexes.PTR, PROCESS_STATE_PTR_INDEX);
+        movePSRegToKernel(RM.RMRegIndexes.SP, PROCESS_STATE_SP_INDEX);
+        movePSRegToKernel(RM.RMRegIndexes.PC, PROCESS_STATE_PC_INDEX);
     }
 
-    // Returns process state block object and removes its data from kernel memory
-//    private Block getProcessStateBlock() {
-//
-//    }
+    // loads a register from real machine registers to PS block in kernel memory
+    // the real machine register is set to zero after load
+    private void movePSRegToKernel(Byte rmRegIndex, Byte psRegIndex) {
+        Short regValue = realMachine.getReg(rmRegIndex);
+        this.processStateBlock.setWord(psRegIndex, regValue);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, psRegIndex, regValue);
+        setRMRegValue(rmRegIndex, (short) 0);
+    }
 
-    private void setIOBlock(Block block) {
+    // loads process state from kernel memory to registers
+    // kernel memory PS block is set to zero after load
+    private Block loadPSBlockToRM() {
+        movePSRegToRM(RM.RMRegIndexes.PTR, PROCESS_STATE_PTR_INDEX);
+        movePSRegToRM(RM.RMRegIndexes.SP, PROCESS_STATE_SP_INDEX);
+        movePSRegToRM(RM.RMRegIndexes.PC, PROCESS_STATE_PC_INDEX);
+        return null;
+    }
+
+    // loads a register from PS block in kernel memory to real machine register
+    // the kernel memory word is set to zero after load
+    private void movePSRegToRM(Byte rmRegIndex, Byte psRegIndex) {
+        Short regValue = (short) this.processStateBlock.getWord(psRegIndex).getValue();
+        this.processStateBlock.setWord(psRegIndex, 0);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, psRegIndex, (short) 0);
+        setRMRegValue(rmRegIndex, regValue);
+    }
+
+    // loads a specified block of memory to kernel IO memory block
+    private void loadIOBlock(Block block) {
         this.IOBlock.setWords(block.getWords());
         for (byte i = 0; i < Utils.BLOCK_WORD_COUNT; ++i) {
             setRMMemValue(IO_BLOCK_INDEX, i, block.getWord(i).getStringValue());
         }
     }
 
-    private void setIOBlock(int[] block) {
+    private void loadIOBlock(int[] block) {
         if (block == null || block.length > 16) {
             return;
         }
 
-        this.setIOBlock(new Block(block));
+        loadIOBlock(new Block(block));
     }
 
-    // Returns IO block object and removes its data from kernel memory
-//    private Block getIOBlock() {
-//
-//    }
-
-    public void getCommand() {
-        setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 1));
-        setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
-        //copy data from inputfield into static RM IO Index line;
-        executeInterrupt();
+    // Returns IO memory block and removes its data from kernel memory
+    private Block getIOBlock() {
+        Block ioBlock = new Block(this.IOBlock);
+        loadIOBlock(new Block());
+        return ioBlock;
     }
 
-    public void putCommand() {
-        setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 2));
-        setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
-        //copy data from VM output line into static RM IO Index line;
-        executeInterrupt();
+    /**
+     * INTERRUPTS
+     */
+
+    private void getInterrupt(){
+        try {
+            loadIOBlock(Block.getBlockFromString(inputText));
+//        IOBlock.setWords(inputText);
+        }catch(ProgramInterrupt e){
+            realMachine.setPI(e.getIntCode());
+            programInterrupt(e.getIntCode());
+        }
+        inputConfirm.setDisable(true);
+        inputField.setDisable(true);
     }
 
-    public void halt() {
+    private void putInterrupt(){
+        //kopijuojam
+    }
+
+    public void haltInterrupt() {
         setRMRegValue(RM.RMRegIndexes.SI, Utils.shortToHexString((short) 3));
         setRMRegValue(RM.RMRegIndexes.MODE, Utils.shortToHexString((short) 1)); // 1 -> kernel mode
         executeInterrupt();
@@ -525,9 +523,43 @@ public class TableController implements Initializable {
         }
     }
 
+    public void test(){
+        if(realMachine.getPI() != 0)
+            programInterrupt(realMachine.getPI());
+        if(realMachine.getSI() != 0)
+            systemInterrupt(realMachine.getSI());
+        if(realMachine.getTI() == 0);
+        // HANDLE TIMER INTERRUPT
+    }
+
+    public void programInterrupt(byte intCode){
+        String alertText = "";
+        switch(intCode){
+            case 1: alertText = "INVALID ADDRESS"; break;  // INVALID ADDRESS
+            case 2: alertText = "INVALID OP CODE"; break;  // INVALID OP CODE
+            case 3: alertText = "INVALID ASSIGN"; break;  // INVALID ASSIGN
+            case 4: alertText = "OVERFLOW"; break;  // OVERFLOW
+            default:
+                System.err.println("Internal error in programInterrupt()");
+                System.exit(0);
+        }
+        popAlert("Program Interrupt. Reason: " + alertText); System.exit(0);
+    }
+
+    public void systemInterrupt(byte intCode){
+        switch(intCode){
+            case 1: inputConfirm.setDisable(false); inputField.setDisable(false);break;
+            case 2: putInterrupt(); break;
+            case 3: break; // HALT
+            default:
+                System.err.println("Internal error in systemInterrupt()");
+                System.exit(0);
+        }
+    }
+
     private void executeInterrupt() {
         // save process state and reset RM registers
-        setProcessStateBlock();
+        loadPSBlockToKernel();
         process.clear();
 
         String reg = getRMRegValues().get(RM.RMRegIndexes.SI).getRegisterValue();
@@ -541,7 +573,7 @@ public class TableController implements Initializable {
                 // get
                 break;
             case 3:
-                // halt
+                // haltInterrupt
                 // realMachine.resetPTR();
                 // process.reset();
                 //return;

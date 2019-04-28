@@ -8,6 +8,13 @@ public class Word {
 		    this.value = 0;
 	}
 
+	public Word(Word value) {
+		if (value != null)
+			this.value = value.getValue();
+		else
+		    this.value = 0;
+	}
+
     public Word() {
         this(0);
     }

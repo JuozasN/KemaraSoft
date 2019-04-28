@@ -213,7 +213,7 @@ public class VM {
 			case "JMP": jmp(4,read()); break;
 			case "GET": get(); break;
 			case "PUT": put(); break;
-			case "HALT": controller.halt(); break;
+			case "HALT": controller.haltInterrupt(); break;
 //			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
 			default:
 				throw new ProgramInterrupt((byte)2, "Invalid command: " + command);
