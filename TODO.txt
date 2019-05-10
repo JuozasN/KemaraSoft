@@ -25,3 +25,9 @@ NOTE:
 	kaip gaunamas String'as iš Word objekto
 
 // <<
+
+ND3:
+- kas atlaisvina "supervizorine atmintis" resursa? (laukia "loadprogram" procese).
+- ar tikrai reikia GetLine??
+- pabaigti resursu lentele
+- resursu/procesu aprasai (primityvu?).

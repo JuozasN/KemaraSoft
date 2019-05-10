@@ -1,10 +1,10 @@
 public class SystemInterrupt extends Exception{
-    int intCode;
+    byte intCode;
 
-    SystemInterrupt(int intCode, String message){
+    SystemInterrupt(byte intCode, String message){
         super(message);
         this.intCode = intCode;
     }
 
-    public int getIntCode(){return intCode;}
+    public byte getIntCode(){return this.intCode;}
 }

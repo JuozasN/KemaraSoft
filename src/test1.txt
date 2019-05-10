@@ -1,3 +1,2 @@
 PSHC 9
-POPM E1
-HALT
+GET

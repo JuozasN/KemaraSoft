@@ -60,6 +60,7 @@ public class TableController implements Initializable {
     @FXML private Button stepButton;
     @FXML private Button resetButton;
     @FXML private Button loadButton;
+    @FXML private Button inputConfirm;
 
     @FXML private Label previousLine;
     @FXML private Label currentLine;
@@ -67,8 +68,17 @@ public class TableController implements Initializable {
     @FXML public TextField inputField;
     @FXML public TextField outputField;
 
+    public static final byte IO_BLOCK_INDEX = 0x40;
+    public static final byte PROCESS_STATE_BLOCK_INDEX = 0x41;
+    private static final byte PROCESS_STATE_PTR_INDEX = 0;
+    private static final byte PROCESS_STATE_SP_INDEX = 1;
+    private static final byte PROCESS_STATE_PC_INDEX = 2;
+
     private final RM realMachine = new RM(this);
     private VM process;
+    private Block IOBlock = new Block();
+    private Block processStateBlock = new Block();
+    private String inputText;
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event) {
         previousLine.setText("We Starting!");
@@ -94,10 +104,16 @@ public class TableController implements Initializable {
         previousLine.setText(currentLine.getText());
         try {
             process.exec();
+            realMachine.decrementTI();
         } catch(SystemInterrupt SI){
-
+            realMachine.setSI(SI.getIntCode());
+            realMachine.toggleMode();
         } catch(ProgramInterrupt PI){
-
+            realMachine.setPI(PI.getIntCode());
+            realMachine.toggleMode();
+        } finally {
+            test();
+            realMachine.toggleMode();
         }
         currentLine.setText(getCommandString(process));
     }
@@ -128,6 +144,13 @@ public class TableController implements Initializable {
 
     }
 
+    @FXML private void inputConfirmAction(javafx.event.ActionEvent event){
+        if (realMachine.getSI() == 1){
+            inputText = inputField.getText();
+            this.getInterrupt();
+        }
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializeRMRegTable();
@@ -150,6 +173,22 @@ public class TableController implements Initializable {
         tableValues.add(new RMRegister("MODE"));
 
         RMRegView.setItems(tableValues);
+    }
+
+    private void getInterrupt(){
+        try {
+            setIOBlock(Block.getBlockFromString(inputText));
+//        IOBlock.setWords(inputText);
+        }catch(ProgramInterrupt e){
+            realMachine.setPI(e.getIntCode());
+            programInterrupt(e.getIntCode());
+        }
+        inputConfirm.setDisable(true);
+        inputField.setDisable(true);
+    }
+
+    private void putInterrupt(){
+        //kopijuojam
     }
 
     private void initializeVMRegTable() {
@@ -240,6 +279,40 @@ public class TableController implements Initializable {
     }
 
 
+    public void test(){
+        if(realMachine.getPI() != 0)
+            programInterrupt(realMachine.getPI());
+        if(realMachine.getSI() != 0)
+            systemInterrupt(realMachine.getSI());
+        if(realMachine.getTI() == 0);
+            // HANDLE TIMER INTERRUPT
+    }
+
+    public void programInterrupt(byte intCode){
+        String alertText = "";
+        switch(intCode){
+            case 1: alertText = "INVALID ADDRESS"; break;  // INVALID ADDRESS
+            case 2: alertText = "INVALID OP CODE"; break;  // INVALID OP CODE
+            case 3: alertText = "INVALID ASSIGN"; break;  // INVALID ASSIGN
+            case 4: alertText = "OVERFLOW"; break;  // OVERFLOW
+            default:
+                System.err.println("Internal error in programInterrupt()");
+                System.exit(0);
+        }
+        popAlert("Program Interrupt. Reason: " + alertText); System.exit(0);
+    }
+
+    public void systemInterrupt(byte intCode){
+        switch(intCode){
+            case 1: inputConfirm.setDisable(false); inputField.setDisable(false);break;
+            case 2: putInterrupt(); break;
+            case 3: break; // HALT
+            default:
+                System.err.println("Internal error in systemInterrupt()");
+                System.exit(0);
+        }
+    }
+
     public boolean checkFilenameField(){
         if(filename.getText().isEmpty()){
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Filename cannot be blank! Please enter a valid filename.", ButtonType.OK);
@@ -291,6 +364,10 @@ public class TableController implements Initializable {
         return true;
     }
 
+    public boolean setRMRegValue(byte registerIndex, Short value) {
+        return setRMRegValue(registerIndex, Utils.shortToHexString(value));
+    }
+
     private boolean setRMRegValuePaging(byte vmRegInd, String value) {
         byte rmRegIndex = Paging.getRMRegIndex(vmRegInd);
         if (rmRegIndex == -1)
@@ -311,14 +388,27 @@ public class TableController implements Initializable {
 //        return setRMRegValuePaging(registerIndex, value);
     }
 
+    public boolean setVMRegValue(byte registerIndex, Short value) {
+        return setVMRegValue(registerIndex, Utils.shortToHexString(value));
+//        return setRMRegValuePaging(registerIndex, value);
+    }
+
     // block - memory block number (hex)
     // word - block word number (hex)
     public boolean setRMMemValue(byte block, byte word, String value) {
-        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
+        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 + 2 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
             return false;
 
         RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
         return rmMemoryBlock.set(word, value);
+    }
+
+    public boolean setRMMemValue(byte block, byte word, Short value) {
+        if (block < 0x0 || block > Utils.UM_BLOCK_COUNT-1 + 2 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
+            return false;
+
+        RMMemoryBlock rmMemoryBlock = getRMMemValues().get(block);
+        return rmMemoryBlock.set(word, Utils.shortToHexString(value));
     }
 
     // uses paging mechanism
@@ -365,7 +455,45 @@ public class TableController implements Initializable {
         return indexes;
     }
 
-//    public void processInterrupt() {
+    private void setProcessStateBlock() {
+        Short ptr = realMachine.getPTR();
+        this.processStateBlock.setWord(PROCESS_STATE_PTR_INDEX, ptr);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PTR_INDEX, ptr);
+        setRMRegValue(RM.RMRegIndexes.PTR, (short) 0);
+
+        Short sp = realMachine.getSP();
+        this.processStateBlock.setWord(PROCESS_STATE_SP_INDEX, sp);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_SP_INDEX, sp);
+        setRMRegValue(RM.RMRegIndexes.SP, (short) 0);
+
+        Short pc = realMachine.getPC();
+        this.processStateBlock.setWord(PROCESS_STATE_PC_INDEX, pc);
+        setRMMemValue(PROCESS_STATE_BLOCK_INDEX, PROCESS_STATE_PC_INDEX, pc);
+        setRMRegValue(RM.RMRegIndexes.PC, (short) 0);
+    }
+
+    // Returns process state block object and removes its data from kernel memory
+//    private Block getProcessStateBlock() {
+//
+//    }
+
+    private void setIOBlock(Block block) {
+        this.IOBlock.setWords(block.getWords());
+        for (byte i = 0; i < Utils.BLOCK_WORD_COUNT; ++i) {
+            setRMMemValue(IO_BLOCK_INDEX, i, block.getWord(i).getStringValue());
+        }
+    }
+
+    private void setIOBlock(int[] block) {
+        if (block == null || block.length > 16) {
+            return;
+        }
+
+        this.setIOBlock(new Block(block));
+    }
+
+    // Returns IO block object and removes its data from kernel memory
+//    private Block getIOBlock() {
 //
 //    }
 
@@ -389,14 +517,17 @@ public class TableController implements Initializable {
         executeInterrupt();
     }
 
-    private void executeInterrupt() {
-        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 0, getRMRegValues()
-                .get(RM.RMRegIndexes.PTR).getRegisterValue());
-        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 1, getRMRegValues()
-                .get(RM.RMRegIndexes.SP).getRegisterValue());
-        setRMMemValue(Utils.KERNEL_STACK_BLOCK_INDEX, (byte) 2, getRMRegValues()
-                .get(RM.RMRegIndexes.PC).getRegisterValue());
+    public void popAlert(String alertText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, alertText, ButtonType.OK);
+        Optional<ButtonType> result = alert.showAndWait();
+        if(result.get() == ButtonType.OK){
+            alert.close();
+        }
+    }
 
+    private void executeInterrupt() {
+        // save process state and reset RM registers
+        setProcessStateBlock();
         process.clear();
 
         String reg = getRMRegValues().get(RM.RMRegIndexes.SI).getRegisterValue();
@@ -411,9 +542,10 @@ public class TableController implements Initializable {
                 break;
             case 3:
                 // halt
-                realMachine.resetPTR();
-                process.reset();
-                return;
+                // realMachine.resetPTR();
+                // process.reset();
+                //return;
+                break;
         }
 
         process.load();

@@ -20,9 +20,9 @@ public class RM {
     private Short ptr;        // puslapių lentelės registras
     private Short sp;         // steko viršūnės žodžio indeksas
     private Short pc;         // komandų skaitliukas
-    private Short pi;         // programinių pertraukimų registras
-    private Short si;         // supervizorinių pertraukimų registras
-    private Short ti;         // taimerio registras
+    private byte pi;         // programinių pertraukimų registras
+    private byte si;         // supervizorinių pertraukimų registras
+    private byte ti;         // taimerio registras
     private boolean isUserMode; // registras, kurio reikšmė nusako procesoriaus darbo režimą
     private boolean[] assignedMemBlocks;
 
@@ -68,9 +68,9 @@ public class RM {
         resetPTR();
         //resetSP();
         //setPC(0);
-        setPI((short) 0);
-        setSI((short) 0);
-        setTI((short) 0);
+        setPI((byte) 0);
+        setSI((byte) 0);
+        setTI((byte) 0);
     }
 
     private void resetAssignedMemory() {
@@ -89,11 +89,19 @@ public class RM {
         controller.setRMRegValue(RMRegIndexes.PTR, Utils.shortToHexString(ptr));
     }
 
+    public Short getPTR() {
+        return this.ptr;
+    }
+
     public void resetPTR() {
         for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i)
             setValue(0, (short) (ptr + i));
 
         setPTR((short) 0);
+    }
+
+    public Short getSP() {
+        return this.sp;
     }
 
     public void incrementSP(){
@@ -115,25 +123,38 @@ public class RM {
         sp = value;
     }
 
+    public Short getPC() {
+        return this.pc;
+    }
+
     public void setPC(Short value){
         pc = value;
         //controller.setRMRegValue(RMRegIndexes.PC, Utils.bytesToHexString(pc, 4));
     }
 
-    public void setPI(Short value){
+    public void setPI(byte value){
         pi = value;
-        controller.setRMRegValue(RMRegIndexes.PI, Utils.shortToHexString(pi));
+        controller.setRMRegValue(RMRegIndexes.PI, Utils.byteToHexString(pi));
     }
 
-    public void setSI(Short value){
+    public void setSI(byte value){
         si = value;
-        controller.setRMRegValue(RMRegIndexes.SI, Utils.shortToHexString(si));
+        controller.setRMRegValue(RMRegIndexes.SI, Utils.byteToHexString(si));
     }
 
-    public void setTI(Short value){
+    public void setTI(byte value){
         ti = value;
-        controller.setRMRegValue(RMRegIndexes.TI, Utils.shortToHexString(ti));
+        controller.setRMRegValue(RMRegIndexes.TI, Utils.byteToHexString(ti));
     }
+
+    public void decrementTI(){
+        ti--;
+        controller.setRMRegValue(RMRegIndexes.TI, Utils.byteToHexString(ti));
+    }
+
+    public byte getPI(){return this.pi;}
+    public byte getSI(){return this.si;}
+    public byte getTI(){return this.ti;}
 
     public void setReg(byte regIndex, Short value) {
         switch(regIndex) {
@@ -165,12 +186,12 @@ public class RM {
     public void setValue(Integer value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
-        um[block].setWord(value, word);
+        um[block].setWord(word, value);
         controller.setRMMemValue(block, word, Utils.intToHexString(value));
     }
 
     private void setValue(Integer value, byte block, byte word) {
-        um[block].setWord(value, word);
+        um[block].setWord(word, value);
         controller.setRMMemValue(block, word, Utils.intToHexString(value));
     }
 
