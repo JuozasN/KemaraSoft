@@ -1,3 +1,9 @@
 public class DynamicResource extends Resource {
-    private String parameter;
+    private Block parameter;
+
+    public void release(Process process, String parameter) throws ProgramInterrupt {
+        process.removeFromOwnedResources(this);
+        this.parameter = Block.getBlockFromString(parameter);
+        //kvieciame resursu paskirstytoja..
+    }
 }

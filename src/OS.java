@@ -81,7 +81,7 @@ public class OS implements Initializable {
     public static final ArrayList<Process> blockedSuspendedProcessList = new ArrayList<>();
     public static final ArrayList<Process> readySuspendedProcessList = new ArrayList<>();
 
-    private ArrayList<Resource> mainResourceList = new ArrayList<>();
+    public static final ArrayList<Resource> mainResourceList = new ArrayList<>();
 
     private final RM realMachine = new RM(this);
     private VM process;

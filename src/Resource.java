@@ -1,33 +1,46 @@
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Resource {
-    private int id;
+    private static long previousID = 0;
+    private long id;
     private String title;
     private Process creator;
-    private ArrayList<Boolean> elementList;
+    private ArrayList<Block> elementList;
     private ArrayList<Process> waitingProcesses;
-    private ArrayList<Resource> resourceList;
+    //private ArrayList<Resource> resourceList;
 
-    public Resource(Process creator, String title) {
+    public Resource() {
+        this.id = previousID++;
+    }
+
+    public void create(Process creator, String title) {
+        OS.mainResourceList.add(this);
+        creator.addToCreatedResources(this);
         this.creator = creator;
         this.title = title;
-        this.resourceList = new ArrayList<>();
         this.elementList = new ArrayList<>();
         this.waitingProcesses = new ArrayList<>();
-        Random r = new Random();
-        this.id = r.nextInt(999) + 1;
     }
 
     public void delete() {
-
+        this.creator.removeFromCreatedResources(this);
+        this.elementList.clear();
+        for(Process p: this.waitingProcesses){
+            p.changeState((byte)2); //2 = READY
+        }
+        OS.mainResourceList.remove(this);
+        //"naikinamas pats aprasas"...
     }
 
-    public void request() {
-
+    public void request(Process process) {
+        process.changeState((byte)1); //1 = BLOCKED
+        this.waitingProcesses.add(process);
+        //kvieciame resurso paskirstytoja..
     }
 
-    public void release() {
-
+    public void release(Process process) {
+        process.removeFromOwnedResources(this);
+        //KAZKA PADARYTI SU ELEMENT LIST...
+        //kvieciame resursu paskirstytoja..
     }
 }
