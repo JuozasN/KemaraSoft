@@ -75,9 +75,11 @@ public class OS implements Initializable {
     private static final byte PROCESS_STATE_SP_INDEX = 1;
     private static final byte PROCESS_STATE_PC_INDEX = 2;
 
-    private ArrayList<Process> mainProcessList = new ArrayList<>();
-    private ArrayList<Process> blockedProcessList = new ArrayList<>();
-    private ArrayList<Process> readyProcessList = new ArrayList<>();
+    public static final ArrayList<Process> blockedProcessList = new ArrayList<>();
+    public static final ArrayList<Process> readyProcessList = new ArrayList<>();
+    public static final ArrayList<Process> suspendedProcessList = new ArrayList<>();
+    public static final ArrayList<Process> blockedSuspendedProcessList = new ArrayList<>();
+    public static final ArrayList<Process> readySuspendedProcessList = new ArrayList<>();
 
     private ArrayList<Resource> mainResourceList = new ArrayList<>();
 
@@ -588,5 +590,51 @@ public class OS implements Initializable {
         }
 
         process.load();
+    }
+
+    /** MANAGE PROCESS LISTS **/
+
+    public static void removeFromList(Process process) {
+        switch (process.getState()) {
+            case Process.ProcessState.BLOCKED:
+                blockedProcessList.remove(process);
+                break;
+            case Process.ProcessState.READY:
+                readyProcessList.remove(process);
+                break;
+            case Process.ProcessState.SUSPENDED:
+                suspendedProcessList.remove(process);
+                break;
+            case Process.ProcessState.BLOCKED_SUSPENDED:
+                blockedSuspendedProcessList.remove(process);
+                break;
+            case Process.ProcessState.READY_SUSPENDED:
+                readySuspendedProcessList.remove(process);
+                break;
+        }
+    }
+
+    public static void addToList(Process process, byte state) {
+        switch(state) {
+            case Process.ProcessState.BLOCKED:
+                blockedProcessList.add(process);
+                break;
+            case Process.ProcessState.READY:
+                readyProcessList.add(process);
+                break;
+            case Process.ProcessState.SUSPENDED:
+                suspendedProcessList.add(process);
+                break;
+            case Process.ProcessState.BLOCKED_SUSPENDED:
+                blockedSuspendedProcessList.add(process);
+                break;
+            case Process.ProcessState.READY_SUSPENDED:
+                readySuspendedProcessList.add(process);
+                break;
+        }
+    }
+
+    public void runProcess(Process process) {
+        // run process...
     }
 }

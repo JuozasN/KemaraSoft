@@ -2,13 +2,9 @@ import java.util.ArrayList;
 
 public class Scheduler {
     private OS os;
-    private ArrayList<Process> blockedProcessList;
-    private ArrayList<Process> readyProcessList;
 
-    public Scheduler(OS os, ArrayList<Process> blockedProcessList, ArrayList<Process> readyProcessList) {
+    public Scheduler(OS os) {
         this.os = os;
-        this.blockedProcessList = blockedProcessList;
-        this.readyProcessList = readyProcessList;
     }
 
     public Process runNextReadyProcess(Process runningProcess) {
@@ -17,10 +13,10 @@ public class Scheduler {
             OS.addToList(runningProcess, Process.ProcessState.BLOCKED);
         }
 
-        if (!readyProcessList.isEmpty()) {
-            Process processToRun = readyProcessList.get(0);
-            os.runProcess(processToRun);
-            OS.removeFromList(processToRun);
+        if (!OS.readyProcessList.isEmpty()) {
+            Process processToRun = OS.readyProcessList.get(0); // get first process in process queue
+            os.runProcess(processToRun);    // assign processor to process; change process state to 'running'
+            OS.removeFromList(processToRun);    // remove the process from ready processes list
             return processToRun;
         }
 
