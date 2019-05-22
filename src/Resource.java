@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Resource {
     private int id;
@@ -11,6 +12,11 @@ public class Resource {
     public Resource(Process creator, String title) {
         this.creator = creator;
         this.title = title;
+        this.resourceList = new ArrayList<>();
+        this.elementList = new ArrayList<>();
+        this.waitingProcesses = new ArrayList<>();
+        Random r = new Random();
+        this.id = r.nextInt(999) + 1;
     }
 
     public void delete() {
