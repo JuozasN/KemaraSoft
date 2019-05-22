@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -73,6 +74,12 @@ public class OS implements Initializable {
     private static final byte PROCESS_STATE_PTR_INDEX = 0;
     private static final byte PROCESS_STATE_SP_INDEX = 1;
     private static final byte PROCESS_STATE_PC_INDEX = 2;
+
+    private ArrayList<Process> mainProcessList = new ArrayList<>();
+    private ArrayList<Process> blockedProcessList = new ArrayList<>();
+    private ArrayList<Process> readyProcessList = new ArrayList<>();
+
+    private ArrayList<Resource> mainResourceList = new ArrayList<>();
 
     private final RM realMachine = new RM(this);
     private VM process;
