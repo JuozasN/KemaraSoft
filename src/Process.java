@@ -27,15 +27,15 @@ public class Process {
         // TODO: baigti inicializuoti (kurti procesą)
     }
 
-    public static void delete() {
+    public void delete() {
 
     }
 
-    public static void suspend() {
+    public void suspend() {
 
     }
 
-    public static void activate() {
+    public void activate() {
 
     }
 }
