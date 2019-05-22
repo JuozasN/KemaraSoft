@@ -85,6 +85,7 @@ public class Process {
 
     public byte getState() {
         return state;
+    }
     public void removeFromChildren(Process children){
         this.children.remove(children);
     }
