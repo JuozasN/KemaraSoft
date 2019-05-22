@@ -1,12 +1,3 @@
-Antrai Uzduociai ND2:
-- Realizuoti projekta (komandas, registrus).
-- Turi buti diskreti deterministine zingsnine masina (?:D)
-- Turime kazkokia busena (STATE). Po kiekvieno zingsnio turime viena konkrecia busena.
-- Reikalavimai UI: Patogus, kad butu galima parodyti destytojui (?:D)
-- start -> nereikia, imame bet kokia busena ir rodome kas gaunasi atlikus veiksmus/zingsnius.
-- geriau daugiau mazu programu negu viena didele.
-
-
 // AR 190411 >>
 
 pagrindiniai update'ai: įrašius reikšmės į vm'ą - viskas atsivaizduoja ir rm'e; suvienodinti
@@ -31,3 +22,6 @@ ND3:
 - ar tikrai reikia GetLine??
 - pabaigti resursu lentele
 - resursu/procesu aprasai (primityvu?).
+
+ND4:
+

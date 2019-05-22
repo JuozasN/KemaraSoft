@@ -14,7 +14,7 @@ public class RM {
         public static final byte MODE = 6;
     }
 
-    private final TableController controller;
+    private final OS controller;
     private RandomAccessFile externalMemoryFile;
     private Block[] um;         // user memory
     private Short ptr;        // puslapių lentelės registras
@@ -26,7 +26,7 @@ public class RM {
     private boolean isUserMode; // registras, kurio reikšmė nusako procesoriaus darbo režimą
     private boolean[] assignedMemBlocks;
 
-    public RM(TableController controller) {
+    public RM(OS controller) {
         this.controller = controller;
         this.um = new Block[Utils.UM_BLOCK_COUNT];
         for(int i = 0; i < Utils.UM_BLOCK_COUNT; ++i)

@@ -9,7 +9,7 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class TableController implements Initializable {
+public class OS implements Initializable {
     @FXML private TableView<RMRegister> RMRegView;
     @FXML private TableColumn<RMRegister, String> RMRegisterNameColumn;
     @FXML private TableColumn<RMRegister, String> RMRegisterValueColumn;

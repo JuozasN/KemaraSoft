@@ -10,12 +10,12 @@ public class VM {
         public static final byte SP = 0;
     }
 
-	private final TableController controller;
+	private final OS controller;
 	private Block[] mem;
 	private Short pc;
 	private Short sp;
 
-	public VM(TableController controller, Block[] mem){
+	public VM(OS controller, Block[] mem){
 		this.mem = mem;
 		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
@@ -25,7 +25,7 @@ public class VM {
         setSP((short) 0xA0);
 	}
 
-	public VM(TableController controller) {
+	public VM(OS controller) {
 		this(controller, new Block[Utils.VM_MEM_BLOCK_COUNT]);
 	}
 
