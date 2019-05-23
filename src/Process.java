@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Process {
+public abstract class Process implements ProcessImplementation {
     public final class ProcessState {
         public static final byte RUNNING = 0;
         public static final byte BLOCKED = 1;
@@ -75,6 +75,8 @@ public class Process {
 
         //kvieciamas planuotojas..
     }
+
+    public abstract void run();
 
     public boolean isBlocked() {
         return state == ProcessState.BLOCKED;
