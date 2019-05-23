@@ -57,6 +57,25 @@ public class OS implements Initializable {
     @FXML private TableColumn<VMMemoryBlock, String> VMColE;
     @FXML private TableColumn<VMMemoryBlock, String> VMColF;
 
+    @FXML private TableView<KMemoryBlock> KMemView;
+    @FXML private TableColumn<KMemoryBlock, String> KMLineNo;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol0;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol1;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol2;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol3;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol4;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol5;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol6;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol7;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol8;
+    @FXML private TableColumn<KMemoryBlock, String> KMCol9;
+    @FXML private TableColumn<KMemoryBlock, String> KMColA;
+    @FXML private TableColumn<KMemoryBlock, String> KMColB;
+    @FXML private TableColumn<KMemoryBlock, String> KMColC;
+    @FXML private TableColumn<KMemoryBlock, String> KMColD;
+    @FXML private TableColumn<KMemoryBlock, String> KMColE;
+    @FXML private TableColumn<KMemoryBlock, String> KMColF;
+
     @FXML private Button runButton;
     @FXML private Button stepButton;
     @FXML private Button resetButton;
@@ -166,6 +185,7 @@ public class OS implements Initializable {
         initializeVMRegTable();
         initializeRMMemTable();
         initializeVMMemTable();
+        initializeKMemTable();
     }
 
     /**
@@ -255,6 +275,34 @@ public class OS implements Initializable {
         VMMemView.setItems(tableValues);
     }
 
+    private void initializeKMemTable() {
+        KMLineNo.setCellValueFactory(new PropertyValueFactory<>("KMLineNo"));
+        KMCol0.setCellValueFactory(new PropertyValueFactory<>("KMCol0"));
+        KMCol1.setCellValueFactory(new PropertyValueFactory<>("KMCol1"));
+        KMCol2.setCellValueFactory(new PropertyValueFactory<>("KMCol2"));
+        KMCol3.setCellValueFactory(new PropertyValueFactory<>("KMCol3"));
+        KMCol4.setCellValueFactory(new PropertyValueFactory<>("KMCol4"));
+        KMCol5.setCellValueFactory(new PropertyValueFactory<>("KMCol5"));
+        KMCol6.setCellValueFactory(new PropertyValueFactory<>("KMCol6"));
+        KMCol7.setCellValueFactory(new PropertyValueFactory<>("KMCol7"));
+        KMCol8.setCellValueFactory(new PropertyValueFactory<>("KMCol8"));
+        KMCol9.setCellValueFactory(new PropertyValueFactory<>("KMCol9"));
+        KMColA.setCellValueFactory(new PropertyValueFactory<>("KMColA"));
+        KMColB.setCellValueFactory(new PropertyValueFactory<>("KMColB"));
+        KMColC.setCellValueFactory(new PropertyValueFactory<>("KMColC"));
+        KMColD.setCellValueFactory(new PropertyValueFactory<>("KMColD"));
+        KMColE.setCellValueFactory(new PropertyValueFactory<>("KMColE"));
+        KMColF.setCellValueFactory(new PropertyValueFactory<>("KMColF"));
+
+        ObservableList<KMemoryBlock> tableValues = FXCollections.observableArrayList();
+        for (int i = 0; i < Utils.KM_BLOCK_COUNT; ++i){
+            String str = Integer.toHexString(i);
+            tableValues.add(new KMemoryBlock(str.toUpperCase()));
+        }
+
+        KMemView.setItems(tableValues);
+    }
+
     /**
      * GETTERS AND SETTERS
      */
@@ -276,6 +324,10 @@ public class OS implements Initializable {
 
     public ObservableList<VMMemoryBlock> getVMMemValues(){
         return VMMemView.getItems();
+    }
+
+    public ObservableList<KMemoryBlock> getKMemValues(){
+        return KMemView.getItems();
     }
 
     /**
@@ -368,7 +420,7 @@ public class OS implements Initializable {
     }
 
     /**
-     * SET REAL MACHINE AND VIRTUAL MACHINE MEMORY
+     * SET REAL MACHINE, VIRTUAL MACHINE AND KERNEL MEMORY
      */
 
     // block - memory block number (hex)
@@ -396,7 +448,7 @@ public class OS implements Initializable {
 
         Short adr = Paging.getUMAdr(vmBlock, vmWord);
         if (adr == null) {
-            System.err.println("ERROR converting VM memory address to RM memory address in methord setRMMemValuePaging()");
+            System.err.println("ERROR converting VM memory address to RM memory address in method setRMMemValuePaging()");
             return false;
         }
 
@@ -412,6 +464,15 @@ public class OS implements Initializable {
         VMMemoryBlock vmMemoryBlock = getVMMemValues().get(block);
 
         return vmMemoryBlock.set(word, value);
+    }
+
+    public boolean setKMemValue(byte block, byte word, String value) {
+        if (block < 0x0 || block > Utils.KM_BLOCK_COUNT-1 || word < 0x0 || word > Utils.BLOCK_WORD_COUNT-1)
+            return false;
+
+        KMemoryBlock kMemoryBlock = getKMemValues().get(block);
+
+        return kMemoryBlock.set(word, value);
     }
 
     /**
@@ -594,7 +655,7 @@ public class OS implements Initializable {
 
     /** MANAGE PROCESS LISTS **/
 
-    public static void removeFromList(Process process) {
+    public static void removeFromProcessList(Process process) {
         switch (process.getState()) {
             case Process.ProcessState.BLOCKED:
                 blockedProcessList.remove(process);
@@ -614,7 +675,7 @@ public class OS implements Initializable {
         }
     }
 
-    public static void addToList(Process process, byte state) {
+    public static void addToProcessList(Process process, byte state) {
         switch(state) {
             case Process.ProcessState.BLOCKED:
                 blockedProcessList.add(process);

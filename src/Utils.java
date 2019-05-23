@@ -9,6 +9,7 @@ public class Utils {
     public static final byte VM_MEM_BLOCK_COUNT = 0x10;      // virtual machine memory block count
     public static final short EM_BLOCK_COUNT = 0x100;         // external memory block count
     public static final byte UM_BLOCK_COUNT = 0x40;          // user memory block count
+    public static final byte KM_BLOCK_COUNT = 0x40;          // user memory block count
     public static final byte BLOCK_WORD_COUNT = 0x10;        // word count in block
     public static final byte WORD_BYTE_COUNT = 0x4;               // byte count in word
     public static String INITIAL_REG_VAL_STR = "0000";
