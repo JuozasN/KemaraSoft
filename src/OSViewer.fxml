@@ -54,12 +54,12 @@
                         <Insets bottom="20.0" />
                      </VBox.margin>
                   </TableView>
-                  <GridPane VBox.vgrow="ALWAYS">
+                  <GridPane minHeight="105.0" VBox.vgrow="ALWAYS">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -87,17 +87,17 @@
                         </Button>
                      </children>
                   </GridPane>
-                  <GridPane VBox.vgrow="ALWAYS">
+                  <GridPane minHeight="150.0" VBox.vgrow="ALWAYS">
                      <columnConstraints>
                         <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <Label text="Previous Command:" />
