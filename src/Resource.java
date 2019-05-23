@@ -14,7 +14,7 @@ public class Resource {
     }
 
     public void create(Process creator, String title) {
-        OS.mainResourceList.add(this);
+        OS.addToResourceList(this);
         creator.addToCreatedResources(this);
         this.creator = creator;
         this.title = title;
@@ -28,7 +28,7 @@ public class Resource {
         for(Process p: this.waitingProcesses){
             p.changeState((byte)2); //2 = READY
         }
-        OS.mainResourceList.remove(this);
+        OS.removeFromResourceList(this);
         //"naikinamas pats aprasas"...
     }
 

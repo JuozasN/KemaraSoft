@@ -33,7 +33,7 @@ public abstract class Process {
         this.priority = priority;
         this.elementList = elementList;
         this.title = title;
-        addToMainLists();
+        OS.addToProcessList(this, priority);
         parent.addToChildren(this);
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
@@ -48,29 +48,24 @@ public abstract class Process {
             c.delete();
         }
         parent.removeFromChildren(this);
-        removeFromMainLists();
         for(Resource r: ownedResources){
             r.delete();
         }
+        OS.removeFromProcessList(this);
         //kvieciamas planuotojas..
     }
 
     public void suspend() {
-        if(state < 3){
-            state+=3;
+        if(state < ProcessState.SUSPENDED){
+            state += ProcessState.SUSPENDED;
         }
-        else {
-            //Do something
-        }
+
         //kvieciamas planuotojas..
     }
 
     public void activate() {
-        if(state >= 3){
-            state-=3;
-        }
-        else {
-            //Do something
+        if(state >= ProcessState.BLOCKED_SUSPENDED){
+            state -= ProcessState.SUSPENDED;
         }
 
         //kvieciamas planuotojas..
@@ -90,38 +85,6 @@ public abstract class Process {
 
     public byte getState() {
         return state;
-    }
-
-    public void removeFromMainLists(){
-        switch(this.state) {
-            case 1:
-                OS.blockedProcessList.remove(this);
-            case 2:
-                OS.readyProcessList.remove(this);
-            case 3:
-                OS.suspendedProcessList.remove(this);
-            case 4:
-                OS.blockedSuspendedProcessList.remove(this);
-            case 5:
-                OS.readySuspendedProcessList.remove(this);
-            default:
-        }
-    }
-
-    public void addToMainLists(){
-        switch(this.state) {
-            case 1:
-                OS.blockedProcessList.add(this);
-            case 2:
-                OS.readyProcessList.add(this);
-            case 3:
-                OS.suspendedProcessList.add(this);
-            case 4:
-                OS.blockedSuspendedProcessList.add(this);
-            case 5:
-                OS.readySuspendedProcessList.add(this);
-            default:
-        }
     }
 
     public void removeFromChildren(Process children){

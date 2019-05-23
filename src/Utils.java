@@ -116,4 +116,9 @@ public class Utils {
         int valueResult = byteArrayToInt(byteArray) + addValue;
         return intToByteArray(valueResult);
     }
+
+    public static short getPositionByPriority(ArrayList<Process> processList, Process process) {
+        /// implementation :)
+        return -1;
+    }
 }

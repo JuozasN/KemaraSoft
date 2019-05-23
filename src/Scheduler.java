@@ -11,8 +11,8 @@ public class Scheduler {
             OS.addToProcessList(runningProcess, Process.ProcessState.BLOCKED);
         }
 
-        if (!OS.readyProcessList.isEmpty()) {
-            Process processToRun = OS.readyProcessList.get(0); // get first process in process queue
+        if (!OS.processList.isEmpty()) {
+            Process processToRun = OS.processList.get(0); // get first process in process queue
             os.runProcess(processToRun);    // assign processor to process; change process state to 'running'
             OS.removeFromProcessList(processToRun);    // remove the process from ready processes list
             return processToRun;
