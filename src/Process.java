@@ -106,4 +106,6 @@ public abstract class Process {
     public void changeState(byte state) {
         this.state = state;
     }
+
+    public void addToOwnedResources(Resource resource) { this.ownedResources.add(resource); }
 }
