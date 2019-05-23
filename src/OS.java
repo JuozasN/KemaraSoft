@@ -94,11 +94,7 @@ public class OS implements Initializable {
     private static final byte PROCESS_STATE_SP_INDEX = 1;
     private static final byte PROCESS_STATE_PC_INDEX = 2;
 
-    public static final ArrayList<Process> blockedProcessList = new ArrayList<>();
-    public static final ArrayList<Process> readyProcessList = new ArrayList<>();
-    public static final ArrayList<Process> suspendedProcessList = new ArrayList<>();
-    public static final ArrayList<Process> blockedSuspendedProcessList = new ArrayList<>();
-    public static final ArrayList<Process> readySuspendedProcessList = new ArrayList<>();
+    public static final ArrayList<Process> processList = new ArrayList<>();
 
     public static final ArrayList<Resource> mainResourceList = new ArrayList<>();
 
@@ -115,7 +111,10 @@ public class OS implements Initializable {
         } catch(ProgramInterrupt PI) {
             // Overflow
         }
+        // init StartStop
+        // start StartStop
         while(true){
+            // run scheduler
             try{
                 process.exec();
                 // decrement timer
@@ -656,43 +655,46 @@ public class OS implements Initializable {
     /** MANAGE PROCESS LISTS **/
 
     public static void removeFromProcessList(Process process) {
-        switch (process.getState()) {
-            case Process.ProcessState.BLOCKED:
-                blockedProcessList.remove(process);
-                break;
-            case Process.ProcessState.READY:
-                readyProcessList.remove(process);
-                break;
-            case Process.ProcessState.SUSPENDED:
-                suspendedProcessList.remove(process);
-                break;
-            case Process.ProcessState.BLOCKED_SUSPENDED:
-                blockedSuspendedProcessList.remove(process);
-                break;
-            case Process.ProcessState.READY_SUSPENDED:
-                readySuspendedProcessList.remove(process);
-                break;
-        }
+        processList.remove(process);
+//        switch (process.getState()) {
+//            case Process.ProcessState.BLOCKED:
+//                blockedProcessList.remove(process);
+//                break;
+//            case Process.ProcessState.READY:
+//                readyProcessList.remove(process);
+//                break;
+//            case Process.ProcessState.SUSPENDED:
+//                suspendedProcessList.remove(process);
+//                break;
+//            case Process.ProcessState.BLOCKED_SUSPENDED:
+//                blockedSuspendedProcessList.remove(process);
+//                break;
+//            case Process.ProcessState.READY_SUSPENDED:
+//                readySuspendedProcessList.remove(process);
+//                break;
+//        }
     }
 
     public static void addToProcessList(Process process, byte state) {
-        switch(state) {
-            case Process.ProcessState.BLOCKED:
-                blockedProcessList.add(process);
-                break;
-            case Process.ProcessState.READY:
-                readyProcessList.add(process);
-                break;
-            case Process.ProcessState.SUSPENDED:
-                suspendedProcessList.add(process);
-                break;
-            case Process.ProcessState.BLOCKED_SUSPENDED:
-                blockedSuspendedProcessList.add(process);
-                break;
-            case Process.ProcessState.READY_SUSPENDED:
-                readySuspendedProcessList.add(process);
-                break;
-        }
+        short positionInQueue = Utils.getPositionByPriority(processList, process);
+        processList.add(positionInQueue, process);
+//        switch(state) {
+//            case Process.ProcessState.BLOCKED:
+//                blockedProcessList.add(process);
+//                break;
+//            case Process.ProcessState.READY:
+//                readyProcessList.add(process);
+//                break;
+//            case Process.ProcessState.SUSPENDED:
+//                suspendedProcessList.add(process);
+//                break;
+//            case Process.ProcessState.BLOCKED_SUSPENDED:
+//                blockedSuspendedProcessList.add(process);
+//                break;
+//            case Process.ProcessState.READY_SUSPENDED:
+//                readySuspendedProcessList.add(process);
+//                break;
+//        }
     }
 
     public void runProcess(Process process) {
