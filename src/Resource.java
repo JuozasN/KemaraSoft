@@ -35,12 +35,21 @@ public class Resource {
     public void request(Process process) {
         process.changeState((byte)1); //1 = BLOCKED
         this.waitingProcesses.add(process);
-        //kvieciame resurso paskirstytoja..
+        Distributor.distributeResource(this);
     }
 
     public void release(Process process) {
         process.removeFromOwnedResources(this);
         //KAZKA PADARYTI SU ELEMENT LIST...
-        //kvieciame resursu paskirstytoja..
+        Distributor.distributeResource(this);
+    }
+
+    public Process getTopWaitingProcess() {
+        return this.waitingProcesses.get(waitingProcesses.size() - 1); //grazina paskutini procesa is laukianciu sio resurso sarase
+                                                                //turetu buti su top priority/anksciausiai ikeltas.
+    }
+
+    public void removeFromWaitingList(Process process) {
+        this.waitingProcesses.remove(process);
     }
 }
