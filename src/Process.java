@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public abstract class Process implements ProcessImplementation {
+public abstract class Process {
     public final class ProcessState {
         public static final byte RUNNING = 0;
         public static final byte BLOCKED = 1;
@@ -76,6 +76,9 @@ public abstract class Process implements ProcessImplementation {
         //kvieciamas planuotojas..
     }
 
+    /**
+     * Abstract method that enables Process algorithm implementation on object creation
+     */
     public abstract void run();
 
     public boolean isBlocked() {

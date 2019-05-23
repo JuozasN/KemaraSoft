@@ -1,10 +1,78 @@
 public class SystemProcesses {
-    public static void startStop() {
-        Process process = new Process() {
-            @Override
-            public void run() {
-                // kažką darom
-            }
-        };
-    }
+    public static Process startStop = new Process() {
+        @Override
+        public void run() {
+            // StartStop algorithm
+        }
+    };
+
+    public static Process LoadProgram = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process JCL = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process Loader = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process MainProc = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process JobHelper = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process VirtualMachine = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process Interrupt = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process ChannelInterrupt = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process PutLine = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
+
+    public static Process Idle = new Process() {
+        @Override
+        public void run() {
+
+        }
+    };
 }
