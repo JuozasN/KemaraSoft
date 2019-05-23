@@ -96,7 +96,7 @@ public class OS implements Initializable {
 
     public static final ArrayList<Process> processList = new ArrayList<>();
 
-    public static final ArrayList<Resource> mainResourceList = new ArrayList<>();
+    public static final ArrayList<Resource> resourceList = new ArrayList<>();
 
     private final RM realMachine = new RM(this);
     private VM process;
@@ -695,6 +695,14 @@ public class OS implements Initializable {
 //                readySuspendedProcessList.add(process);
 //                break;
 //        }
+    }
+
+    public static void removeFromResourceList(Resource resource) {
+        resourceList.remove(resource);
+    }
+
+    public static void addToResourceList(Resource resource) {
+        resourceList.add(resource);
     }
 
     public void runProcess(Process process) {

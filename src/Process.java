@@ -33,6 +33,7 @@ public class Process {
         this.priority = priority;
         this.elementList = elementList;
         this.title = title;
+        OS.addToProcessList(this, priority);
         parent.addToChildren(this);
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
@@ -50,6 +51,7 @@ public class Process {
         for(Resource r: ownedResources){
             r.delete();
         }
+        OS.removeFromProcessList(this);
         //kvieciamas planuotojas..
     }
 
