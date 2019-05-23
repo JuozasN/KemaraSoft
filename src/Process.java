@@ -87,6 +87,10 @@ public abstract class Process {
         return state;
     }
 
+    public Resource getOwnedResource(int i) {
+        return this.ownedResources.get(i);
+    }
+
     public void removeFromChildren(Process children){
         this.children.remove(children);
     }

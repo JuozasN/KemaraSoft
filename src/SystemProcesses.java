@@ -9,6 +9,8 @@ public class SystemProcesses {
     public static Process LoadProgram = new Process() {
         @Override
         public void run() {
+            Resource fileNameRes = this.getOwnedResource(0);
+            fileNameRes.request(this);
 
         }
     };
