@@ -87,6 +87,10 @@ public abstract class Process {
         return state;
     }
 
+    public byte getPriority(){
+        return priority;
+    }
+
     public void removeFromChildren(Process children){
         this.children.remove(children);
     }
