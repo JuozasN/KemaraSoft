@@ -111,8 +111,8 @@ public class OS implements Initializable {
         } catch(ProgramInterrupt PI) {
             // Overflow
         }
-        // init StartStop
-        // start StartStop
+
+        SystemProcesses.startStop.run();
         while(true){
             // run scheduler
             try{
