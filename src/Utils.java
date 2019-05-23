@@ -131,4 +131,14 @@ public class Utils {
         }
         OS.processList.add(index, process);
     }
+
+    public static void addByPriority(ArrayList<Process> processList, Process process){
+        byte processPriority = process.getPriority();
+        int index = 0;
+        for(Process p: processList){
+            if(p.getPriority() < processPriority) break;
+            index++;
+        }
+        processList.add(index, process);
+    }
 }
