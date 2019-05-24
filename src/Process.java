@@ -91,6 +91,10 @@ public abstract class Process {
         return this.ownedResources.get(i);
     }
 
+    public byte getPriority(){
+        return priority;
+    }
+
     public void removeFromChildren(Process children){
         this.children.remove(children);
     }
