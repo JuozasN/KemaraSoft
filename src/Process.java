@@ -15,8 +15,8 @@ public abstract class Process {
     private long ID;
     private Short[] savedRegisters = new Short[7];
     private ArrayList<Resource> createdResources;
-    private ArrayList<Resource> ownedResources = new ArrayList<>();
-    private ArrayList<Resource> elementList;
+    private ArrayList<Block> ownedResources = new ArrayList<>();
+//    private ArrayList<Block> elementList;
     private byte state;
     private byte priority;
     private Process parent;
@@ -27,11 +27,11 @@ public abstract class Process {
         this.ID = previousID++;
     }
 
-    public void create(Process parent, byte state, byte priority, ArrayList<Resource> elementList, String title) {
+    public void create(Process parent, byte state, byte priority, String title) {
         this.parent = parent;
         this.state = state;
         this.priority = priority;
-        this.elementList = elementList;
+//        this.elementList = elementList;
         this.title = title;
         OS.addToProcessList(this, priority);
         parent.addToChildren(this);
@@ -48,9 +48,10 @@ public abstract class Process {
             c.delete();
         }
         parent.removeFromChildren(this);
-        for(Resource r: ownedResources){
-            r.delete();
-        }
+//        for(Resource r: ownedResources){
+//            r.delete();
+//        }
+        ownedResources.clear();
         OS.removeFromProcessList(this);
         //kvieciamas planuotojas..
     }
@@ -66,6 +67,8 @@ public abstract class Process {
     public void activate() {
         if(state >= ProcessState.BLOCKED_SUSPENDED){
             state -= ProcessState.SUSPENDED;
+        } else if (state == ProcessState.BLOCKED) {
+            state = ProcessState.READY;
         }
 
         //kvieciamas planuotojas..
@@ -87,9 +90,13 @@ public abstract class Process {
         return state;
     }
 
-    public Resource getOwnedResource(int i) {
-        return this.ownedResources.get(i);
+    public ArrayList<Block> getOwnedResources() {
+        return this.ownedResources;
     }
+
+//    public ArrayList<Block> getElementList() {
+//        return this.elementList;
+//    }
 
     public byte getPriority(){
         return priority;
@@ -107,13 +114,25 @@ public abstract class Process {
         this.createdResources.remove(resource);
     }
 
-    public void removeFromOwnedResources(Resource resource) {
-        this.ownedResources.remove(resource);
+    public void removeFromOwnedResources(Block resourceElement) {
+        this.ownedResources.remove(resourceElement);
+    }
+
+    public void removeOwnedResources() {
+        this.ownedResources.clear();
+    }
+//
+//    public void removeFromOwnedResources(Resource resource) {
+//        this.ownedResources.remove(resource);
+//    }
+
+//    public void addToOwnedResources(Resource resource) { this.ownedResources.add(resource); }
+
+    public void addToOwnedResources(Resource resource) {
+        this.ownedResources.addAll(resource.getElementList());
     }
 
     public void changeState(byte state) {
         this.state = state;
     }
-
-    public void addToOwnedResources(Resource resource) { this.ownedResources.add(resource); }
 }

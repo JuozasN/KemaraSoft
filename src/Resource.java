@@ -33,15 +33,30 @@ public class Resource {
     }
 
     public void request(Process process) {
-        process.changeState((byte)1); //1 = BLOCKED
+        process.changeState(Process.ProcessState.BLOCKED);
         this.waitingProcesses.add(process);
         Distributor.distributeResource(this);
     }
 
-    public void release(Process process) {
-        process.removeFromOwnedResources(this);
-        //KAZKA PADARYTI SU ELEMENT LIST...
+//    public void release(Process process) {
+//        process.removeFromOwnedResources(this);
+//        //KAZKA PADARYTI SU ELEMENT LIST...
+//        Distributor.distributeResource(this);
+//    }
+
+    public void release(Block element) {
+        // perduodame elementą resursui ir kviečiame paskirstytoją,
+        // kad jis perduotų elementą jo laukiančiam procesui
+        this.elementList.add(element);
         Distributor.distributeResource(this);
+    }
+
+    public ArrayList<Block> getElementList() {
+        return this.elementList;
+    }
+
+    public void removeElementList() {
+        this.elementList.clear();
     }
 
     public Process getTopWaitingProcess() {
@@ -51,5 +66,9 @@ public class Resource {
 
     public void removeFromWaitingList(Process process) {
         this.waitingProcesses.remove(process);
+    }
+
+    public boolean isProcessWaiting(Process process) {
+        return this.waitingProcesses.contains(process);
     }
 }

@@ -95,8 +95,9 @@ public class OS implements Initializable {
     private static final byte PROCESS_STATE_PC_INDEX = 2;
 
     public static final ArrayList<Process> processList = new ArrayList<>();
-
     public static final ArrayList<Resource> resourceList = new ArrayList<>();
+
+    public static final SystemResources systemResources = new SystemResources();
 
     private final RM realMachine = new RM(this);
     private VM process;
