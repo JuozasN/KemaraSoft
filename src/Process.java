@@ -10,18 +10,18 @@ public abstract class Process {
         public static final byte READY_SUSPENDED = 5;
     }
 
-    private ArrayList<Process> processList = new ArrayList<>();
-    private static long previousID = 0;
-    private long ID;
-    private Short[] savedRegisters = new Short[7];
-    private ArrayList<Resource> createdResources;
-    private ArrayList<Block> ownedResources = new ArrayList<>();
-//    private ArrayList<Block> elementList;
-    private byte state;
-    private byte priority;
-    private Process parent;
-    private ArrayList<Process> children;
-    private String title;
+    protected ArrayList<Process> processList = new ArrayList<>();
+    protected static long previousID = 0;
+    protected long ID;
+    protected Short[] savedRegisters = new Short[7];
+    protected ArrayList<Resource> createdResources;
+    protected ArrayList<Resource> ownedResources = new ArrayList<>();
+    protected ArrayList<Resource> elementList;
+    protected byte state;
+    protected byte priority;
+    protected Process parent;
+    protected ArrayList<Process> children;
+    protected String title;
 
     public Process(){
         this.ID = previousID++;
@@ -37,6 +37,7 @@ public abstract class Process {
         parent.addToChildren(this);
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
+        state = ProcessState.READY;
         //kvieciamas planuotojas..
     }
 

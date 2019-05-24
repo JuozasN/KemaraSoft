@@ -123,13 +123,7 @@ public class Utils {
     }
 
     public static void addByPriority(Process process){
-        byte processPriority = process.getPriority();
-        int index = 0;
-        for(Process p: OS.processList){
-            if(p.getPriority() < processPriority) break;
-            index++;
-        }
-        OS.processList.add(index, process);
+        addByPriority(OS.processList, process);
     }
 
     public static void addByPriority(ArrayList<Process> processList, Process process){
