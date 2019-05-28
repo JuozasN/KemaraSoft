@@ -15,8 +15,8 @@ public abstract class Process {
     protected long ID;
     protected Short[] savedRegisters = new Short[7];
     protected ArrayList<Resource> createdResources;
-    protected ArrayList<Resource> ownedResources = new ArrayList<>();
-    protected ArrayList<Resource> elementList;
+    protected ArrayList<Block> ownedResources = new ArrayList<>();
+//    protected ArrayList<Resource> elementList;
     protected byte state;
     protected byte priority;
     protected Process parent;
@@ -34,7 +34,8 @@ public abstract class Process {
 //        this.elementList = elementList;
         this.title = title;
         OS.addToProcessList(this, priority);
-        parent.addToChildren(this);
+        if (parent != null)
+            parent.addToChildren(this);
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
         state = ProcessState.READY;
