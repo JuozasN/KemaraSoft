@@ -12,7 +12,7 @@ public class JCL extends Process{
         switch(step){
             case 0:
                 //ownedResources.get("Užduotis supervizorinėje atmintyje").request(this);
-                step = 1;
+                stepIncrement();
                 return;
             case 1:
                 ArrayList<Word> program = new ArrayList<>();
@@ -20,7 +20,7 @@ public class JCL extends Process{
                     Word word = getWord(1);
                     if(word.toString() == "$BDY") {
                         releaseDynamicResource("Eilute atmintyje", "Nera programos antrastes");
-                        step = 0;
+                        stepReset();
                         return;
                     }else{
                         program.add(word);
@@ -30,7 +30,7 @@ public class JCL extends Process{
                             if(word.toString() == "$BDY"){break;}
                             if(word.toString() == ""){
                                 releaseDynamicResource("Eilute atmintyje", "Nera vartotojo programos");
-                                step = 0;
+                                stepReset();
                                 return;
                             }
                             program.add(word);
@@ -41,11 +41,11 @@ public class JCL extends Process{
                             if(word.toString() == "$END" || word.toString() == ""){
                                 if(word.toString() == "$END"){
                                     releaseDynamicResource("MainProc uzduotis", "Vykdymo laikas = 1");
-                                    step = 0;
+                                    stepReset();
                                     return;
                                 }
                                 releaseDynamicResource("Eilute atmintyje", "Nera programos pabaigos zymes");
-                                step = 0;
+                                stepReset();
                                 return;
                             }else{
                                 program.add(word);
@@ -55,7 +55,7 @@ public class JCL extends Process{
                     }
                 }else{
                     releaseDynamicResource("Eilute atmintyje", "Nera programos antrastes");
-                    step = 0;
+                    stepReset();
                     return;
                 }
             default:
