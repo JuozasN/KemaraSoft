@@ -63,4 +63,13 @@ public class Resource {
     public boolean isProcessWaiting(Process process) {
         return this.waitingProcesses.contains(process);
     }
+
+    public String getElementsAsString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(elementList.get(0));
+        for(int i = 1; i < elementList.size(); ++i) {
+            sb.append(elementList.get(i));
+        }
+        return(sb.toString());
+    }
 }

@@ -204,15 +204,60 @@ public class OS implements Initializable {
     }
 
     /**
-     * SET REAL MACHINE AND VIRTUAL MACHINE REGISTERS
+     * ADD ITEMS TO PROCESS QUEUE AND RESOURCES TABLES
      */
 
-    
+    // adds a process row at the end of the process queue list
+    public void addPQRow(Process process) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.add(new PQRow(processViewValues.size(), process));
+    }
+
+    // adds a resource row at the end of the resources list
+    public void addResRow(Resource resource) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.add(new ResRow(resViewValues.size(), resource));
+    }
+
+    // adds a process row at the index position of the process queue list
+    public void addPQRow(int index, Process process) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.add(index, new PQRow(processViewValues.size(), process));
+    }
+
+    // adds a resource row at the index position of the resources list
+    public void addResRow(int index, Resource resource) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.add(index, new ResRow(resViewValues.size(), resource));
+    }
 
     /**
-     * SET REAL MACHINE, VIRTUAL MACHINE AND KERNEL MEMORY
+     * REMOVES ITEMS FROM PROCESS QUEUE AND RESOURCES TABLES
      */
 
+    // removes a process row from the end of the process queue list
+    public void removePQRow() {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.remove(processViewValues.size()-1);
+    }
+
+    // removes a resource row from the end of the resources list
+    public void removeResRow() {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.remove(resViewValues.size()-1);
+    }
+
+    // removes a process row from the index position of the process queue list
+    public void removePQRow(int index) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.remove(index);
+    }
+
+    // removes a resource row from the index position of the resources list
+    public void removeResRow(int index) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.remove(index);
+    }
 
     /**
      * RANDOM RM MEMORY ASSIGNMENT MECHANISM
