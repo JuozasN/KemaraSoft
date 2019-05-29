@@ -1,6 +1,9 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,6 +11,17 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class OS implements Initializable {
+    @FXML private TableView<PQRow> processQueueView;
+    @FXML private TableColumn<PQRow, String> PQLineNoCol;
+    @FXML private TableColumn<PQRow, String> PQTitleCol;
+    @FXML private TableColumn<PQRow, String> PQStateCol;
+    @FXML private TableColumn<PQRow, String> PQPriorityCol;
+
+    @FXML private TableView<ResRow> resourcesView;
+    @FXML private TableColumn<ResRow, String> ResLineNoCol;
+    @FXML private TableColumn<ResRow, String> ResTitleCol;
+    @FXML private TableColumn<ResRow, String> ResElementsCol;
+
     @FXML private Button runButton;
     @FXML private Button stepButton;
     @FXML private Button resetButton;
@@ -108,16 +122,52 @@ public class OS implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        initializePQTable();
+        initializeResTable();
     }
 
     /**
      * UI INITIALIZATION METHODS
      */
 
+    private void initializePQTable() {
+        PQLineNoCol.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        PQTitleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        PQStateCol.setCellValueFactory(new PropertyValueFactory<>("State"));
+        PQPriorityCol.setCellValueFactory(new PropertyValueFactory<>("Priority"));
+
+        ObservableList<PQRow> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new PQRow("1"));
+
+        processQueueView.setItems(tableValues);
+    }
+
+    private void initializeResTable() {
+        ResLineNoCol.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        ResTitleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        ResElementsCol.setCellValueFactory(new PropertyValueFactory<>("Elements"));
+
+        ObservableList<ResRow> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new ResRow("1"));
+
+        resourcesView.setItems(tableValues);
+    }
+
     /**
      * GETTERS AND SETTERS
      */
+
+    public RM getRealMachine() {
+        return realMachine;
+    }
+
+    public ObservableList<PQRow> getProcessQueueValues(){
+        return processQueueView.getItems();
+    }
+
+    public ObservableList<ResRow> getResourcesValues(){
+        return resourcesView.getItems();
+    }
 
     /**
      * UI METHODS
@@ -156,6 +206,8 @@ public class OS implements Initializable {
     /**
      * SET REAL MACHINE AND VIRTUAL MACHINE REGISTERS
      */
+
+    
 
     /**
      * SET REAL MACHINE, VIRTUAL MACHINE AND KERNEL MEMORY
