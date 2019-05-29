@@ -6,6 +6,7 @@
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -13,8 +14,26 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane prefHeight="637.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OS">
+<SplitPane dividerPositions="0.25" prefHeight="637.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OS">
    <items>
+      <VBox prefWidth="256.0">
+         <children>
+            <Label text="Operating System Log">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <TextArea fx:id="processLog" editable="false" wrapText="true" VBox.vgrow="ALWAYS">
+               <VBox.margin>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets></TextArea>
+         </children></VBox>
       <VBox>
          <children>
             <SplitPane dividerPositions="0.5" prefWidth="665.0" VBox.vgrow="ALWAYS">
@@ -25,6 +44,9 @@
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
                         </Label>
                         <TableView fx:id="processQueueView" VBox.vgrow="ALWAYS">
                            <columns>
@@ -45,6 +67,9 @@
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
                         </Label>
                         <TableView fx:id="resourcesView" VBox.vgrow="ALWAYS">
                            <columns>

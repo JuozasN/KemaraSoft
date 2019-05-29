@@ -22,6 +22,8 @@ public class OS implements Initializable {
     @FXML private TableColumn<ResRow, String> ResTitleCol;
     @FXML private TableColumn<ResRow, String> ResElementsCol;
 
+    @FXML private TextArea processLog;
+
     @FXML private Button runButton;
     @FXML private Button stepButton;
     @FXML private Button resetButton;
@@ -124,6 +126,7 @@ public class OS implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializePQTable();
         initializeResTable();
+        appendProcessLog("hello world");
     }
 
     /**
@@ -167,6 +170,10 @@ public class OS implements Initializable {
 
     public ObservableList<ResRow> getResourcesValues(){
         return resourcesView.getItems();
+    }
+
+    public String getProcessLog() {
+        return this.processLog.getText();
     }
 
     /**
@@ -257,6 +264,22 @@ public class OS implements Initializable {
     public void removeResRow(int index) {
         ObservableList<ResRow> resViewValues = getResourcesValues();
         resViewValues.remove(index);
+    }
+
+    /**
+     * APPEND TO PROCESS LOG
+     */
+
+    public void appendProcessLog(String text) {
+        processLog.appendText(text + "\n");
+    }
+
+    /**
+     * RESET PROCESS LOG
+     */
+
+    public void resetProcessLog() {
+        processLog.setText("");
     }
 
     /**
