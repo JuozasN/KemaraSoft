@@ -101,6 +101,11 @@ public abstract class Process {
 //        return this.elementList;
 //    }
 
+
+    public String getTitle() {
+        return title;
+    }
+
     public byte getPriority(){
         return priority;
     }

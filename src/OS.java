@@ -1,6 +1,9 @@
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -8,6 +11,19 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class OS implements Initializable {
+    @FXML private TableView<PQRow> processQueueView;
+    @FXML private TableColumn<PQRow, String> PQLineNoCol;
+    @FXML private TableColumn<PQRow, String> PQTitleCol;
+    @FXML private TableColumn<PQRow, String> PQStateCol;
+    @FXML private TableColumn<PQRow, String> PQPriorityCol;
+
+    @FXML private TableView<ResRow> resourcesView;
+    @FXML private TableColumn<ResRow, String> ResLineNoCol;
+    @FXML private TableColumn<ResRow, String> ResTitleCol;
+    @FXML private TableColumn<ResRow, String> ResElementsCol;
+
+    @FXML private TextArea processLog;
+
     @FXML private Button runButton;
     @FXML private Button stepButton;
     @FXML private Button resetButton;
@@ -108,16 +124,57 @@ public class OS implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        initializePQTable();
+        initializeResTable();
+        appendProcessLog("hello world");
     }
 
     /**
      * UI INITIALIZATION METHODS
      */
 
+    private void initializePQTable() {
+        PQLineNoCol.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        PQTitleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        PQStateCol.setCellValueFactory(new PropertyValueFactory<>("State"));
+        PQPriorityCol.setCellValueFactory(new PropertyValueFactory<>("Priority"));
+
+        ObservableList<PQRow> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new PQRow("1"));
+
+        processQueueView.setItems(tableValues);
+    }
+
+    private void initializeResTable() {
+        ResLineNoCol.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        ResTitleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
+        ResElementsCol.setCellValueFactory(new PropertyValueFactory<>("Elements"));
+
+        ObservableList<ResRow> tableValues = FXCollections.observableArrayList();
+        tableValues.add(new ResRow("1"));
+
+        resourcesView.setItems(tableValues);
+    }
+
     /**
      * GETTERS AND SETTERS
      */
+
+    public RM getRealMachine() {
+        return realMachine;
+    }
+
+    public ObservableList<PQRow> getProcessQueueValues(){
+        return processQueueView.getItems();
+    }
+
+    public ObservableList<ResRow> getResourcesValues(){
+        return resourcesView.getItems();
+    }
+
+    public String getProcessLog() {
+        return this.processLog.getText();
+    }
 
     /**
      * UI METHODS
@@ -154,13 +211,76 @@ public class OS implements Initializable {
     }
 
     /**
-     * SET REAL MACHINE AND VIRTUAL MACHINE REGISTERS
+     * ADD ITEMS TO PROCESS QUEUE AND RESOURCES TABLES
      */
+
+    // adds a process row at the end of the process queue list
+    public void addPQRow(Process process) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.add(new PQRow(processViewValues.size(), process));
+    }
+
+    // adds a resource row at the end of the resources list
+    public void addResRow(Resource resource) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.add(new ResRow(resViewValues.size(), resource));
+    }
+
+    // adds a process row at the index position of the process queue list
+    public void addPQRow(int index, Process process) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.add(index, new PQRow(processViewValues.size(), process));
+    }
+
+    // adds a resource row at the index position of the resources list
+    public void addResRow(int index, Resource resource) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.add(index, new ResRow(resViewValues.size(), resource));
+    }
 
     /**
-     * SET REAL MACHINE, VIRTUAL MACHINE AND KERNEL MEMORY
+     * REMOVES ITEMS FROM PROCESS QUEUE AND RESOURCES TABLES
      */
 
+    // removes a process row from the end of the process queue list
+    public void removePQRow() {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.remove(processViewValues.size()-1);
+    }
+
+    // removes a resource row from the end of the resources list
+    public void removeResRow() {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.remove(resViewValues.size()-1);
+    }
+
+    // removes a process row from the index position of the process queue list
+    public void removePQRow(int index) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        processViewValues.remove(index);
+    }
+
+    // removes a resource row from the index position of the resources list
+    public void removeResRow(int index) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        resViewValues.remove(index);
+    }
+
+    /**
+     * APPEND TO PROCESS LOG
+     */
+
+    public void appendProcessLog(String text) {
+        processLog.appendText(text + "\n");
+    }
+
+    /**
+     * RESET PROCESS LOG
+     */
+
+    public void resetProcessLog() {
+        processLog.setText("");
+    }
 
     /**
      * RANDOM RM MEMORY ASSIGNMENT MECHANISM
