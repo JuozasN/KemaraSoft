@@ -149,6 +149,14 @@ public abstract class Process {
         this.ownedResources.addAll(resource.getElementList());
     }
 
+    public void stepIncrement(){
+        step++;
+    }
+
+    public void stepReset(){
+        step = 0;
+    }
+
     public void changeState(byte state) {
         this.state = state;
     }

@@ -5,7 +5,6 @@ public class Resource {
     private long id;
     private String title;
     private Process creator;
-    private ArrayList<Block> elementList;
     private ArrayList<Process> waitingProcesses;
     //private ArrayList<Resource> resourceList;
 
@@ -18,13 +17,11 @@ public class Resource {
         creator.addToCreatedResources(this);
         this.creator = creator;
         this.title = title;
-        this.elementList = new ArrayList<>();
         this.waitingProcesses = new ArrayList<>();
     }
 
     public void delete() {
         this.creator.removeFromCreatedResources(this);
-        this.elementList.clear();
         for(Process p: this.waitingProcesses){
             p.changeState((byte)2); //2 = READY
         }
@@ -44,23 +41,14 @@ public class Resource {
 //        Distributor.distributeResource(this);
 //    }
 
-    public void release(Block element) {
+    public void release() {
         // perduodame elementą resursui ir kviečiame paskirstytoją,
         // kad jis perduotų elementą jo laukiančiam procesui
-        this.elementList.add(element);
         Distributor.distributeResource(this);
     }
 
     public String getTitle(){
         return this.title;
-    }
-
-    public ArrayList<Block> getElementList() {
-        return this.elementList;
-    }
-
-    public void removeElementList() {
-        this.elementList.clear();
     }
 
     public Process getTopWaitingProcess() {
