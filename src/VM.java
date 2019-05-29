@@ -10,48 +10,51 @@ public class VM {
         public static final byte SP = 0;
     }
 
-	private final OS controller;
+	private final OS os;
+	private final RM rm;
 	private Block[] mem;
 	private Short pc;
 	private Short sp;
 
-	public VM(OS controller, Block[] mem){
+	public VM(OS os, RM rm, Block[] mem){
 		this.mem = mem;
 		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
-        this.controller = controller;
-        this.controller.assignRMMemoryBlocksForVM();
+        this.os = os;
+        this.os.assignRMMemoryBlocksForVM();
         setPC((short) 0);
         setSP((short) 0xA0);
+		this.rm = rm;
 	}
 
-	public VM(OS controller) {
-		this(controller, new Block[Utils.VM_MEM_BLOCK_COUNT]);
+	public VM(OS os, RM rm) {
+		this(os, rm, new Block[Utils.VM_MEM_BLOCK_COUNT]);
 	}
 
     public Block[] getMem() {
         return mem;
     }
 
+    /**
 	public void clear() {
-		setRegValue(VMRegIndexes.SP, (short) 0);
-		setRegValue(VMRegIndexes.PC, (short) 0);
+		setRMRegValuePaging(VMRegIndexes.SP, (short) 0);
+		setRMRegValuePaging(VMRegIndexes.PC, (short) 0);
 
 		for(byte i = 0; i < mem.length; ++i)
 			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
-				controller.setVMMemValue(i, j, "0000");
-				//setUITableValues(i, j, "0000");
+				this.mem[i].setWord(j, 0);
 	}
 
 	public void load() {
-		setRegValue(VMRegIndexes.SP, sp);
-		setRegValue(VMRegIndexes.PC, pc);
+		setRMRegValuePaging(VMRegIndexes.SP, sp);
+		setRMRegValuePaging(VMRegIndexes.PC, pc);
 
 		for(byte i = 0; i < mem.length; ++i)
 			for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
-				controller.setVMMemValue(i, j, mem[i].getWordString(j));
+				os.setVMMemValue(i, j, mem[i].getWordString(j));
 //				setUITableValues(i, j, mem[i].getWordString(j));
 	}
+	**/
 
     public void reset() {
         resetRegisters();
@@ -67,7 +70,7 @@ public class VM {
         // reset only assigned memory blocks
         for(byte i = 0; i < mem.length; ++i)
             for(byte j = 0; j < Utils.BLOCK_WORD_COUNT; ++j)
-                setValue(0, i, j);
+                setMemValue(0, i, j);
     }
 
     public static short strToShort(String str) throws ProgramInterrupt{
@@ -94,73 +97,74 @@ public class VM {
 
 	public void incrementSP(){
 	    ++sp;
-	    setRegValue(VMRegIndexes.SP, sp);
-//	    controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+	    setRMRegValuePaging(VMRegIndexes.SP, sp);
+//	    os.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
     }
 
     public void decrementSP(){
 		--sp;
-        setRegValue(VMRegIndexes.SP, sp);
-//		controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+        setRMRegValuePaging(VMRegIndexes.SP, sp);
+//		os.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
 
 	}
 
 	private void setSP(Short value) {
 	    sp = value;
-	    setRegValue(VMRegIndexes.SP, sp);
+	    setRMRegValuePaging(VMRegIndexes.SP, sp);
     }
 
 	private void resetSP() {
         sp = (byte) 0;
-		controller.setVMRegValue(VMRegIndexes.SP, Utils.INITIAL_REG_VAL_STR);
-		controller.setRMRegValue(Paging.getRMRegIndex(VMRegIndexes.SP), Utils.INITIAL_REG_VAL_STR);
-//        setRegValue(VMRegIndexes.SP, sp);
-//        controller.setVMRegValue(VMRegIndexes.SP, Utils.byteToHexString(sp));
+        rm.setSP(sp);
     }
 
 	public void setPC(Short value){
 		pc = value;
-        setRegValue(VMRegIndexes.PC, pc);
-//		controller.setVMRegValue(VMRegIndexes.PC, Utils.byteToHexString(pc));
+        setRMRegValuePaging(VMRegIndexes.PC, pc);
 	}
 
 	private void resetPC() {
 		pc = (byte) 0;
-		controller.setVMRegValue(VMRegIndexes.PC, Utils.INITIAL_REG_VAL_STR);
-		controller.setRMRegValue(Paging.getRMRegIndex(VMRegIndexes.PC), Utils.INITIAL_REG_VAL_STR);
+		rm.setPC(pc);
 	}
 
-	public void setRegValue(byte register, Short value) {
-	    controller.setVMRegValue(register, Utils.shortToHexString(value));
+	public void setRMRegValuePaging(byte register, Short value) {
 	    // use paging mechanism to change RM registers
-	    controller.setRMRegValue(Paging.getRMRegIndex(register), Utils.shortToHexString(Paging.getUMAdr(value)));
+	    rm.setReg(Paging.getRMRegIndex(register), Paging.getUMAdr(value));
     }
 
-    private void setValue(int value, byte block, byte word) {
+    private void setMemValue(int value, byte block, byte word) {
         mem[block].setWord(word, value);
-//        setUITableValues(block, word, Utils.intToHexString(value));
-        setUITableValues(block, word, mem[block].getWordString(word));
+        setRMMemValuePaging(value, block, word);
     }
 
-	public void setValue(int value, Short adr){
+	public void setMemValue(int value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
-		setValue(value, block, word);
+		setMemValue(value, block, word);
 	}
 
-	public void setValue(byte[] value, Short adr){
+	public void setMemValue(byte[] value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
         mem[block].setWord(word, value);
-        setUITableValues(block, word, mem[block].getWordString(word));
+        setRMMemValuePaging(Utils.bytesToShort(value), block, word);
 	}
 
-	private void setUITableValues(byte block, byte word, String value) {
-        controller.setRMMemValuePaging(block, word, value);
-        controller.setVMMemValue(block, word, value);
-    }
+	// uses paging mechanism
+	public void setRMMemValuePaging(int value, byte vmBlock, byte vmWord) {
+		if (vmBlock < 0x0 || vmBlock > Utils.UM_BLOCK_COUNT-1 || vmWord < 0x0 || vmWord > Utils.BLOCK_WORD_COUNT-1)
+			return;
 
-	public Word getValue(Short adr){
+		Short adr = Paging.getUMAdr(vmBlock, vmWord);
+		if (adr == null) {
+			System.err.println("ERROR converting VM memory address to RM memory address in method setRMMemValuePaging()");
+			return;
+		}
+		rm.setValue(value, adr);
+	}
+
+	public Word getMemValue(Short adr){
 		byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
 		byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
 		return mem[block].getWord(word);
@@ -168,7 +172,7 @@ public class VM {
 
 	public void loadProgram() throws ProgramInterrupt{
         BufferedReader br;
-        String tempFilePath = "src/" + controller.filename.getText();
+        String tempFilePath = "src/" + os.filename.getText();
         try {
             br = new BufferedReader(new FileReader(tempFilePath));
 
@@ -179,7 +183,7 @@ public class VM {
                     if (str.length() > 4) {
 						throw new ProgramInterrupt((byte)4, "Overflow");
                     }
-                    setValue(str.getBytes(), (short) adr);
+                    setMemValue(str.getBytes(), (short) adr);
                     adr++;
                 }
             }
@@ -213,7 +217,7 @@ public class VM {
 			case "JMP": jmp(4,read()); break;
 			case "GET": get(); break;
 			case "PUT": put(); break;
-			case "HALT": controller.haltInterrupt(); break;
+			case "HALT": os.haltInterrupt(); break;
 //			case "HALT": throw new SystemInterrupt(3, "HALT!!!");
 			default:
 				throw new ProgramInterrupt((byte)2, "Invalid command: " + command);
@@ -230,33 +234,33 @@ public class VM {
 	}
 	
 	public String read(){
-		String value = getValue(pc).toString();
+		String value = getMemValue(pc).toString();
 		setPC(++pc);
 		return value;
 	}
 	
 	public void push(String strAdr) throws ProgramInterrupt{
 		Short adr = strToShort(strAdr);
-		Word value = getValue(adr);
-		setValue(value.getValue(), sp);
+		Word value = getMemValue(adr);
+		setMemValue(value.getValue(), sp);
 		incrementSP();
 	}
 	
 	public void pshc(String strVal){
-		setValue(strVal.getBytes(), sp);
+		setMemValue(strVal.getBytes(), sp);
 		incrementSP();
 	}
 	
 	public Word pop(){
-		setValue(0, sp);
+		setMemValue(0, sp);
 		decrementSP();
-		return getValue(sp);
+		return getMemValue(sp);
 	}
 	
 	public void popm(String strAdr) throws ProgramInterrupt{
 		Short adr = strToShort(strAdr);
 		Word value = pop();
-		setValue(value.getValue(), adr);
+		setMemValue(value.getValue(), adr);
 	}
 	
 	public void top(String strAdr) throws ProgramInterrupt{

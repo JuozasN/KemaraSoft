@@ -24,7 +24,7 @@ public class SystemProcesses {
                 // ?? nuskaitom failo pavadinimą iš įvedimo supervizorinėje atmintyje?
                 // Block input = OS.readInput();
                 Block input = ownedResources.get(0);
-                if (Utils.validateFileName(input)) { // validuojame įvedimą
+                if (true/**Utils.validateFileName(input)**/) { // validuojame įvedimą
                     // failo pavadinimas korektiškas
                     // failą nuskaitom ir suskaidom blokais...
                     // request'inam supervizorinės atminties resurso

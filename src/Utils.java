@@ -3,7 +3,6 @@ import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Utils {
     public static final byte VM_MEM_BLOCK_COUNT = 0x10;      // virtual machine memory block count
@@ -92,7 +91,7 @@ public class Utils {
         return bigInt.toByteArray();
     }
 
-    public static int byteArrayToInt(byte[] value) {
+    public static int bytesToInt(byte[] value) {
         if (value == null)
             return -1;
 
@@ -104,16 +103,16 @@ public class Utils {
         return intValue;
     }
 
-//    public static int byteArrayToInt(byte[] value) {
+//    public static int bytesToInt(byte[] value) {
 //        return ByteBuffer.wrap(value).getInt();
 //    }
 
-    public static short byteArrayToShort(byte[] value) {
+    public static short bytesToShort(byte[] value) {
         return ByteBuffer.wrap(value).getShort();
     }
 
     public static byte[] addToByteArray(byte[] byteArray, int addValue) {
-        int valueResult = byteArrayToInt(byteArray) + addValue;
+        int valueResult = bytesToInt(byteArray) + addValue;
         return intToByteArray(valueResult);
     }
 

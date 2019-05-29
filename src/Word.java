@@ -45,16 +45,16 @@ public class Word {
 	    this.value = value;
     }
 
-//	public void setValue(byte[] value){
+//	public void setMemValue(byte[] value){
 //		resetValue(); System.arraycopy(value, 0, this.value, 0, value.length);
 //	}
 
 	public void setValue(String value) {
-		this.value = Utils.byteArrayToInt(value.getBytes());
+		this.value = Utils.bytesToInt(value.getBytes());
 	}
 
 	public void setValue(byte[] value) {
-		this.value = Utils.byteArrayToInt(value);
+		this.value = Utils.bytesToInt(value);
 	}
 	
 	public String toString(){
