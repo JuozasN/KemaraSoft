@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
@@ -14,175 +13,118 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.2, 0.6" prefHeight="637.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OS">
+<SplitPane prefHeight="637.0" prefWidth="667.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="OS">
    <items>
-      <ScrollPane fitToHeight="true" fitToWidth="true" maxWidth="300.0" minWidth="125.0">
-         <content>
-            <VBox maxWidth="300.0" minWidth="125.0">
-               <children>
-                  <Label text="RM Processor" VBox.vgrow="ALWAYS">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-                  <TableView fx:id="RMRegView" maxHeight="194.0" maxWidth="300.0" minHeight="194.0" minWidth="125.0" prefHeight="194.0" prefWidth="212.0" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn fx:id="RMRegisterNameColumn" text="Register" />
-                      <TableColumn fx:id="RMRegisterValueColumn" text="Value" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                  </TableView>
-                  <Label text="VM Processor" VBox.vgrow="ALWAYS">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                  </Label>
-                  <TableView fx:id="VMRegView" maxHeight="74.0" maxWidth="300.0" minHeight="74.0" minWidth="125.0" prefHeight="74.0" prefWidth="224.0" VBox.vgrow="ALWAYS">
-                    <columns>
-                      <TableColumn fx:id="VMRegisterNameColumn" text="Register" />
-                      <TableColumn fx:id="VMRegisterValueColumn" text="Value" />
-                    </columns>
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <VBox.margin>
-                        <Insets bottom="20.0" />
-                     </VBox.margin>
-                  </TableView>
-                  <GridPane minHeight="105.0" VBox.vgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Button fx:id="stepButton" mnemonicParsing="false" onAction="#stepButtonAction" prefHeight="25.0" prefWidth="100.0" text="Step" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetButtonAction" prefWidth="100.0" text="Reset" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Button fx:id="runButton" mnemonicParsing="false" onAction="#runButtonAction" prefWidth="100.0" text="Run" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Button fx:id="loadButton" mnemonicParsing="false" onAction="#loadButtonAction" prefWidth="100.0" text="Load" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER">
-                           <GridPane.margin>
-                              <Insets bottom="2.0" />
-                           </GridPane.margin>
-                        </Button>
-                     </children>
-                  </GridPane>
-                  <GridPane minHeight="150.0" VBox.vgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="17.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <Label text="Previous Command:" />
-                        <Label fx:id="previousLine" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Label fx:id="currentLine" GridPane.rowIndex="3">
-                           <GridPane.margin>
-                              <Insets bottom="5.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Label text="Current Command:" GridPane.rowIndex="2" />
-                        <Label text="Name of file to load:" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
-                        <TextField fx:id="filename" promptText="Enter filename" GridPane.rowIndex="5" />
-                     </children>
-                     <padding>
-                        <Insets bottom="20.0" left="5.0" right="5.0" top="20.0" />
-                     </padding>
-                  </GridPane>
-               </children>
-            </VBox>
-         </content>
-      </ScrollPane>
       <VBox>
          <children>
-            <Label text="Real Memory">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <TableView fx:id="RMMemView" VBox.vgrow="ALWAYS">
-              <columns>
-                <TableColumn fx:id="RMLineNo" minWidth="35.0" prefWidth="0.0" />
-                <TableColumn fx:id="RMCol0" minWidth="35.0" prefWidth="0.0" text="0" />
-                  <TableColumn fx:id="RMCol1" minWidth="35.0" prefWidth="0.0" text="1" />
-                  <TableColumn fx:id="RMCol2" minWidth="35.0" prefWidth="0.0" text="2" />
-                  <TableColumn fx:id="RMCol3" minWidth="35.0" prefWidth="0.0" text="3" />
-                  <TableColumn fx:id="RMCol4" minWidth="35.0" prefWidth="0.0" text="4" />
-                  <TableColumn fx:id="RMCol5" minWidth="35.0" prefWidth="0.0" text="5" />
-                  <TableColumn fx:id="RMCol6" minWidth="35.0" prefWidth="0.0" text="6" />
-                  <TableColumn fx:id="RMCol7" minWidth="35.0" prefWidth="0.0" text="7" />
-                  <TableColumn fx:id="RMCol8" minWidth="35.0" prefWidth="0.0" text="8" />
-                  <TableColumn fx:id="RMCol9" minWidth="35.0" prefWidth="0.0" text="9" />
-                  <TableColumn fx:id="RMColA" minWidth="35.0" prefWidth="0.0" text="A" />
-                  <TableColumn fx:id="RMColB" minWidth="35.0" prefWidth="0.0" text="B" />
-                  <TableColumn fx:id="RMColC" minWidth="35.0" prefWidth="0.0" text="C" />
-                  <TableColumn fx:id="RMColD" minWidth="35.0" prefWidth="0.0" text="D" />
-                  <TableColumn fx:id="RMColE" minWidth="35.0" prefWidth="0.0" text="E" />
-                  <TableColumn fx:id="RMColF" minWidth="35.0" prefWidth="0.0" text="F" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
-            <Label text="Virtual Memory">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <TableView fx:id="VMMemView" maxWidth="1.7976931348623157E308" prefHeight="399.0" prefWidth="937.0" VBox.vgrow="ALWAYS">
-               <columns>
-                  <TableColumn fx:id="VMLineNo" minWidth="35.0" prefWidth="55.0" />
-                  <TableColumn fx:id="VMCol0" minWidth="35.0" prefWidth="55.0" text="0" />
-                  <TableColumn fx:id="VMCol1" minWidth="35.0" prefWidth="55.0" text="1" />
-                  <TableColumn fx:id="VMCol2" minWidth="35.0" prefWidth="55.0" text="2" />
-                  <TableColumn fx:id="VMCol3" minWidth="35.0" prefWidth="55.0" text="3" />
-                  <TableColumn fx:id="VMCol4" minWidth="35.0" prefWidth="55.0" text="4" />
-                  <TableColumn fx:id="VMCol5" minWidth="35.0" prefWidth="55.0" text="5" />
-                  <TableColumn fx:id="VMCol6" minWidth="35.0" prefWidth="55.0" text="6" />
-                  <TableColumn fx:id="VMCol7" minWidth="35.0" prefWidth="55.0" text="7" />
-                  <TableColumn fx:id="VMCol8" minWidth="35.0" prefWidth="55.0" text="8" />
-                  <TableColumn fx:id="VMCol9" minWidth="35.0" prefWidth="55.0" text="9" />
-                  <TableColumn fx:id="VMColA" minWidth="35.0" prefWidth="55.0" text="A" />
-                  <TableColumn fx:id="VMColB" minWidth="35.0" prefWidth="55.0" text="B" />
-                  <TableColumn fx:id="VMColC" minWidth="35.0" prefWidth="55.0" text="C" />
-                  <TableColumn fx:id="VMColD" minWidth="35.0" prefWidth="55.0" text="D" />
-                  <TableColumn fx:id="VMColE" minWidth="35.0" prefWidth="55.0" text="E" />
-                  <TableColumn fx:id="VMColF" minWidth="35.0" prefWidth="55.0" text="F" />
-               </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
+            <SplitPane dividerPositions="0.5" prefWidth="665.0" VBox.vgrow="ALWAYS">
+              <items>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Process Queue">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="processQueueView" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="PQLineNoCol" maxWidth="40.0" minWidth="20.0" prefWidth="30.0" text="#" />
+                              <TableColumn fx:id="PQTitleCol" minWidth="35.0" prefWidth="-1.0" text="Title" />
+                              <TableColumn fx:id="PQStateCol" prefWidth="75.0" text="State" />
+                              <TableColumn fx:id="PQPriorityCol" prefWidth="75.0" text="Priority" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Label text="Resources">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="resourcesView" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="ResLineNoCol" maxWidth="40.0" minWidth="20.0" prefWidth="30.0" text="#" />
+                              <TableColumn fx:id="ResTitleCol" minWidth="35.0" prefWidth="-1.0" text="Title" />
+                              <TableColumn fx:id="ResElementsCol" prefWidth="75.0" text="Elements" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children></VBox>
+              </items>
+            </SplitPane>
+            <GridPane prefWidth="665.0" VBox.vgrow="NEVER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button fx:id="stepButton" mnemonicParsing="false" onAction="#stepButtonAction" prefHeight="25.0" prefWidth="250.0" text="Step" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="resetButton" mnemonicParsing="false" onAction="#resetButtonAction" prefWidth="250.0" text="Reset" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="runButton" mnemonicParsing="false" onAction="#runButtonAction" prefWidth="250.0" text="Run" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Button fx:id="loadButton" mnemonicParsing="false" onAction="#loadButtonAction" prefWidth="250.0" text="Load" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="2.0" />
+                     </GridPane.margin>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </GridPane>
+            <GridPane VBox.vgrow="NEVER">
+               <columnConstraints>
+                  <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" />
+                  <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints vgrow="NEVER" />
+                  <RowConstraints vgrow="NEVER" />
+               </rowConstraints>
+               <children>
+                  <Label text="Previous Command:" />
+                  <Label fx:id="previousLine" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Current Command:" GridPane.columnIndex="1" />
+                  <Label fx:id="currentLine" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Name of file to load:" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.valignment="CENTER" />
+                  <TextField fx:id="filename" promptText="Enter filename" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </GridPane>
             <GridPane minHeight="100.0">
               <columnConstraints>
                 <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -198,78 +140,6 @@
                   <Button fx:id="inputConfirm" disable="true" mnemonicParsing="false" onAction="#inputConfirmAction" prefHeight="40.0" prefWidth="200.0" text="Enter" GridPane.columnIndex="2" GridPane.hgrow="ALWAYS" />
                </children>
             </GridPane>
-         </children>
-      </VBox>
-      <VBox>
-         <children>
-            <Label text="Kernel Memory">
-               <font>
-                  <Font name="System Bold" size="16.0" />
-               </font>
-            </Label>
-            <TableView fx:id="KMemView" VBox.vgrow="ALWAYS">
-               <columns>
-                  <TableColumn fx:id="KMLineNo" minWidth="35.0" prefWidth="0.0" />
-                  <TableColumn fx:id="KMCol0" minWidth="35.0" prefWidth="0.0" text="0" />
-                  <TableColumn fx:id="KMCol1" minWidth="35.0" prefWidth="0.0" text="1" />
-                  <TableColumn fx:id="KMCol2" minWidth="35.0" prefWidth="0.0" text="2" />
-                  <TableColumn fx:id="KMCol3" minWidth="35.0" prefWidth="0.0" text="3" />
-                  <TableColumn fx:id="KMCol4" minWidth="35.0" prefWidth="0.0" text="4" />
-                  <TableColumn fx:id="KMCol5" minWidth="35.0" prefWidth="0.0" text="5" />
-                  <TableColumn fx:id="KMCol6" minWidth="35.0" prefWidth="0.0" text="6" />
-                  <TableColumn fx:id="KMCol7" minWidth="35.0" prefWidth="0.0" text="7" />
-                  <TableColumn fx:id="KMCol8" minWidth="35.0" prefWidth="0.0" text="8" />
-                  <TableColumn fx:id="KMCol9" minWidth="35.0" prefWidth="0.0" text="9" />
-                  <TableColumn fx:id="KMColA" minWidth="35.0" prefWidth="0.0" text="A" />
-                  <TableColumn fx:id="KMColB" minWidth="35.0" prefWidth="0.0" text="B" />
-                  <TableColumn fx:id="KMColC" minWidth="35.0" prefWidth="0.0" text="C" />
-                  <TableColumn fx:id="KMColD" minWidth="35.0" prefWidth="0.0" text="D" />
-                  <TableColumn fx:id="KMColE" minWidth="35.0" prefWidth="0.0" text="E" />
-                  <TableColumn fx:id="KMColF" minWidth="35.0" prefWidth="0.0" text="F" />
-               </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
-            <SplitPane dividerPositions="0.5" VBox.vgrow="ALWAYS">
-              <items>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <Label text="Ready Process Queue">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Label>
-                        <TableView fx:id="ReadyProcView">
-                           <columns>
-                              <TableColumn fx:id="RPLineNo" maxWidth="40.0" minWidth="20.0" prefWidth="30.0" />
-                              <TableColumn fx:id="RPCol0" minWidth="35.0" prefWidth="-1.0" text="Title" />
-                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </children>
-                  </VBox>
-                  <VBox prefHeight="200.0" prefWidth="100.0">
-                     <children>
-                        <Label text="Blocked Process Queue">
-                           <font>
-                              <Font name="System Bold" size="16.0" />
-                           </font>
-                        </Label>
-                        <TableView fx:id="BlockedProcView">
-                           <columns>
-                              <TableColumn fx:id="BPLineNo" maxWidth="40.0" minWidth="20.0" prefWidth="30.0" />
-                              <TableColumn fx:id="BPCol0" minWidth="35.0" prefWidth="-1.0" text="Title" />
-                           </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </children></VBox>
-              </items>
-            </SplitPane>
          </children></VBox>
    </items>
 </SplitPane>

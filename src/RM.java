@@ -86,7 +86,6 @@ public class RM {
 
     public void setPTR(Short value){
         ptr = value;
-        controller.setRMRegValue(RMRegIndexes.PTR, Utils.shortToHexString(ptr));
     }
 
     public Short getPTR() {
@@ -106,20 +105,20 @@ public class RM {
 
     public void incrementSP(){
         ++sp;
-        //controller.setRMRegValue(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
+        //controller.setRMRegValuePaging(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
     }
 
     public void decrementSP(){
         --sp;
-        //controller.setRMRegValue(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
+        //controller.setRMRegValuePaging(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
     }
 
     public void resetSP() {
         sp = 0;
-        //controller.setRMRegValue(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
+        //controller.setRMRegValuePaging(RMRegIndexes.SP, Utils.bytesToHexString(sp, 4));
     }
 
-    private void setSP(Short value) {
+    public void setSP(Short value) {
         sp = value;
     }
 
@@ -129,27 +128,35 @@ public class RM {
 
     public void setPC(Short value){
         pc = value;
-        //controller.setRMRegValue(RMRegIndexes.PC, Utils.bytesToHexString(pc, 4));
+        //controller.setRMRegValuePaging(RMRegIndexes.PC, Utils.bytesToHexString(pc, 4));
     }
 
     public void setPI(byte value){
         pi = value;
-        controller.setRMRegValue(RMRegIndexes.PI, Utils.byteToHexString(pi));
     }
 
     public void setSI(byte value){
         si = value;
-        controller.setRMRegValue(RMRegIndexes.SI, Utils.byteToHexString(si));
     }
 
     public void setTI(byte value){
         ti = value;
-        controller.setRMRegValue(RMRegIndexes.TI, Utils.byteToHexString(ti));
     }
 
     public void decrementTI(){
         ti--;
-        controller.setRMRegValue(RMRegIndexes.TI, Utils.byteToHexString(ti));
+    }
+
+    public void setMode(boolean value) {
+        this.isUserMode = value;
+    }
+
+    public void toggleMode(){
+        if (this.isUserMode) {
+            this.isUserMode = false;
+        } else {
+            this.isUserMode = true;
+        }
     }
 
     public byte getPI(){return this.pi;}
@@ -198,26 +205,14 @@ public class RM {
         }
     }
 
-    public void toggleMode(){
-        if (this.isUserMode) {
-            this.isUserMode = false;
-            controller.setRMRegValue(RMRegIndexes.MODE, "KRNL");
-        } else {
-            this.isUserMode = true;
-            controller.setRMRegValue(RMRegIndexes.MODE, "USER");
-        }
-    }
-
     public void setValue(Integer value, Short adr){
         byte block = (byte) (adr/Utils.BLOCK_WORD_COUNT);
         byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
         um[block].setWord(word, value);
-        controller.setRMMemValue(block, word, Utils.intToHexString(value));
     }
 
-    private void setValue(Integer value, byte block, byte word) {
+    public void setValue(Integer value, byte block, byte word) {
         um[block].setWord(word, value);
-        controller.setRMMemValue(block, word, Utils.intToHexString(value));
     }
 
     public Word getValue(Short adr){
@@ -374,7 +369,7 @@ public class RM {
             System.err.println("Cannot seek word at block " + block + ", word " + word);
             e.printStackTrace();
         }
-        return new Word(Utils.byteArrayToInt(wordBytes));
+        return new Word(Utils.bytesToInt(wordBytes));
     }
 
     private void writeTask() {
