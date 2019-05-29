@@ -22,14 +22,14 @@ public abstract class Process {
     protected Process parent;
     protected ArrayList<Process> children;
     protected String title;
+    protected int step;
 
     public Process(){
         this.ID = previousID++;
     }
 
-    public void create(Process parent, byte state, byte priority, String title) {
+    public void create(Process parent, byte priority, String title) {
         this.parent = parent;
-        this.state = state;
         this.priority = priority;
 //        this.elementList = elementList;
         this.title = title;
@@ -39,6 +39,7 @@ public abstract class Process {
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
         state = ProcessState.READY;
+        step = 0;
         //kvieciamas planuotojas..
     }
 
@@ -122,6 +123,15 @@ public abstract class Process {
 
     public void removeOwnedResources() {
         this.ownedResources.clear();
+    }
+
+    public Resource getCreatedResource(String title){
+        for(Resource r: createdResources){
+            if(r.getTitle() == title)
+                return r;
+        }
+        //System.err.format("Resource %s was not found", title);
+        return null;
     }
 //
 //    public void removeFromOwnedResources(Resource resource) {

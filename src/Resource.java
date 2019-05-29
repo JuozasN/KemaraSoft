@@ -51,6 +51,10 @@ public class Resource {
         Distributor.distributeResource(this);
     }
 
+    public String getTitle(){
+        return this.title;
+    }
+
     public ArrayList<Block> getElementList() {
         return this.elementList;
     }
