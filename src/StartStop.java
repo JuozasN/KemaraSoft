@@ -13,11 +13,14 @@ public class StartStop extends Process{
                 step = 1;
                 //ownedResources.get("POS pabaiga").request(this);
                 return;
-
-
             case 1:
                 deleteChildren();
                 deleteResources();
+                step = 0;
+                return;
+            default:
+                System.err.println("Impossible step at StartStop.run()");
+                System.exit(0);
         }
     }
     public void createResources(){
