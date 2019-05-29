@@ -79,7 +79,7 @@ public class Block {
 
 		for(int i = 0; i < words.length; ++i) {
 			setWord(i, words[i]);
-//			this.words[i].setValue(words[i]);
+//			this.words[i].setMemValue(words[i]);
 		}
 	}
 
