@@ -22,6 +22,8 @@ public class OS implements Initializable {
     @FXML private TableColumn<ResRow, String> ResTitleCol;
     @FXML private TableColumn<ResRow, String> ResElementsCol;
 
+    @FXML private TextArea processLog;
+
     @FXML private Button runButton;
     @FXML private Button stepButton;
     @FXML private Button resetButton;
@@ -169,6 +171,10 @@ public class OS implements Initializable {
         return resourcesView.getItems();
     }
 
+    public String getProcessLog() {
+        return this.processLog.getText();
+    }
+
     /**
      * UI METHODS
      */
@@ -257,6 +263,22 @@ public class OS implements Initializable {
     public void removeResRow(int index) {
         ObservableList<ResRow> resViewValues = getResourcesValues();
         resViewValues.remove(index);
+    }
+
+    /**
+     * APPEND TO PROCESS LOG
+     */
+
+    public void appendProcessLog(String text) {
+        processLog.appendText("\n" + text);
+    }
+
+    /**
+     * RESET PROCESS LOG
+     */
+
+    public void resetProcessLog() {
+        processLog.setText("");
     }
 
     /**
