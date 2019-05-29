@@ -5,26 +5,73 @@ public class JCL extends Process{
     public JCL(Process parent) {
         this.create(parent, (byte)3, "JCL");
         new DynamicResource().create(this, "Eilute atmintyje");
+        new DynamicResource().create(this, "MainProc uzduotis");
     }
 
     public void run(){
-        //ownedResources.get("Užduotis supervizorinėje atmintyje").request(this);
-        ArrayList<Word> program = new ArrayList<>();
-        if(ownedResources.get(0).getWord(0).toString() == "$HDR"){
-            Word word = ownedResources.get(0).getWord(1);
-            if(word.toString() == "$BDY") {
-                try {
-                    ((DynamicResource)getCreatedResource("Eilute atmintyje")).release(this, "Nera programos antrastes");
-
-                }catch(ProgramInterrupt pi){System.err.println("Impossible error while running JCL");System.exit(0);}
-            }else{
-                program.add(word);
-
-            }
-        }else{
-            try {
-                ((DynamicResource)getCreatedResource("Eilute atmintyje")).release(this, "Nera programos antrastes");
-            }catch(ProgramInterrupt pi){System.err.println("Impossible error while running JCL");System.exit(0);}
+        switch(step){
+            case 0:
+                //ownedResources.get("Užduotis supervizorinėje atmintyje").request(this);
+                step = 1;
+                return;
+            case 1:
+                ArrayList<Word> program = new ArrayList<>();
+                if(getWord(0).toString() == "$HDR"){
+                    Word word = getWord(1);
+                    if(word.toString() == "$BDY") {
+                        releaseDynamicResource("Eilute atmintyje", "Nera programos antrastes");
+                        step = 0;
+                        return;
+                    }else{
+                        program.add(word);
+                        int i = 2;
+                        while(true){
+                            word = getWord(i);
+                            if(word.toString() == "$BDY"){break;}
+                            if(word.toString() == ""){
+                                releaseDynamicResource("Eilute atmintyje", "Nera vartotojo programos");
+                                step = 0;
+                                return;
+                            }
+                            program.add(word);
+                            i++;
+                        }
+                        while(true){
+                            word = getWord(i);
+                            if(word.toString() == "$END" || word.toString() == ""){
+                                if(word.toString() == "$END"){
+                                    releaseDynamicResource("MainProc uzduotis", "Vykdymo laikas = 1");
+                                    step = 0;
+                                    return;
+                                }
+                                releaseDynamicResource("Eilute atmintyje", "Nera programos pabaigos zymes");
+                                step = 0;
+                                return;
+                            }else{
+                                program.add(word);
+                                i++;
+                            }
+                        }
+                    }
+                }else{
+                    releaseDynamicResource("Eilute atmintyje", "Nera programos antrastes");
+                    step = 0;
+                    return;
+                }
+            default:
+                System.err.println("Impossible step at JCL.run()");
+                System.exit(0);
         }
+    }
+
+    public Word getWord(int index){
+        return ownedResources.get(index/Utils.BLOCK_WORD_COUNT).getWord(index%Utils.BLOCK_WORD_COUNT);
+    }
+
+    public void releaseDynamicResource(String resourceTitle, String resourceParameter){
+        try {
+            ((DynamicResource)getCreatedResource(resourceTitle)).release(this, resourceParameter);
+
+        }catch(ProgramInterrupt pi){System.err.println("Impossible error while running JCL");System.exit(0);}
     }
 }
