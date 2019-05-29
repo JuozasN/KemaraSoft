@@ -100,11 +100,10 @@ public class Block {
 	}
 	
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("|");
-		for(int i = 0; i < Utils.BLOCK_WORD_COUNT; ++i){
-			sb.append(String.format("%-4s|", words[i]));
+		String s = "";
+		for(Word w: words){
+			s+=w;
 		}
-		return sb.toString();
+		return s;
 	}
 }
