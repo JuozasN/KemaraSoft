@@ -6,15 +6,20 @@ public class PQRow {
     private SimpleStringProperty State;
     private SimpleStringProperty Priority;
 
-    public PQRow(String LineNoCol, String TitleCol, String StateCol, String PriorityCol){
-        this.LineNo = new SimpleStringProperty(LineNoCol);
-        this.Title = new SimpleStringProperty(TitleCol);
-        this.State = new SimpleStringProperty(StateCol);
-        this.Priority = new SimpleStringProperty(PriorityCol);
+    public PQRow(String LineNo, String Title, String State, String Priority){
+        this.LineNo = new SimpleStringProperty(LineNo);
+        this.Title = new SimpleStringProperty(Title);
+        this.State = new SimpleStringProperty(State);
+        this.Priority = new SimpleStringProperty(Priority);
     }
 
-    public PQRow(String VMLineNo) {
-        this(VMLineNo, "nil", "nil", "nil");
+    public PQRow(int LineNo, Process process) {
+        this(String.valueOf(LineNo), process.getTitle(), String.valueOf(process.getState()),
+                String.valueOf(process.getPriority()));
+    }
+
+    public PQRow(String LineNo) {
+        this(LineNo, "nil", "nil", "nil");
     }
 
     public void setInitial() {
