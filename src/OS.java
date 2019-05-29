@@ -126,6 +126,7 @@ public class OS implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializePQTable();
         initializeResTable();
+        appendProcessLog("hello world");
     }
 
     /**
@@ -270,7 +271,7 @@ public class OS implements Initializable {
      */
 
     public void appendProcessLog(String text) {
-        processLog.appendText("\n" + text);
+        processLog.appendText(text + "\n");
     }
 
     /**

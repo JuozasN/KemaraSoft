@@ -22,11 +22,17 @@
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
+               <VBox.margin>
+                  <Insets left="5.0" top="5.0" />
+               </VBox.margin>
             </Label>
-            <TextArea fx:id="processLog" editable="false" VBox.vgrow="ALWAYS">
+            <TextArea fx:id="processLog" editable="false" wrapText="true" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </VBox.margin></TextArea>
+               </VBox.margin>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets></TextArea>
          </children></VBox>
       <VBox>
          <children>
@@ -38,6 +44,9 @@
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
                         </Label>
                         <TableView fx:id="processQueueView" VBox.vgrow="ALWAYS">
                            <columns>
@@ -58,6 +67,9 @@
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
+                           <VBox.margin>
+                              <Insets left="5.0" />
+                           </VBox.margin>
                         </Label>
                         <TableView fx:id="resourcesView" VBox.vgrow="ALWAYS">
                            <columns>
