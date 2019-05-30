@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class LoadProgram extends Process {
@@ -8,6 +12,26 @@ public class LoadProgram extends Process {
     }
 
     public void run() {
+        switch(step){
+            case 0:
+                Distributor.request(this, Title.FILE_NAME);
+                stepIncrement();
+                return;
+            case 1:
+
+            case 2:
+                Utils.getResource(os.resourceList, Title.KERNEL_MEMORY);
+                //Copy file content to kernel memory
+                String memPoint = ""; //Send pointer to program???
+                Resource r = new DynamicResource(memPoint);
+                r.create(os,this, Title.KERNEL_PROGRAM);
+                r.release();
+                stepReset();
+                return;
+            default:
+                System.err.println("Impossible step at LoadProgram.run()");
+                System.exit(0);
+        }
 //        ArrayList<Block> ownedResources = this.getOwnedResources();
 //        if (ownedResources.isEmpty()) {
 //            // procesas dar nebuvo gaves jokių resursų, todėl request'inam pirmo is turimų;
@@ -40,4 +64,5 @@ public class LoadProgram extends Process {
 //            }
 //        }
     }
+    
 }
