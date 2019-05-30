@@ -12,12 +12,16 @@ public class MainProc extends Process{
                 stepIncrement();
                 return;
             case 1:
-                if (Integer.parseInt((DynamicResource)Utils.getResource(this.ownedResources, Title.MAIN_PROGRAM))))
-                //check resource parameter
-                new JobHelper(os, this);
-                //jei vykdymo laikas = 0 is kur zinome kuri JobHelper'i trinti?
+                if (Integer.parseInt(((DynamicResource)Utils.getResource(this.ownedResources, Title.MAIN_PROGRAM)).getParameter()) == 0){
+                    Utils.getProcess(this.children, "JobHelper").delete();
+                } else {
+                    new JobHelper(os, this);
+                }
                 stepReset();
                 return;
+            default:
+                System.err.println("Impossible step at MainProc.run()");
+                System.exit(0);
         }
     }
 }
