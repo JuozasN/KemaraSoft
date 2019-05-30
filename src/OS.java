@@ -42,55 +42,28 @@ public class OS implements Initializable {
     private static final byte PROCESS_STATE_SP_INDEX = 1;
     private static final byte PROCESS_STATE_PC_INDEX = 2;
 
-    private final RM realMachine = new RM(this);
+    private final RM realMachine = null;
     private VM process;
     private Block IOBlock = new Block();
     private Block processStateBlock = new Block();
     private String inputText;
+    private Scheduler scheduler;
+    private Distributor distributor;
 
     public static final ArrayList<Process> processList = new ArrayList<>();
     public static final ArrayList<Resource> resourceList = new ArrayList<>();
     public static final SystemResources systemResources = new SystemResources();
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event) {
-        previousLine.setText("We Starting!");
-        try {
-            process.loadProgram();
-        } catch(ProgramInterrupt PI) {
-            // Overflow
-        }
-
-//        SystemProcesses.startStop.run();
-        while(true){
-            // run scheduler
-            try{
-                process.exec();
-                // decrement timer
-            }catch (SystemInterrupt SI){
-                int intCode = SI.getIntCode();
-                if (intCode == 3) break;
-            }catch (ProgramInterrupt PI){
-                int intCode = PI.getIntCode();
-            }
-        }
+        scheduler = new Scheduler(this);
+        distributor = new Distributor(this);
+        StartStop ss = new StartStop(this);
+        ss.create(null, (byte)4, "StartStop");
+        ss.run();
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
-        previousLine.setText(currentLine.getText());
-        try {
-            process.exec();
-            realMachine.decrementTI();
-        } catch(SystemInterrupt SI){
-            realMachine.setSI(SI.getIntCode());
-            realMachine.toggleMode();
-        } catch(ProgramInterrupt PI){
-            realMachine.setPI(PI.getIntCode());
-            realMachine.toggleMode();
-        } finally {
-            test();
-            realMachine.toggleMode();
-        }
-        currentLine.setText(getCommandString(process));
+        //scheduler.runNextReadyProcess();
     }
 
     @FXML private void resetButtonAction(javafx.event.ActionEvent event){
@@ -124,6 +97,7 @@ public class OS implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         initializePQTable();
         initializeResTable();
     }
@@ -461,9 +435,8 @@ public class OS implements Initializable {
 
     /** MANAGE PROCESS LISTS **/
 
-    public static void removeFromProcessList(Process process) {
-        OS os = new OS();
-        os.appendProcessLog("OS. Removing " + process.getTitle() + " from Process List.");
+    public void removeFromProcessList(Process process) {
+        appendProcessLog("OS. Removing " + process.getTitle() + " from Process List.");
         processList.remove(process);
 //        switch (process.getState()) {
 //            case Process.ProcessState.BLOCKED:
@@ -484,22 +457,21 @@ public class OS implements Initializable {
 //        }
     }
 
-    public static void addToProcessList(Process process) {
-        OS os = new OS();
-        os.appendProcessLog("OS. Adding " + process.getTitle() + " to Process List.");
-        Utils.addByPriority(processList, process);
+    public void addToProcessList(Process process) {
+        appendProcessLog("OS. Adding " + process.getTitle() + " to Process List.");
+        addPQRow(Utils.addByPriority(processList, process), process);
     }
 
-    public static void removeFromResourceList(Resource resource) {
-        OS os = new OS();
-        os.appendProcessLog("OS. Removing " + resource.getTitle() + " from Resource List.");
+    public void removeFromResourceList(Resource resource) {
+        appendProcessLog("OS. Removing " + resource.getTitle() + " from Resource List.");
         resourceList.remove(resource);
+
     }
 
-    public static void addToResourceList(Resource resource) {
-        OS os = new OS();
-        os.appendProcessLog("OS. Adding " + resource.getTitle() + " to Resource List.");
+    public void addToResourceList(Resource resource) {
+        appendProcessLog("OS. Adding " + resource.getTitle() + " to Resource List.");
         resourceList.add(resource);
+        addResRow(resource);
     }
 
     public void runProcess(Process process) {

@@ -2,7 +2,6 @@ public class StartStop extends Process{
 
     public StartStop(OS os) {
         super(os);
-        this.create(null, (byte)4, "StartStop");
     }
 
     public void run() {

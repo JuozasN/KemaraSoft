@@ -121,7 +121,7 @@ public class Utils {
         return -1;
     }
 
-    public static void addByPriority(ArrayList<Process> processList, Process process){
+    public static int addByPriority(ArrayList<Process> processList, Process process){
         byte processPriority = process.getPriority();
         int index = 0;
         for(Process p: processList){
@@ -129,6 +129,7 @@ public class Utils {
             index++;
         }
         processList.add(index, process);
+        return index;
     }
 
     public static Resource getResource(ArrayList<Resource> list, Title title){

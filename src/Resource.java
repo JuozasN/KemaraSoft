@@ -15,7 +15,7 @@ public class Resource {
 
     public void create(OS os, Process creator, Title title) {
         this.os = os;
-        OS.addToResourceList(this);
+        os.addToResourceList(this);
         creator.addToCreatedResources(this);
         this.creator = creator;
         this.title = title;
@@ -29,7 +29,7 @@ public class Resource {
             p.changeState((byte)2); //2 = READY
             //Istrynus resursa, jo laukes procesas tampa pasiruoses???
         }
-        OS.removeFromResourceList(this);
+        os.removeFromResourceList(this);
         os.appendProcessLog("Resource. Resource deleted: " + this.getTitle() + ".");
         //"naikinamas pats aprasas"...
     }
@@ -37,7 +37,7 @@ public class Resource {
     public void request(Process process) {
         os.appendProcessLog("Resource. Resource: " + this.getTitle() + " is requested by Process: " + process.getTitle() + ".");
         process.block();
-        this.waitingProcesses.add(process);
+        Utils.addByPriority(waitingProcesses, process);
         Distributor.distributeResource(this);
     }
 
@@ -59,8 +59,7 @@ public class Resource {
     }
 
     public Process getTopWaitingProcess() {
-        return this.waitingProcesses.get(waitingProcesses.size() - 1); //grazina paskutini procesa is laukianciu sio resurso sarase
-                                                                //turetu buti su top priority/anksciausiai ikeltas.
+        return this.waitingProcesses.get(0);
     }
 
     public void removeFromWaitingList(Process process) {
