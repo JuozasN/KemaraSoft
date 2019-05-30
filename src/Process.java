@@ -107,6 +107,11 @@ public abstract class Process {
         return ownedResources;
     }
 
+//    public ArrayList<Block> getElementList() {
+//        return this.elementList;
+//    }
+
+
     public String getTitle() {
         return title;
     }
