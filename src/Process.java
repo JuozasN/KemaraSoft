@@ -1,15 +1,6 @@
 import java.util.ArrayList;
 
 public abstract class Process {
-    public final class ProcessState {
-        public static final byte RUNNING = 0;
-        public static final byte BLOCKED = 1;
-        public static final byte READY = 2;
-        public static final byte SUSPENDED = 3;
-        public static final byte BLOCKED_SUSPENDED = 4;
-        public static final byte READY_SUSPENDED = 5;
-    }
-
     protected ArrayList<Process> processList = new ArrayList<>();
     protected static long previousID = 0;
     protected long id;
@@ -17,7 +8,7 @@ public abstract class Process {
     protected ArrayList<Resource> createdResources;
     protected ArrayList<Resource> ownedResources = new ArrayList<>();
 //    protected ArrayList<Resource> elementList;
-    protected byte state;
+    protected State state;
     protected byte priority;
     protected Process parent;
     protected ArrayList<Process> children;
@@ -35,13 +26,13 @@ public abstract class Process {
         this.priority = priority;
 //        this.elementList = elementList;
         this.title = title;
-        os.addToProcessList(this);
         if (parent != null)
             parent.addToChildren(this);
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
-        state = ProcessState.READY;
+        state = State.READY;
         step = 0;
+        os.addToProcessList(this);
         if (parent == null){
             os.appendProcessLog("Process. Process created: " + this.getTitle() + " by OS.");
         }else
@@ -67,27 +58,31 @@ public abstract class Process {
     }
 
     public void suspend() {
-        if(state < ProcessState.SUSPENDED){
-            state += ProcessState.SUSPENDED;
-        }
+        if (state == State.RUNNING)
+            state = State.SUSPENDED;
+        else if (state == State.BLOCKED)
+            state = State.BLOCKED_SUSPENDED;
+        else if (state == State.READY)
+            state = State.READY_SUSPENDED;
         os.appendProcessLog("Process. Process suspended: " + this.getTitle() + ".");
 
         //kvieciamas planuotojas..
     }
 
     public void activate() {
-        if(state >= ProcessState.BLOCKED_SUSPENDED){
-            state -= ProcessState.SUSPENDED;
-        } else if (state == ProcessState.BLOCKED) {
-            state = ProcessState.READY;
-        }
+        if (state == State.BLOCKED_SUSPENDED)
+            state = State.BLOCKED;
+        else if (state == State.READY_SUSPENDED)
+            state = State.READY;
+        else if (state == State.BLOCKED)
+            state = State.READY;
         os.appendProcessLog("Process. Process activated: " + this.getTitle() + ".");
 
         //kvieciamas planuotojas..
     }
 
     public void block(){
-        state = ProcessState.BLOCKED;
+        state = State.BLOCKED;
         os.appendProcessLog("Process. Process blocked: " + this.getTitle() + ".");
     }
     /**
@@ -96,7 +91,7 @@ public abstract class Process {
     public abstract void run();
 
     public boolean isBlocked() {
-        return state == ProcessState.BLOCKED;
+        return state == State.BLOCKED;
     }
     public void addToChildren(Process children){
         this.children.add(children);
@@ -106,7 +101,7 @@ public abstract class Process {
         return id;
     }
 
-    public byte getState() {
+    public State getState() {
         return state;
     }
 
@@ -178,7 +173,7 @@ public abstract class Process {
         step = 0;
     }
 
-    public void changeState(byte state) {
+    public void changeState(State state) {
         this.state = state;
     }
 }

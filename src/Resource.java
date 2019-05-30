@@ -26,7 +26,7 @@ public class Resource {
     public void delete() {
         this.creator.removeFromCreatedResources(this);
         for(Process p: this.waitingProcesses){
-            p.changeState((byte)2); //2 = READY
+            p.changeState(State.READY);
             //Istrynus resursa, jo laukes procesas tampa pasiruoses???
         }
         os.removeFromResourceList(this);

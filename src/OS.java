@@ -481,6 +481,7 @@ public class OS implements Initializable {
 
     public void addToProcessList(Process process) {
         appendProcessLog("OS. Adding " + process.getTitle() + " to Process List.");
+        System.out.println(process.getState());
         addPQRow(Utils.addByPriority(processList, process), process);
     }
 

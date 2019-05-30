@@ -9,7 +9,7 @@ public class Scheduler {
         os.appendProcessLog("Scheduler. Attempting to get next ready process.");
         for(Process p: os.processList){
 
-            if(p.getState() == Process.ProcessState.READY){
+            if(p.getState() == State.READY){
                 os.appendProcessLog("Scheduler. Running " + p.getTitle() + " process.");
                 return p;
             }
