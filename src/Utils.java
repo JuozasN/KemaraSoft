@@ -138,4 +138,10 @@ public class Utils {
         }
         return null;
     }
+
+    public static void releaseDynamicResource(OS os, Process creator, Title title, String parameter){
+        Resource r = new DynamicResource(parameter);
+        r.create(os,creator, title);
+        r.release();
+    }
 }
