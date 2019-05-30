@@ -8,10 +8,11 @@ public class MainProc extends Process{
     public void run(){
         switch(step){
             case 0:
-                //request for "MainProc uzduotis" resource
+                Distributor.request(this, Title.MAIN_PROGRAM);
                 stepIncrement();
                 return;
             case 1:
+                if (Integer.parseInt((DynamicResource)Utils.getResource(this.ownedResources, Title.MAIN_PROGRAM))))
                 //check resource parameter
                 new JobHelper(os, this);
                 //jei vykdymo laikas = 0 is kur zinome kuri JobHelper'i trinti?
