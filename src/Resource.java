@@ -15,11 +15,11 @@ public class Resource {
 
     public void create(OS os, Process creator, Title title) {
         this.os = os;
-        os.addToResourceList(this);
         creator.addToCreatedResources(this);
         this.creator = creator;
         this.title = title;
         this.waitingProcesses = new ArrayList<>();
+        os.addToResourceList(this);
         os.appendProcessLog("Resource. Resource created: " + this.getTitle() + " by Process: " + this.creator.getTitle() + ".");
     }
 

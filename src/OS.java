@@ -54,7 +54,6 @@ public class OS implements Initializable {
 
     public static final ArrayList<Process> processList = new ArrayList<>();
     public static final ArrayList<Resource> resourceList = new ArrayList<>();
-    public static final SystemResources systemResources = new SystemResources();
 
     @FXML private void runButtonAction(javafx.event.ActionEvent event) {
         scheduler = new Scheduler(this);

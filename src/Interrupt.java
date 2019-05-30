@@ -6,6 +6,16 @@ public class Interrupt extends Process{
     }
 
     public void run(){
+        switch (step) {
+            case 0:
+                
+                return;
+            case 1:
 
+                return;
+            default:
+                System.err.println("Impossible step at StartStop.run()");
+                System.exit(0);
+        }
     }
 }
