@@ -462,6 +462,8 @@ public class OS implements Initializable {
     /** MANAGE PROCESS LISTS **/
 
     public static void removeFromProcessList(Process process) {
+        OS os = new OS();
+        os.appendProcessLog("OS. Removing " + process.getTitle() + " from Process List.");
         processList.remove(process);
 //        switch (process.getState()) {
 //            case Process.ProcessState.BLOCKED:
@@ -483,14 +485,20 @@ public class OS implements Initializable {
     }
 
     public static void addToProcessList(Process process) {
+        OS os = new OS();
+        os.appendProcessLog("OS. Adding " + process.getTitle() + " to Process List.");
         Utils.addByPriority(processList, process);
     }
 
     public static void removeFromResourceList(Resource resource) {
+        OS os = new OS();
+        os.appendProcessLog("OS. Removing " + resource.getTitle() + " from Resource List.");
         resourceList.remove(resource);
     }
 
     public static void addToResourceList(Resource resource) {
+        OS os = new OS();
+        os.appendProcessLog("OS. Adding " + resource.getTitle() + " to Resource List.");
         resourceList.add(resource);
     }
 

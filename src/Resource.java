@@ -6,9 +6,11 @@ public class Resource {
     private String title;
     private Process creator;
     private ArrayList<Process> waitingProcesses;
+    private OS os;
     //private ArrayList<Resource> resourceList;
 
-    public Resource() {
+    public Resource(OS os) {
+        this.os = os;
         this.id = previousID++;
     }
 
@@ -18,6 +20,7 @@ public class Resource {
         this.creator = creator;
         this.title = title;
         this.waitingProcesses = new ArrayList<>();
+        os.appendProcessLog("Resource. Resource created: " + this.getTitle() + " by Process: " + this.creator.getTitle() + ".");
     }
 
     public void delete() {
@@ -27,10 +30,12 @@ public class Resource {
             //Istrynus resursa, jo laukes procesas tampa pasiruoses???
         }
         OS.removeFromResourceList(this);
+        os.appendProcessLog("Resource. Resource deleted: " + this.getTitle() + ".");
         //"naikinamas pats aprasas"...
     }
 
     public void request(Process process) {
+        os.appendProcessLog("Resource. Resource: " + this.getTitle() + " is requested by Process: " + process.getTitle() + ".");
         process.block();
         this.waitingProcesses.add(process);
         Distributor.distributeResource(this);
@@ -43,6 +48,7 @@ public class Resource {
 //    }
 
     public void release() {
+        os.appendProcessLog("Resource. Resource: " + this.getTitle() + " is being released.");
         // perduodame elementą resursui ir kviečiame paskirstytoją,
         // kad jis perduotų elementą jo laukiančiam procesui
         Distributor.distributeResource(this);

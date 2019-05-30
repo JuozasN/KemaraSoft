@@ -3,14 +3,17 @@ import java.util.Map;
 
 public class Distributor {
 
+    public static OS os;
     public static Map<DynamicResource.Title, Process> waitingProcesses;
 
     public Distributor(){
+        os.appendProcessLog("Distributor. Initializing distributor.");
         waitingProcesses = new HashMap<>();
     }
 
     //Kvieciama is Resurso primityvu "request" ir "release"
     public static void distributeResource(Resource resource){
+        os.appendProcessLog("Distributor. Distributing resource: " + resource.getTitle());
         if(resource instanceof DynamicResource){
             DynamicResource.Title title = ((DynamicResource)resource).getTitle();
             Process process = waitingProcesses.get(title);
@@ -35,6 +38,7 @@ public class Distributor {
     }
 
     public static void request(Process process, DynamicResource.Title title){
+        os.appendProcessLog("Distributor. " + process.getTitle() + "requesting " + title + ".");
         process.block();
         waitingProcesses.put(title, process);
     }

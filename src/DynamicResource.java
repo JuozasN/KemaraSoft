@@ -8,7 +8,8 @@ public class DynamicResource extends Resource {
     private Title title;
     private String parameter;
 
-    public DynamicResource(Title title, String parameter){
+    public DynamicResource(OS os, Title title, String parameter){
+        super(os);
         this.title = title;
         this.parameter = parameter;
     }

@@ -3,6 +3,10 @@ import java.util.Arrays;
 public class StaticResource extends Resource {
     private Block[] elementList;
 
+    public StaticResource (OS os){
+        super(os);
+    }
+
     public void create(Process creator, String title, int eListSize){
         this.elementList = new Block[eListSize];
         super.create(creator, title);

@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 
 public class SystemProcesses {
-
     public static Process startStop = new Process() {
         @Override
         public void run() {

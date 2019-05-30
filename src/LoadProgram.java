@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 public class LoadProgram extends Process {
 
-    public LoadProgram(Process parent){
+    public LoadProgram(OS os, Process parent){
+        super(os);
         this.create(parent, (byte)3, "LoadProgram");
     }
 

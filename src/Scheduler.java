@@ -6,6 +6,7 @@ public class Scheduler {
     }
 
     public Process runNextReadyProcess(Process runningProcess) {
+        os.appendProcessLog("Scheduler. Attempting to get next ready process.");
         if (runningProcess.isBlocked()) {
             OS.removeFromProcessList(runningProcess);
             OS.addToProcessList(runningProcess, Process.ProcessState.BLOCKED);
@@ -17,7 +18,7 @@ public class Scheduler {
             OS.removeFromProcessList(processToRun);    // remove the process from ready processes list
             return processToRun;
         }
-
+        os.appendProcessLog("Scheduler. There are no ready processes.");
         return null;
     }
 }

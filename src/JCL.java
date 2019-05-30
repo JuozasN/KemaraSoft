@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 public class JCL extends Process{
 
-    public JCL(Process parent) {
+    public JCL(OS os, Process parent) {
+        super(os);
         this.create(parent, (byte)3, "JCL");
     }
 
@@ -67,6 +68,6 @@ public class JCL extends Process{
     }
 
     public void releaseDynamicResource(DynamicResource.Title title, String parameter){
-        new DynamicResource(title, parameter).release();
+        new DynamicResource(os, title, parameter).release();
     }
 }
