@@ -483,26 +483,8 @@ public class OS implements Initializable {
 //        }
     }
 
-    public static void addToProcessList(Process process, byte state) {
-        short positionInQueue = Utils.getPositionByPriority(processList, process);
-        processList.add(positionInQueue, process);
-//        switch(state) {
-//            case Process.ProcessState.BLOCKED:
-//                blockedProcessList.add(process);
-//                break;
-//            case Process.ProcessState.READY:
-//                readyProcessList.add(process);
-//                break;
-//            case Process.ProcessState.SUSPENDED:
-//                suspendedProcessList.add(process);
-//                break;
-//            case Process.ProcessState.BLOCKED_SUSPENDED:
-//                blockedSuspendedProcessList.add(process);
-//                break;
-//            case Process.ProcessState.READY_SUSPENDED:
-//                readySuspendedProcessList.add(process);
-//                break;
-//        }
+    public static void addToProcessList(Process process) {
+        Utils.addByPriority(processList, process);
     }
 
     public static void removeFromResourceList(Resource resource) {

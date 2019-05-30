@@ -4,8 +4,6 @@ public class JCL extends Process{
 
     public JCL(Process parent) {
         this.create(parent, (byte)3, "JCL");
-        new DynamicResource().create(this, "Eilute atmintyje");
-        new DynamicResource().create(this, "MainProc uzduotis");
     }
 
     public void run(){
@@ -19,7 +17,7 @@ public class JCL extends Process{
                 if(getWord(0).toString() == "$HDR"){
                     Word word = getWord(1);
                     if(word.toString() == "$BDY") {
-                        releaseDynamicResource("Eilute atmintyje", "Nera programos antrastes");
+                        releaseDynamicResource(DynamicResource.Title.MEM_LINE, "Nera programos antrastes");
                         stepReset();
                         return;
                     }else{
@@ -29,7 +27,7 @@ public class JCL extends Process{
                             word = getWord(i);
                             if(word.toString() == "$BDY"){break;}
                             if(word.toString() == ""){
-                                releaseDynamicResource("Eilute atmintyje", "Nera vartotojo programos");
+                                releaseDynamicResource(DynamicResource.Title.MEM_LINE, "Nera vartotojo programos");
                                 stepReset();
                                 return;
                             }
@@ -40,11 +38,11 @@ public class JCL extends Process{
                             word = getWord(i);
                             if(word.toString() == "$END" || word.toString() == ""){
                                 if(word.toString() == "$END"){
-                                    releaseDynamicResource("MainProc uzduotis", "Vykdymo laikas = 1");
+                                    releaseDynamicResource(DynamicResource.Title.MAIN_PROGRAM, "Vykdymo laikas = 1");
                                     stepReset();
                                     return;
                                 }
-                                releaseDynamicResource("Eilute atmintyje", "Nera programos pabaigos zymes");
+                                releaseDynamicResource(DynamicResource.Title.MEM_LINE, "Nera programos pabaigos zymes");
                                 stepReset();
                                 return;
                             }else{
@@ -54,7 +52,7 @@ public class JCL extends Process{
                         }
                     }
                 }else{
-                    releaseDynamicResource("Eilute atmintyje", "Nera programos antrastes");
+                    releaseDynamicResource(DynamicResource.Title.MEM_LINE, "Nera programos antrastes");
                     stepReset();
                     return;
                 }
@@ -68,10 +66,7 @@ public class JCL extends Process{
         return ownedResources.get(index/Utils.BLOCK_WORD_COUNT).getWord(index%Utils.BLOCK_WORD_COUNT);
     }
 
-    public void releaseDynamicResource(String resourceTitle, String resourceParameter){
-        try {
-            ((DynamicResource)getCreatedResource(resourceTitle)).release(this, resourceParameter);
-
-        }catch(ProgramInterrupt pi){System.err.println("Impossible error while running JCL");System.exit(0);}
+    public void releaseDynamicResource(DynamicResource.Title title, String parameter){
+        new DynamicResource(title, parameter).release();
     }
 }

@@ -33,7 +33,7 @@ public abstract class Process {
         this.priority = priority;
 //        this.elementList = elementList;
         this.title = title;
-        OS.addToProcessList(this, priority);
+        OS.addToProcessList(this);
         if (parent != null)
             parent.addToChildren(this);
         children = new ArrayList<>();
@@ -77,6 +77,9 @@ public abstract class Process {
         //kvieciamas planuotojas..
     }
 
+    public void block(){
+        state = ProcessState.BLOCKED;
+    }
     /**
      * Abstract method that enables Process algorithm implementation on object creation
      */

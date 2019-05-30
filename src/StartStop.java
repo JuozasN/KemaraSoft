@@ -11,7 +11,7 @@ public class StartStop extends Process{
                 createChildren();
 
                 stepIncrement();
-                //ownedResources.get("POS pabaiga").request(this);
+                Distributor.request(this, DynamicResource.Title.POS_END);
                 return;
             case 1:
                 deleteChildren();
