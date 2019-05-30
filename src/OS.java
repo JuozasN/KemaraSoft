@@ -494,4 +494,8 @@ public class OS implements Initializable {
         resourceList.add(resource);
         addResRow(resource);
     }
+
+    public void setOutputField(String string){
+        this.outputField.setText(string);
+    }
 }

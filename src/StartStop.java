@@ -24,8 +24,9 @@ public class StartStop extends Process{
         }
     }
     public void createResources(){
-        new StaticResource().create(os, this, Title.USER_MEMORY, 0x100);
-        new StaticResource().create(os, this, Title.KERNEL_MEMORY, 0x100);
+        new StaticResource().create(os, this, Title.USER_MEMORY, Utils.UM_BLOCK_COUNT);
+        new StaticResource().create(os, this, Title.KERNEL_MEMORY, Utils.KM_BLOCK_COUNT);
+        new StaticResource().create(os, this, Title.OUTPUT, 0x1);
     }
 
     public void createChildren(){
