@@ -130,4 +130,11 @@ public class Utils {
         }
         processList.add(index, process);
     }
+
+    public static Resource getResource(ArrayList<Resource> list, Title title){
+        for(Resource r: list){
+            if(r.getTitle() == title) return r;
+        }
+        return null;
+    }
 }
