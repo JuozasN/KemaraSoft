@@ -14,7 +14,7 @@ public class Distributor {
     //Kvieciama is Resurso primityvu "request" ir "release"
     public static void distributeResource(Resource resource){
         os.appendProcessLog("Distributor. Distributing resource: " + resource.getTitle());
-        if(resource instanceof DynamicResource){
+        if(resource instanceof DynamicResource) {
             DynamicResource.Title title = ((DynamicResource)resource).getTitle();
             Process process = waitingProcesses.get(title);
             process.addToOwnedResources(resource);

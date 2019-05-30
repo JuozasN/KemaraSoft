@@ -60,7 +60,7 @@ public class OS implements Initializable {
             // Overflow
         }
 
-        SystemProcesses.startStop.run();
+//        SystemProcesses.startStop.run();
         while(true){
             // run scheduler
             try{
