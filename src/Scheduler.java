@@ -5,18 +5,14 @@ public class Scheduler {
         this.os = os;
     }
 
-    public Process runNextReadyProcess(Process runningProcess) {
+    public Process runNextReadyProcess() {
         os.appendProcessLog("Scheduler. Attempting to get next ready process.");
-        if (runningProcess.isBlocked()) {
-            os.removeFromProcessList(runningProcess);
-            os.addToProcessList(runningProcess);
-        }
+        for(Process p: os.processList){
 
-        if (!OS.processList.isEmpty()) {
-            Process processToRun = OS.processList.get(0); // get first process in process queue
-            os.runProcess(processToRun);    // assign processor to process; change process state to 'running'
-            os.removeFromProcessList(processToRun);    // remove the process from ready processes list
-            return processToRun;
+            if(p.getState() == Process.ProcessState.READY){
+                os.appendProcessLog("Scheduler. Running " + p.getTitle() + " process.");
+                return p;
+            }
         }
         os.appendProcessLog("Scheduler. There are no ready processes.");
         return null;
