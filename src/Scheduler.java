@@ -9,7 +9,7 @@ public class Scheduler {
         os.appendProcessLog("Scheduler. Attempting to get next ready process.");
         if (runningProcess.isBlocked()) {
             OS.removeFromProcessList(runningProcess);
-            OS.addToProcessList(runningProcess, Process.ProcessState.BLOCKED);
+            OS.addToProcessList(runningProcess);
         }
 
         if (!OS.processList.isEmpty()) {
