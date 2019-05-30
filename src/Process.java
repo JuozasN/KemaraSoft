@@ -145,9 +145,9 @@ public abstract class Process {
 
 //    public void addToOwnedResources(Resource resource) { this.ownedResources.add(resource); }
 
-    public void addToOwnedResources(Resource resource) {
-        this.ownedResources.addAll(resource.getElementList());
-    }
+//    public void addToOwnedResources(Resource resource) {
+//        this.ownedResources.addAll(resource.getElementList());
+//    }
 
     public void stepIncrement(){
         step++;

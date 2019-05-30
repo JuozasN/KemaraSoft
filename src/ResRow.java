@@ -12,7 +12,7 @@ public class ResRow {
     }
 
     public ResRow(int LineNo, Resource resource) {
-        this(String.valueOf(LineNo), resource.getTitle(), String.valueOf(resource.getElementsAsString()));
+//        this(String.valueOf(LineNo), resource.getTitle(), String.valueOf(resource.getElementsAsString()));
     }
 
     public ResRow(String LineNo) {

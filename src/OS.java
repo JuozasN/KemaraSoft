@@ -126,7 +126,6 @@ public class OS implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializePQTable();
         initializeResTable();
-        appendProcessLog("hello world");
     }
 
     /**
