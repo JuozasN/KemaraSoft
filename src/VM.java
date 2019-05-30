@@ -3,20 +3,21 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class VM {
+public class VM extends Process{
 
 	public final class VMRegIndexes {
         public static final byte PC = 1;
         public static final byte SP = 0;
     }
 
-	private final OS os;
+//	private final OS os;
 	private final RM rm;
 	private Block[] mem;
 	private Short pc;
 	private Short sp;
 
 	public VM(OS os, RM rm, Block[] mem){
+		super(os);
 		this.mem = mem;
 		for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i)
 			mem[i] = new Block();
@@ -31,7 +32,19 @@ public class VM {
 		this(os, rm, new Block[Utils.VM_MEM_BLOCK_COUNT]);
 	}
 
-    public Block[] getMem() {
+	@Override
+	public void run() {
+		rm.setMode(true); // set user mode
+		try {
+			exec();
+		} catch (SystemInterrupt | ProgramInterrupt e) {
+			e.printStackTrace();
+		}
+
+		Utils.releaseDynamicResource(os, this, Title.INTERRUPT, "HALT");
+	}
+
+	public Block[] getMem() {
         return mem;
     }
 
