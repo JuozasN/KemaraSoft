@@ -1,24 +1,23 @@
 public class SystemResources {
-    OS os = new OS();
-    private final Resource fileName = new Resource(os);
-    private final Resource kernelMemory = new Resource(os);
-    private final Resource taskInKernelMemory = new Resource(os);
+    private static final StaticResource fileName = new StaticResource();
+    private static final StaticResource kernelMemory = new StaticResource();
+    private static final StaticResource taskInKernelMemory = new StaticResource();
 
-    public void initResources(Process creatorProcess) {
-        fileName.create(creatorProcess, "File Name");
-        kernelMemory.create(creatorProcess, "Kernel Memory");
-        taskInKernelMemory.create(creatorProcess, "Task In Kernel Memory");
+    public static void initResources(OS os, Process creatorProcess) {
+        fileName.create(os, creatorProcess, Title.FILE_NAME);
+        kernelMemory.create(os, creatorProcess, Title.KERNEL_MEMORY);
+        taskInKernelMemory.create(os, creatorProcess, Title.KERNEL_PROGRAM);
     }
 
-    public Resource getFileNameRes() {
+    public static StaticResource getFileNameRes() {
         return fileName;
     }
 
-    public Resource getKernelMemoryRes() {
+    public static StaticResource getKernelMemoryRes() {
         return kernelMemory;
     }
 
-    public Resource getTaskInKernelMemoryRes() {
+    public static StaticResource getTaskInKernelMemoryRes() {
         return taskInKernelMemory;
     }
 }

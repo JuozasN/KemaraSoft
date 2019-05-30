@@ -12,7 +12,7 @@ public class StartStop extends Process{
                 createChildren();
 
                 stepIncrement();
-                Distributor.request(this, DynamicResource.Title.POS_END);
+                Distributor.request(this, Title.POS_END);
                 return;
             case 1:
                 deleteChildren();

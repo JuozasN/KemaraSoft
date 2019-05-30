@@ -4,7 +4,7 @@ import java.util.Map;
 public class Distributor {
 
     public static OS os;
-    public static Map<DynamicResource.Title, Process> waitingProcesses;
+    public static Map<Title, Process> waitingProcesses;
 
     public Distributor(){
         os.appendProcessLog("Distributor. Initializing distributor.");
@@ -15,7 +15,7 @@ public class Distributor {
     public static void distributeResource(Resource resource){
         os.appendProcessLog("Distributor. Distributing resource: " + resource.getTitle());
         if(resource instanceof DynamicResource) {
-            DynamicResource.Title title = ((DynamicResource)resource).getTitle();
+            Title title = resource.getTitle();
             Process process = waitingProcesses.get(title);
             process.addToOwnedResources(resource);
             process.activate();
@@ -37,7 +37,7 @@ public class Distributor {
         //kviečiame planuotoja
     }
 
-    public static void request(Process process, DynamicResource.Title title){
+    public static void request(Process process, Title title){
         os.appendProcessLog("Distributor. " + process.getTitle() + "requesting " + title + ".");
         process.block();
         waitingProcesses.put(title, process);

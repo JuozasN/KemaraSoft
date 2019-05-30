@@ -3,18 +3,18 @@ import java.util.ArrayList;
 public class Resource {
     private static long previousID = 0;
     private long id;
-    private String title;
+    private Title title;
     private Process creator;
     private ArrayList<Process> waitingProcesses;
     private OS os;
     //private ArrayList<Resource> resourceList;
 
-    public Resource(OS os) {
-        this.os = os;
+    public Resource() {
         this.id = previousID++;
     }
 
-    public void create(Process creator, String title) {
+    public void create(OS os, Process creator, Title title) {
+        this.os = os;
         OS.addToResourceList(this);
         creator.addToCreatedResources(this);
         this.creator = creator;
@@ -54,7 +54,7 @@ public class Resource {
         Distributor.distributeResource(this);
     }
 
-    public String getTitle(){
+    public Title getTitle(){
         return this.title;
     }
 

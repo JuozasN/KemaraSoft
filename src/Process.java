@@ -140,7 +140,7 @@ public abstract class Process {
         this.ownedResources.clear();
     }
 
-    public Resource getCreatedResource(String title){
+    public Resource getCreatedResource(Title title){
         for(Resource r: createdResources){
             if(r.getTitle() == title)
                 return r;
