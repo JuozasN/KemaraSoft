@@ -1,9 +1,23 @@
 public class DynamicResource extends Resource {
-    private Block parameter;
+    enum Title {
+        POS_END, FILE_NAME, KERNEL_PROGRAM,
+        MEM_LINE, MAIN_PROGRAM, DATA_LOAD,
+        LOADER_END, INTERRUPT, CHANNEL_INTERRUPT
+    }
 
-    public void release(Process process, String parameter) throws ProgramInterrupt {
-//        process.removeFromOwnedResources(this);
-//        this.parameter = Block.getBlockFromString(parameter);
-//        Distributor.distributeResource(this);
+    private Title title;
+    private String parameter;
+
+    public DynamicResource(Title title, String parameter){
+        this.title = title;
+        this.parameter = parameter;
+    }
+
+    public void release(){
+        Distributor.distributeResource(this);
+    }
+
+    public Title getTitle() {
+        return title;
     }
 }

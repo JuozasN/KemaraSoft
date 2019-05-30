@@ -24,13 +24,14 @@ public class Resource {
         this.creator.removeFromCreatedResources(this);
         for(Process p: this.waitingProcesses){
             p.changeState((byte)2); //2 = READY
+            //Istrynus resursa, jo laukes procesas tampa pasiruoses???
         }
         OS.removeFromResourceList(this);
         //"naikinamas pats aprasas"...
     }
 
     public void request(Process process) {
-        process.changeState(Process.ProcessState.BLOCKED);
+        process.block();
         this.waitingProcesses.add(process);
         Distributor.distributeResource(this);
     }
