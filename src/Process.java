@@ -93,7 +93,7 @@ public abstract class Process {
     /**
      * Abstract method that enables Process algorithm implementation on object creation
      */
-    public abstract void run();
+    public abstract void run() throws ProgramInterrupt;
 
     public boolean isBlocked() {
         return state == ProcessState.BLOCKED;

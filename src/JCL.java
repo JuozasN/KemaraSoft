@@ -16,9 +16,9 @@ public class JCL extends Process{
             case 1:
                 StaticResource sr = (StaticResource)Utils.getResource(ownedResources, Title.KERNEL_PROGRAM);
                 ArrayList<Word> program = new ArrayList<>();
-                if(getWord(sr, 0).toString() == "$HDR"){
+                if(getWord(sr, 0).toString() == Utils.TASK_HEADER){
                     Word word = getWord(sr, 1);
-                    if(word.toString() == "$BDY") {
+                    if(word.toString() == Utils.TASK_BODY) {
                         releaseDynamicResource(Title.MEM_LINE, "Nera programos antrastes");
                         stepReset();
                         return;
@@ -27,7 +27,7 @@ public class JCL extends Process{
                         int i = 2;
                         while(true){
                             word = getWord(sr, i);
-                            if(word.toString() == "$BDY"){break;}
+                            if(word.toString() == Utils.TASK_BODY){break;}
                             if(word.toString() == ""){
                                 releaseDynamicResource(Title.MEM_LINE, "Nera vartotojo programos");
                                 stepReset();
@@ -38,8 +38,8 @@ public class JCL extends Process{
                         }
                         while(true){
                             word = getWord(sr, i);
-                            if(word.toString() == "$END" || word.toString() == ""){
-                                if(word.toString() == "$END"){
+                            if(word.toString() == Utils.TASK_END || word.toString() == ""){
+                                if(word.toString() == Utils.TASK_END){
                                     releaseDynamicResource(Title.MAIN_PROGRAM, "Vykdymo laikas = 1");
                                     stepReset();
                                     return;

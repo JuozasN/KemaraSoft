@@ -169,33 +169,6 @@ public class VM {
 		byte word = (byte) (adr%Utils.BLOCK_WORD_COUNT);
 		return mem[block].getWord(word);
 	}
-
-	public void loadProgram() throws ProgramInterrupt{
-        BufferedReader br;
-        String tempFilePath = "src/" + os.filename.getText();
-        try {
-            br = new BufferedReader(new FileReader(tempFilePath));
-
-            byte adr = 0;
-            for (String line; (line = br.readLine()) != null; ) {
-                String[] strArray = line.split(" ");
-                for (String str : strArray) {
-                    if (str.length() > 4) {
-						throw new ProgramInterrupt((byte)4, "Overflow");
-                    }
-                    setMemValue(str.getBytes(), (short) adr);
-                    adr++;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.err.println("File not found");
-            System.exit(0);
-        } catch (IOException e) {
-            System.err.println("Error reading from file");
-            System.exit(0);
-        }
-    }
-	
 	
 	public void exec() throws SystemInterrupt, ProgramInterrupt{
 		boolean running = true;

@@ -12,7 +12,8 @@ public class Utils {
     public static final byte BLOCK_WORD_COUNT = 0x10;        // word count in block
     public static final byte WORD_BYTE_COUNT = 0x4;               // byte count in word
     public static String INITIAL_REG_VAL_STR = "0000";
-    public static final String TASK_BEGIN = "$BGN";
+    public static final String TASK_HEADER = "$HDR";
+    public static final String TASK_BODY = "$BDY";
     public static final String TASK_END = "$END";
     public static final String EM_FILE_PATH = "res/external_memory.txt";
     private final static char[] HEX_CHAR_VALUES = "0123456789ABCDEF".toCharArray();
