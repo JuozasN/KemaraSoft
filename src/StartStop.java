@@ -1,6 +1,7 @@
 public class StartStop extends Process{
 
-    public StartStop() {
+    public StartStop(OS os) {
+        super(os);
         this.create(null, (byte)4, "StartStop");
     }
 
@@ -28,14 +29,14 @@ public class StartStop extends Process{
     }
 
     public void createChildren(){
-        new LoadProgram(this);
-        new JCL(this);
-        new Loader(this);
-        new MainProc(this);
-        new Interrupt(this);
-        new ChannelInterrupt(this);
-        new PutLine(this);
-        new Idle(this);
+        new LoadProgram(os, this);
+        new JCL(os, this);
+        new Loader(os, this);
+        new MainProc(os, this);
+        new Interrupt(os, this);
+        new ChannelInterrupt(os, this);
+        new PutLine(os, this);
+        new Idle(os, this);
     }
 
     public void deleteResources() {

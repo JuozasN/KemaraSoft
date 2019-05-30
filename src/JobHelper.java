@@ -1,6 +1,7 @@
 public class JobHelper extends Process{
 
-    public JobHelper(Process parent){
+    public JobHelper(OS os, Process parent){
+        super(os);
         this.create(parent, (byte)2, "JobHelper");
     }
 

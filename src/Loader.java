@@ -1,6 +1,7 @@
 public class Loader extends Process{
 
-    public Loader(Process parent) {
+    public Loader(OS os, Process parent) {
+        super(os);
         this.create(parent, (byte)3, "Loader");
     }
 

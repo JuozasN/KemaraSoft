@@ -23,9 +23,11 @@ public abstract class Process {
     protected ArrayList<Process> children;
     protected String title;
     protected int step;
+    protected OS os;
 
-    public Process(){
+    public Process(OS os){
         this.ID = previousID++;
+        this.os = os;
     }
 
     public void create(Process parent, byte priority, String title) {
@@ -40,6 +42,7 @@ public abstract class Process {
         createdResources = new ArrayList<>();
         state = ProcessState.READY;
         step = 0;
+        os.appendProcessLog("Process. Process created: " + this.getTitle() + " by Parent: " + this.parent.getTitle() + ".");
         //kvieciamas planuotojas..
     }
 
@@ -56,6 +59,7 @@ public abstract class Process {
 //        }
         ownedResources.clear();
         OS.removeFromProcessList(this);
+        os.appendProcessLog("Process. Process deleted: " + this.getTitle() + ".");
         //kvieciamas planuotojas..
     }
 
@@ -63,6 +67,7 @@ public abstract class Process {
         if(state < ProcessState.SUSPENDED){
             state += ProcessState.SUSPENDED;
         }
+        os.appendProcessLog("Process. Process suspended: " + this.getTitle() + ".");
 
         //kvieciamas planuotojas..
     }
@@ -73,12 +78,14 @@ public abstract class Process {
         } else if (state == ProcessState.BLOCKED) {
             state = ProcessState.READY;
         }
+        os.appendProcessLog("Process. Process activated: " + this.getTitle() + ".");
 
         //kvieciamas planuotojas..
     }
 
     public void block(){
         state = ProcessState.BLOCKED;
+        os.appendProcessLog("Process. Process blocked: " + this.getTitle() + ".");
     }
     /**
      * Abstract method that enables Process algorithm implementation on object creation

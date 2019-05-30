@@ -1,7 +1,8 @@
 public class SystemResources {
-    private final Resource fileName = new Resource();
-    private final Resource kernelMemory = new Resource();
-    private final Resource taskInKernelMemory = new Resource();
+    OS os = new OS();
+    private final Resource fileName = new Resource(os);
+    private final Resource kernelMemory = new Resource(os);
+    private final Resource taskInKernelMemory = new Resource(os);
 
     public void initResources(Process creatorProcess) {
         fileName.create(creatorProcess, "File Name");

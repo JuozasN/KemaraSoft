@@ -1,6 +1,7 @@
 public class MainProc extends Process{
 
-    public MainProc(Process parent) {
+    public MainProc(OS os, Process parent) {
+        super(os);
         this.create(parent, (byte)3, "MainProc");
     }
 
@@ -12,7 +13,7 @@ public class MainProc extends Process{
                 return;
             case 1:
                 //check resource parameter
-                new JobHelper(this);
+                new JobHelper(os, this);
                 //jei vykdymo laikas = 0 is kur zinome kuri JobHelper'i trinti?
                 stepReset();
                 return;
