@@ -15,7 +15,7 @@ public abstract class Process {
     protected long ID;
     protected Short[] savedRegisters = new Short[7];
     protected ArrayList<Resource> createdResources;
-    protected ArrayList<Block> ownedResources = new ArrayList<>();
+    protected ArrayList<Resource> ownedResources = new ArrayList<>();
 //    protected ArrayList<Resource> elementList;
     protected byte state;
     protected byte priority;
@@ -103,7 +103,7 @@ public abstract class Process {
         return state;
     }
 
-    public ArrayList<Block> getOwnedResources() {
+    public ArrayList<Resource> getOwnedResources() {
         return this.ownedResources;
     }
 

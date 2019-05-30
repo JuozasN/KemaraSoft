@@ -10,13 +10,14 @@ public class JCL extends Process{
     public void run(){
         switch(step){
             case 0:
-                //ownedResources.get("Užduotis supervizorinėje atmintyje").request(this);
+                Utils.getResource(os.resourceList, Title.KERNEL_PROGRAM).request(this);
                 stepIncrement();
                 return;
             case 1:
+                StaticResource sr = (StaticResource)Utils.getResource(ownedResources, Title.KERNEL_PROGRAM);
                 ArrayList<Word> program = new ArrayList<>();
-                if(getWord(0).toString() == "$HDR"){
-                    Word word = getWord(1);
+                if(getWord(sr, 0).toString() == "$HDR"){
+                    Word word = getWord(sr, 1);
                     if(word.toString() == "$BDY") {
                         releaseDynamicResource(Title.MEM_LINE, "Nera programos antrastes");
                         stepReset();
@@ -25,7 +26,7 @@ public class JCL extends Process{
                         program.add(word);
                         int i = 2;
                         while(true){
-                            word = getWord(i);
+                            word = getWord(sr, i);
                             if(word.toString() == "$BDY"){break;}
                             if(word.toString() == ""){
                                 releaseDynamicResource(Title.MEM_LINE, "Nera vartotojo programos");
@@ -36,7 +37,7 @@ public class JCL extends Process{
                             i++;
                         }
                         while(true){
-                            word = getWord(i);
+                            word = getWord(sr, i);
                             if(word.toString() == "$END" || word.toString() == ""){
                                 if(word.toString() == "$END"){
                                     releaseDynamicResource(Title.MAIN_PROGRAM, "Vykdymo laikas = 1");
@@ -63,11 +64,13 @@ public class JCL extends Process{
         }
     }
 
-    public Word getWord(int index){
-        return ownedResources.get(index/Utils.BLOCK_WORD_COUNT).getWord(index%Utils.BLOCK_WORD_COUNT);
+    public Word getWord(StaticResource sr, int index){
+        return sr.getElementList()[index/Utils.BLOCK_WORD_COUNT].getWord(index%Utils.BLOCK_WORD_COUNT);
     }
 
     public void releaseDynamicResource(Title title, String parameter){
-        new DynamicResource(parameter).release();
+        Resource r = new DynamicResource(parameter);
+        r.create(os,this, title);
+        r.release();
     }
 }
