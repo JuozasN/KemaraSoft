@@ -13,12 +13,14 @@ import java.util.ResourceBundle;
 public class OS implements Initializable {
     @FXML private TableView<PQRow> processQueueView;
     @FXML private TableColumn<PQRow, String> PQLineNoCol;
+    @FXML private TableColumn<PQRow, String> PQIdCol;
     @FXML private TableColumn<PQRow, String> PQTitleCol;
     @FXML private TableColumn<PQRow, String> PQStateCol;
     @FXML private TableColumn<PQRow, String> PQPriorityCol;
 
     @FXML private TableView<ResRow> resourcesView;
     @FXML private TableColumn<ResRow, String> ResLineNoCol;
+    @FXML private TableColumn<ResRow, String> ResIdCol;
     @FXML private TableColumn<ResRow, String> ResTitleCol;
     @FXML private TableColumn<ResRow, String> ResElementsCol;
 
@@ -97,7 +99,6 @@ public class OS implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
         initializePQTable();
         initializeResTable();
     }
@@ -108,23 +109,23 @@ public class OS implements Initializable {
 
     private void initializePQTable() {
         PQLineNoCol.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        PQIdCol.setCellValueFactory(new PropertyValueFactory<>("Id"));
         PQTitleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
         PQStateCol.setCellValueFactory(new PropertyValueFactory<>("State"));
         PQPriorityCol.setCellValueFactory(new PropertyValueFactory<>("Priority"));
 
         ObservableList<PQRow> tableValues = FXCollections.observableArrayList();
-        tableValues.add(new PQRow("1"));
 
         processQueueView.setItems(tableValues);
     }
 
     private void initializeResTable() {
         ResLineNoCol.setCellValueFactory(new PropertyValueFactory<>("LineNo"));
+        ResIdCol.setCellValueFactory(new PropertyValueFactory<>("Id"));
         ResTitleCol.setCellValueFactory(new PropertyValueFactory<>("Title"));
         ResElementsCol.setCellValueFactory(new PropertyValueFactory<>("Elements"));
 
         ObservableList<ResRow> tableValues = FXCollections.observableArrayList();
-        tableValues.add(new ResRow("1"));
 
         resourcesView.setItems(tableValues);
     }
@@ -237,6 +238,28 @@ public class OS implements Initializable {
     public void removeResRow(int index) {
         ObservableList<ResRow> resViewValues = getResourcesValues();
         resViewValues.remove(index);
+    }
+
+    // removes a process row from the index position of the process queue list
+    public void removePQRow(Process process) {
+        ObservableList<PQRow> processViewValues = getProcessQueueValues();
+        for(int i = 0; i < processViewValues.size(); ++i) {
+            if (processViewValues.get(i).getId().equals(String.valueOf(process.getId()))) {
+                processViewValues.remove(i);
+                break;
+            }
+        }
+    }
+
+    // removes a resource row from the index position of the resources list
+    public void removeResRow(Resource resource) {
+        ObservableList<ResRow> resViewValues = getResourcesValues();
+        for (int i = 0; i < resViewValues.size(); ++i) {
+            if (resViewValues.get(i).getId().equals(String.valueOf(resource.getId()))) {
+                resViewValues.remove(i);
+                break;
+            }
+        }
     }
 
     /**

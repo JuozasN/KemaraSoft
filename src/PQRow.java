@@ -2,27 +2,30 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class PQRow {
     private SimpleStringProperty LineNo;
+    private SimpleStringProperty Id;
     private SimpleStringProperty Title;
     private SimpleStringProperty State;
     private SimpleStringProperty Priority;
 
-    public PQRow(String LineNo, String Title, String State, String Priority){
+    public PQRow(String LineNo, String Id, String Title, String State, String Priority){
         this.LineNo = new SimpleStringProperty(LineNo);
+        this.Id = new SimpleStringProperty(Id);
         this.Title = new SimpleStringProperty(Title);
         this.State = new SimpleStringProperty(State);
         this.Priority = new SimpleStringProperty(Priority);
     }
 
     public PQRow(int LineNo, Process process) {
-        this(String.valueOf(LineNo), process.getTitle(), String.valueOf(process.getState()),
+        this(String.valueOf(LineNo), String.valueOf(process.getId()), process.getTitle(), String.valueOf(process.getState()),
                 String.valueOf(process.getPriority()));
     }
 
     public PQRow(String LineNo) {
-        this(LineNo, "nil", "nil", "nil");
+        this(LineNo, "nil", "nil", "nil", "nil");
     }
 
     public void setInitial() {
+        setIdCol("nil");
         setTitleCol("nil");
         setStateCol("nil");
         setPriorityCol("nil");
@@ -44,6 +47,14 @@ public class PQRow {
         return Title;
     }
 
+    public String getId() {
+        return Id.get();
+    }
+
+    public SimpleStringProperty idProperty() {
+        return Id;
+    }
+
     public String getState() {
         return State.get();
     }
@@ -62,6 +73,10 @@ public class PQRow {
 
     public void setTitleCol(String titleCol) {
         this.Title.set(titleCol);
+    }
+
+    public void setIdCol(String id) {
+        this.Id.set(id);
     }
 
     public void setStateCol(String stateCol) {

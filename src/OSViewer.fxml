@@ -51,6 +51,7 @@
                         <TableView fx:id="processQueueView" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="PQLineNoCol" maxWidth="40.0" minWidth="20.0" prefWidth="30.0" text="#" />
+                              <TableColumn fx:id="PQIdCol" maxWidth="50.0" minWidth="20.0" prefWidth="40.0" text="Id" />
                               <TableColumn fx:id="PQTitleCol" minWidth="35.0" prefWidth="-1.0" text="Title" />
                               <TableColumn fx:id="PQStateCol" prefWidth="75.0" text="State" />
                               <TableColumn fx:id="PQPriorityCol" prefWidth="75.0" text="Priority" />
@@ -74,6 +75,7 @@
                         <TableView fx:id="resourcesView" VBox.vgrow="ALWAYS">
                            <columns>
                               <TableColumn fx:id="ResLineNoCol" maxWidth="40.0" minWidth="20.0" prefWidth="30.0" text="#" />
+                              <TableColumn fx:id="ResIdCol" maxWidth="50.0" minWidth="20.0" prefWidth="40.0" text="Id" />
                               <TableColumn fx:id="ResTitleCol" minWidth="35.0" prefWidth="-1.0" text="Title" />
                               <TableColumn fx:id="ResElementsCol" prefWidth="75.0" text="Elements" />
                            </columns>
