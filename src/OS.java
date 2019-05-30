@@ -61,11 +61,10 @@ public class OS implements Initializable {
         distributor = new Distributor(this);
         StartStop ss = new StartStop(this);
         ss.create(null, (byte)4, "StartStop");
-        ss.run();
     }
 
     @FXML private void stepButtonAction(javafx.event.ActionEvent event){
-        //scheduler.runNextReadyProcess();
+        scheduler.runNextReadyProcess().run();
     }
 
     @FXML private void resetButtonAction(javafx.event.ActionEvent event){
@@ -495,9 +494,5 @@ public class OS implements Initializable {
         appendProcessLog("OS. Adding " + resource.getTitle() + " to Resource List.");
         resourceList.add(resource);
         addResRow(resource);
-    }
-
-    public void runProcess(Process process) {
-        // run process...
     }
 }
