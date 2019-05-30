@@ -6,7 +6,8 @@ public class Distributor {
     public static OS os;
     public static Map<Title, Process> waitingProcesses;
 
-    public Distributor(){
+    public Distributor(OS os){
+        this.os = os;
         os.appendProcessLog("Distributor. Initializing distributor.");
         waitingProcesses = new HashMap<>();
     }
@@ -14,24 +15,21 @@ public class Distributor {
     //Kvieciama is Resurso primityvu "request" ir "release"
     public static void distributeResource(Resource resource){
         os.appendProcessLog("Distributor. Distributing resource: " + resource.getTitle());
+        Process process = null;
         if(resource instanceof DynamicResource) {
             Title title = resource.getTitle();
-            Process process = waitingProcesses.get(title);
-            process.addToOwnedResources(resource);
-            process.activate();
+            process = waitingProcesses.remove(title);
         }
-        // imame pirmą eilėje laukiantį resurso procesą
-        Process topWaitingProcess = resource.getTopWaitingProcess();
-        // perduodame procesui resurso elementus
+        if(resource instanceof StaticResource){
+            process = resource.getTopWaitingProcess();
+            resource.removeFromWaitingList(process);
+        }
 
-        //topWaitingProcess.addToOwnedResources(resource);
-
-        // atblokuojame procesą, gavusį resursą
-        topWaitingProcess.activate();
-        // pašaliname procesą iš laukiančių resurso procesų sąrašo
-        resource.removeFromWaitingList(topWaitingProcess);
+        process.addToOwnedResources(resource);
+        process.activate();
 
         // pašaliname perduotus procesui elementus iš resurso elementų sąrašo
+
         //resource.removeElementList();
 
         //kviečiame planuotoja

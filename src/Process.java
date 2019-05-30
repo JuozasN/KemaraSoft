@@ -35,14 +35,17 @@ public abstract class Process {
         this.priority = priority;
 //        this.elementList = elementList;
         this.title = title;
-        OS.addToProcessList(this);
+        os.addToProcessList(this);
         if (parent != null)
             parent.addToChildren(this);
         children = new ArrayList<>();
         createdResources = new ArrayList<>();
         state = ProcessState.READY;
         step = 0;
-        os.appendProcessLog("Process. Process created: " + this.getTitle() + " by Parent: " + this.parent.getTitle() + ".");
+        if (parent == null){
+            os.appendProcessLog("Process. Process created: " + this.getTitle() + " by OS.");
+        }else
+            os.appendProcessLog("Process. Process created: " + this.getTitle() + " by Parent: " + this.parent.getTitle() + ".");
         //kvieciamas planuotojas..
     }
 
@@ -58,7 +61,7 @@ public abstract class Process {
 //            r.delete();
 //        }
         ownedResources.clear();
-        OS.removeFromProcessList(this);
+        os.removeFromProcessList(this);
         os.appendProcessLog("Process. Process deleted: " + this.getTitle() + ".");
         //kvieciamas planuotojas..
     }
@@ -104,7 +107,7 @@ public abstract class Process {
     }
 
     public ArrayList<Resource> getOwnedResources() {
-        return this.ownedResources;
+        return ownedResources;
     }
 
 //    public ArrayList<Block> getElementList() {
@@ -132,12 +135,16 @@ public abstract class Process {
         this.createdResources.remove(resource);
     }
 
-    public void removeFromOwnedResources(Block resourceElement) {
-        this.ownedResources.remove(resourceElement);
+    public void removeFromOwnedResources(Resource resource) {
+        this.ownedResources.remove(resource);
     }
 
     public void removeOwnedResources() {
         this.ownedResources.clear();
+    }
+
+    public void addToOwnedResources(Resource resource) {
+        this.ownedResources.add(resource);
     }
 
     public Resource getCreatedResource(Title title){
