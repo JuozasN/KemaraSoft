@@ -62,8 +62,10 @@ public class OS implements Initializable {
         ss.create(null, (byte)4, "StartStop");
     }
 
-    @FXML private void stepButtonAction(javafx.event.ActionEvent event){
-        scheduler.runNextReadyProcess().run();
+    @FXML private void stepButtonAction(javafx.event.ActionEvent event) {
+        try {
+            scheduler.runNextReadyProcess().run();
+        }catch(ProgramInterrupt pi){}
     }
 
     @FXML private void resetButtonAction(javafx.event.ActionEvent event){
@@ -75,16 +77,6 @@ public class OS implements Initializable {
     }
 
     @FXML private void loadButtonAction(javafx.event.ActionEvent event){
-        if(checkFilenameField()) {
-            try {
-                process= new VM(this, realMachine);
-                process.loadProgram();
-            } catch (ProgramInterrupt PI) {
-                // Overflow
-            }
-            previousLine.setText(currentLine.getText());
-            currentLine.setText(getCommandString(process));
-        }
 
     }
 
