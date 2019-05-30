@@ -54,6 +54,10 @@ public class Resource {
         Distributor.distributeResource(this);
     }
 
+    public long getId() {
+        return id;
+    }
+
     public Title getTitle(){
         return this.title;
     }

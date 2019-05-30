@@ -12,7 +12,7 @@ public abstract class Process {
 
     protected ArrayList<Process> processList = new ArrayList<>();
     protected static long previousID = 0;
-    protected long ID;
+    protected long id;
     protected Short[] savedRegisters = new Short[7];
     protected ArrayList<Resource> createdResources;
     protected ArrayList<Resource> ownedResources = new ArrayList<>();
@@ -26,7 +26,7 @@ public abstract class Process {
     protected OS os;
 
     public Process(OS os){
-        this.ID = previousID++;
+        this.id = previousID++;
         this.os = os;
     }
 
@@ -100,6 +100,10 @@ public abstract class Process {
     }
     public void addToChildren(Process children){
         this.children.add(children);
+    }
+
+    public long getId() {
+        return id;
     }
 
     public byte getState() {
