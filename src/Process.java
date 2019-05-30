@@ -15,7 +15,7 @@ public abstract class Process {
     protected long ID;
     protected Short[] savedRegisters = new Short[7];
     protected ArrayList<Resource> createdResources;
-    protected ArrayList<Block> ownedResources = new ArrayList<>();
+    protected ArrayList<Resource> ownedResources = new ArrayList<>();
 //    protected ArrayList<Resource> elementList;
     protected byte state;
     protected byte priority;
@@ -103,14 +103,9 @@ public abstract class Process {
         return state;
     }
 
-    public ArrayList<Block> getOwnedResources() {
-        return this.ownedResources;
+    public ArrayList<Resource> getOwnedResources() {
+        return ownedResources;
     }
-
-//    public ArrayList<Block> getElementList() {
-//        return this.elementList;
-//    }
-
 
     public String getTitle() {
         return title;
@@ -132,12 +127,16 @@ public abstract class Process {
         this.createdResources.remove(resource);
     }
 
-    public void removeFromOwnedResources(Block resourceElement) {
-        this.ownedResources.remove(resourceElement);
+    public void removeFromOwnedResources(Resource resource) {
+        this.ownedResources.remove(resource);
     }
 
     public void removeOwnedResources() {
         this.ownedResources.clear();
+    }
+
+    public void addToOwnedResources(Resource resource) {
+        this.ownedResources.add(resource);
     }
 
     public Resource getCreatedResource(Title title){
