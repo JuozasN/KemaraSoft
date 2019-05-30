@@ -9,4 +9,7 @@ public class DynamicResource extends Resource {
     public void release(){
         Distributor.distributeResource(this);
     }
+    public String getParameter(){
+        return parameter;
+    }
 }
