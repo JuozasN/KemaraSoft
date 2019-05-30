@@ -160,7 +160,7 @@ public abstract class Process {
 //        this.ownedResources.remove(resource);
 //    }
 
-    public void addToOwnedResources(Resource resource) { this.ownedResources.add(resource); }
+//    public void addToOwnedResources(Resource resource) { this.ownedResources.add(resource); }
 
 //    public void addToOwnedResources(Resource resource) {
 //        this.ownedResources.addAll(resource.getElementList());
