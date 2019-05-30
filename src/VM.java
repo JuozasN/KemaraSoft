@@ -34,7 +34,14 @@ public class VM extends Process{
 
 	@Override
 	public void run() {
+		rm.setMode(true); // set user mode
+		try {
+			exec();
+		} catch (SystemInterrupt | ProgramInterrupt e) {
+			e.printStackTrace();
+		}
 
+		Utils.releaseDynamicResource(os, this, Title.INTERRUPT, "HALT");
 	}
 
 	public Block[] getMem() {
