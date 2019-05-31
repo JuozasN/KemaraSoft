@@ -216,7 +216,8 @@ public class VM extends Process{
 	}
 	
 	public void put() throws SystemInterrupt{
-		throw new SystemInterrupt((byte)2, "PUT");
+		//Utils.releaseDynamicResource(os, this, Title.INTERRUPT, "PUT");
+    	throw new SystemInterrupt((byte)2, "PUT");
 	}
 	
 	public String read(){

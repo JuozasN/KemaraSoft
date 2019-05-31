@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public abstract class Process {
-    protected ArrayList<Process> processList = new ArrayList<>();
+//    protected ArrayList<Process> processList = new ArrayList<>();
     protected static long previousID = 0;
     protected long id;
     protected Short[] savedRegisters = new Short[7];

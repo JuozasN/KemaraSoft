@@ -36,7 +36,7 @@ public class Distributor {
     }
 
     public static void request(Process process, Title title){
-        os.appendProcessLog("Distributor. " + process.getTitle() + "requesting " + title + ".");
+        os.appendProcessLog("Distributor. " + process.getTitle() + " requesting " + title + ".");
         process.block();
         waitingProcesses.put(title, process);
     }
