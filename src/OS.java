@@ -84,10 +84,10 @@ public class OS implements Initializable {
     }
 
     @FXML private void inputConfirmAction(javafx.event.ActionEvent event){
-        if (realMachine.getSI() == 1){
-            inputText = inputField.getText();
-            this.getInterrupt();
-        }
+//        if (realMachine.getSI() == 1){
+//            inputText = inputField.getText();
+//            this.getInterrupt();
+//        }
         enterPressed = true;
     }
 

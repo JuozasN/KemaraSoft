@@ -8,13 +8,13 @@ public class Idle extends Process{
     public void run(){
         os.inputConfirm.setDisable(false);
         os.inputField.setDisable(false);
-        if (os.enterPushed){
+        if (os.isEnterPressed()){
             Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Enter");
-            os.enterPushed = false;
+            os.setEnterPressed(false);
         }
-        if (os.escPushed){
+        if (os.isEscPressed()){
             Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Esc");
-            os.escPushed = false;
+            os.setEscPressed(false);
         }
     }
 }
