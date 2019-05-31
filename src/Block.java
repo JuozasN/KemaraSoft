@@ -98,7 +98,14 @@ public class Block {
 	public void setWord(int index, String word) {
 		setWord(index, word.getBytes());
 	}
-	
+
+	public boolean isEmpty(){
+		for(Word w: words){
+			if(w.getValue() != 0) return false;
+		}
+		return true;
+	}
+
 	public String toString() {
 		String s = "";
 		for(Word w: words){

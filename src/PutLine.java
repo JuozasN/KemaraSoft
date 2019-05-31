@@ -12,11 +12,13 @@ public class PutLine extends Process{
                 stepIncrement();
                 return;
             case 1:
-                Distributor.request(this, Title.OUTPUT);
+                Utils.getResource(os.resourceList, Title.OUTPUT).request(this);
                 stepIncrement();
                 return;
             case 2:
+                os.outputField.setDisable(false);
                 os.setOutputField(((DynamicResource)Utils.getResource(this.ownedResources, Title.MEM_LINE)).getParameter());
+                //os.outputField.setDisable(true);
                 Utils.getResource(this.ownedResources, Title.MEM_LINE).release();
                 stepReset();
                 return;

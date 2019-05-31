@@ -26,12 +26,11 @@ public class LoadProgram extends Process {
                 stepIncrement();
                 return;
             case 2:
-                Utils.getResource(os.resourceList, Title.KERNEL_MEMORY);
-                //Copy file content to kernel memory
-                String memPoint = ""; //Send pointer to program???
-                Resource r = new DynamicResource(memPoint);
-                r.create(os,this, Title.KERNEL_PROGRAM);
-                r.release();
+                StaticResource km = (StaticResource)Utils.getResource(ownedResources, Title.KERNEL_MEMORY);
+                Block[] blocks = km.getElements(Utils.VM_MEM_BLOCK_COUNT);
+                String memPoint = Integer.toString(blocks[0].getWord(0).getValue());
+                transfer(blocks);
+                Utils.releaseDynamicResource(os, this, Title.KERNEL_PROGRAM, memPoint);
                 stepReset();
                 return;
             default:
@@ -44,8 +43,11 @@ public class LoadProgram extends Process {
     public ArrayList<String> loadProgram(){
         BufferedReader br;
         ArrayList<String> strArray = new ArrayList<>();
-        String resource = ((DynamicResource)Utils.getResource(ownedResources, Title.FILE_NAME)).getParameter();
+        DynamicResource resourceObj = (DynamicResource)Utils.getResource(ownedResources, Title.FILE_NAME);
+        String resource = resourceObj.getParameter();
+        resourceObj.delete();
         String tempFilePath = "src/" + resource;
+
 //        String tempFilePath = "src/" + Utils.getResource(ownedResources, Title.FILE_NAME);
         try {
             br = new BufferedReader(new FileReader(tempFilePath));
@@ -59,7 +61,6 @@ public class LoadProgram extends Process {
             System.err.println("Error reading from file");
             System.exit(0);
         }
-        System.out.println(strArray);
         return strArray;
     }
 
@@ -69,20 +70,30 @@ public class LoadProgram extends Process {
             blocks[i] = new Block();
         }
         int i = 0;
+        int wordsCount = 0;
         for(String str: strArray){
+            int tempWordsCount = (int) Math.ceil(((double)str.length())/4);
             Word[] words = new Word[Utils.BLOCK_WORD_COUNT];
             Word[] temp = Block.getBlockFromString(str).getWords();
-            if((temp.length + words.length) <= Utils.BLOCK_WORD_COUNT){
-                System.arraycopy(temp, 0, words, words.length, temp.length);
+            if((wordsCount + tempWordsCount) <= Utils.BLOCK_WORD_COUNT){
+                System.arraycopy(temp, 0, words, wordsCount, tempWordsCount);
+                wordsCount += tempWordsCount;
             } else{
-                int remainingLen = Utils.BLOCK_WORD_COUNT-words.length;
-                System.arraycopy(temp, 0, words, words.length, remainingLen);
+                int remainingLen = Utils.BLOCK_WORD_COUNT-wordsCount;
+                System.arraycopy(temp, 0, words, wordsCount, remainingLen);
                 blocks[i].setWords(words);
                 Arrays.fill(words, null);
-                System.arraycopy(temp, remainingLen, words, words.length, temp.length-remainingLen);
+                wordsCount = tempWordsCount-remainingLen;
+                System.arraycopy(temp, remainingLen, words, 0, wordsCount);
                 i++;
             }
         }
         return blocks;
+    }
+
+    public void transfer(Block[] dest){
+        for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; ++i){
+            dest[i].setWords(program[i].getWords());
+        }
     }
 }

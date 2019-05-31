@@ -29,6 +29,7 @@ public class Resource {
         }
         os.removeFromResourceList(this);
         os.appendProcessLog("Resource. Resource deleted: " + this.getTitle() + ".");
+        os.removeResRow(this);
     }
 
     public void request(Process process) {
