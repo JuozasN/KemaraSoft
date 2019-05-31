@@ -88,6 +88,11 @@ public class OS implements Initializable {
 //            inputText = inputField.getText();
 //            this.getInterrupt();
 //        }
+        try {
+            loadIOBlock(Block.getBlockFromString(inputField.getText()));
+        } catch (ProgramInterrupt e) {
+            e.printStackTrace();
+        }
         enterPressed = true;
     }
 
@@ -509,5 +514,19 @@ public class OS implements Initializable {
 
     public void setOutputField(String string){
         this.outputField.setText(string);
+    }
+
+    public Command processCommand() {
+        String command = this.getIOBlock().toString();
+        switch(command.substring(0, 2)) {
+            case "/q":
+                return Command.QUIT;    // quits current program
+            case "/l":
+                return Command.LOAD;    // loads a new program
+            case "/s":
+                return Command.SHOW;    // shows another running program on the console
+            default:
+                return null;
+        }
     }
 }
