@@ -44,7 +44,9 @@ public class LoadProgram extends Process {
     public ArrayList<String> loadProgram(){
         BufferedReader br;
         ArrayList<String> strArray = new ArrayList<>();
-        String tempFilePath = "src/" + Utils.getResource(ownedResources, Title.FILE_NAME);
+        String resource = ((DynamicResource)Utils.getResource(ownedResources, Title.FILE_NAME)).getParameter();
+        String tempFilePath = "src/" + resource;
+//        String tempFilePath = "src/" + Utils.getResource(ownedResources, Title.FILE_NAME);
         try {
             br = new BufferedReader(new FileReader(tempFilePath));
             for (String line; (line = br.readLine()) != null; ) {
@@ -57,6 +59,7 @@ public class LoadProgram extends Process {
             System.err.println("Error reading from file");
             System.exit(0);
         }
+        System.out.println(strArray);
         return strArray;
     }
 

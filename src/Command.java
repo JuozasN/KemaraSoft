@@ -1,3 +1,3 @@
 public enum Command {
-    LOAD, QUIT, PAUSE, SHOW
+    LOAD, QUIT, PAUSE, SHOW, USER_INPUT
 }
