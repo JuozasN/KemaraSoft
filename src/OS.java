@@ -148,6 +148,18 @@ public class OS implements Initializable {
         this.enterPressed = enterPressed;
     }
 
+    public boolean isEnterPressed() {
+        return enterPressed;
+    }
+
+    public boolean isEscPressed() {
+        return escPressed;
+    }
+
+    public void setEscPressed(boolean escPressed) {
+        this.escPressed = escPressed;
+    }
+
     /**
      * UI METHODS
      */
