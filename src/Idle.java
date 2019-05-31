@@ -6,6 +6,8 @@ public class Idle extends Process{
     }
 
     public void run(){
+        os.inputConfirm.setDisable(false);
+        os.inputField.setDisable(false);
         if (os.enterPushed){
             Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Enter");
             os.enterPushed = false;

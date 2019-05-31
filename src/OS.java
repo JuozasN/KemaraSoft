@@ -30,7 +30,7 @@ public class OS implements Initializable {
     @FXML private Button stepButton;
     @FXML private Button resetButton;
     @FXML private Button loadButton;
-    @FXML private Button inputConfirm;
+    @FXML public Button inputConfirm;
 
     @FXML private Label previousLine;
     @FXML private Label currentLine;
