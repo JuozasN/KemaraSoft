@@ -102,7 +102,8 @@ public class Block {
 	public String toString() {
 		String s = "";
 		for(Word w: words){
-			s+=w;
+			if (w.getValue() != 0)
+				s+=w;
 		}
 		return s;
 	}

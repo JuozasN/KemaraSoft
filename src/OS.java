@@ -44,7 +44,7 @@ public class OS implements Initializable {
     private static final byte PROCESS_STATE_SP_INDEX = 1;
     private static final byte PROCESS_STATE_PC_INDEX = 2;
 
-    private final RM realMachine = null;
+    private RM realMachine = null;
     private VM process;
     private Block IOBlock = new Block();
     private Block processStateBlock = new Block();
@@ -94,12 +94,17 @@ public class OS implements Initializable {
             e.printStackTrace();
         }
         enterPressed = true;
+
+        try {
+            scheduler.runNextReadyProcess().run();
+        }catch(ProgramInterrupt pi){}
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializePQTable();
         initializeResTable();
+        realMachine = new RM(this);
     }
 
     /**
@@ -357,9 +362,9 @@ public class OS implements Initializable {
     // loads a specified block of memory to kernel IO memory block
     private void loadIOBlock(Block block) {
         this.IOBlock.setWords(block.getWords());
-        for (byte i = 0; i < Utils.BLOCK_WORD_COUNT; ++i) {
-            realMachine.setValue(block.getWord(i).getValue(), IO_BLOCK_INDEX, i);
-        }
+//        for (byte i = 0; i < Utils.BLOCK_WORD_COUNT; ++i) {
+//            realMachine.setValue(block.getWord(i).getValue(), IO_BLOCK_INDEX, i);
+//        }
     }
 
     private void loadIOBlock(int[] block) {
@@ -373,7 +378,9 @@ public class OS implements Initializable {
     // Returns IO memory block and removes its data from kernel memory
     private Block getIOBlock() {
         Block ioBlock = new Block(this.IOBlock);
+        this.inputText = ioBlock.toString();
         loadIOBlock(new Block());
+//        this.inputField.setText("");
         return ioBlock;
     }
 
@@ -526,7 +533,13 @@ public class OS implements Initializable {
             case "/s":
                 return Command.SHOW;    // shows another running program on the console
             default:
-                return null;
+                return Command.USER_INPUT;
         }
+    }
+
+    public String getFileNameFromInput() {
+//        String command = this.getIOBlock().toString();
+//        return command.substring(3);
+        return this.inputText.substring(3);
     }
 }

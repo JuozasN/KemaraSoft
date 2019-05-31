@@ -16,7 +16,7 @@ public class ChannelInterrupt extends Process{
                 if (channelInterrupt.equals("Enter")) {
                     // atpažįstama komanda IO eilutėje atmintyje
                     if (os.processCommand().equals(Command.LOAD)) {         // load a program
-                        Utils.releaseDynamicResource(os, this, Title.FILE_NAME, "File");
+                        Utils.releaseDynamicResource(os, this, Title.FILE_NAME, os.getFileNameFromInput());
                     } else if (os.processCommand().equals(Command.QUIT)) { // quit current program
                         Utils.releaseDynamicResource(os, this, Title.INTERRUPT, "HALT");
                     } else if (os.processCommand().equals(Command.SHOW)) { // show another program currently running in OS
