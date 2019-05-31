@@ -4,7 +4,7 @@ public abstract class Process {
 //    protected ArrayList<Process> processList = new ArrayList<>();
     protected static long previousID = 0;
     protected long id;
-    protected Short[] savedRegisters = new Short[7];
+//    protected Short[] savedRegisters = new Short[7];
     protected ArrayList<Resource> createdResources;
     protected ArrayList<Resource> ownedResources = new ArrayList<>();
 //    protected ArrayList<Resource> elementList;
@@ -24,7 +24,6 @@ public abstract class Process {
     public void create(Process parent, byte priority, String title) {
         this.parent = parent;
         this.priority = priority;
-//        this.elementList = elementList;
         this.title = title;
         if (parent != null)
             parent.addToChildren(this);
@@ -37,7 +36,6 @@ public abstract class Process {
             os.appendProcessLog("Process. Process created: " + this.getTitle() + " by OS.");
         }else
             os.appendProcessLog("Process. Process created: " + this.getTitle() + " by Parent: " + this.parent.getTitle() + ".");
-        //kvieciamas planuotojas..
     }
 
     public void delete() {
@@ -48,13 +46,9 @@ public abstract class Process {
             c.delete();
         }
         parent.removeFromChildren(this);
-//        for(Resource r: ownedResources){
-//            r.delete();
-//        }
         ownedResources.clear();
         os.removeFromProcessList(this);
         os.appendProcessLog("Process. Process deleted: " + this.getTitle() + ".");
-        //kvieciamas planuotojas..
     }
 
     public void suspend() {
@@ -65,8 +59,6 @@ public abstract class Process {
         else if (state == State.READY)
             state = State.READY_SUSPENDED;
         os.appendProcessLog("Process. Process suspended: " + this.getTitle() + ".");
-
-        //kvieciamas planuotojas..
     }
 
     public void activate() {
@@ -77,8 +69,6 @@ public abstract class Process {
         else if (state == State.BLOCKED)
             state = State.READY;
         os.appendProcessLog("Process. Process activated: " + this.getTitle() + ".");
-
-        //kvieciamas planuotojas..
     }
 
     public void block(){

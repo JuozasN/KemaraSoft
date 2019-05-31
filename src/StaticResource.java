@@ -19,7 +19,6 @@ public class StaticResource extends Resource {
     public void delete() {
         this.clearElementList();
         super.delete();
-        //"naikinamas pats aprasas"...
     }
 
     public void clearElementList() {

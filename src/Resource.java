@@ -7,7 +7,6 @@ public class Resource {
     private Process creator;
     private ArrayList<Process> waitingProcesses;
     private OS os;
-    //private ArrayList<Resource> resourceList;
 
     public Resource() {
         this.id = previousID++;
@@ -27,11 +26,9 @@ public class Resource {
         this.creator.removeFromCreatedResources(this);
         for(Process p: this.waitingProcesses){
             p.changeState(State.READY);
-            //Istrynus resursa, jo laukes procesas tampa pasiruoses???
         }
         os.removeFromResourceList(this);
         os.appendProcessLog("Resource. Resource deleted: " + this.getTitle() + ".");
-        //"naikinamas pats aprasas"...
     }
 
     public void request(Process process) {
