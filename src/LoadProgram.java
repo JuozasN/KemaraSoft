@@ -62,6 +62,9 @@ public class LoadProgram extends Process {
 
     public Block[] splitToBlocks(ArrayList<String> strArray) throws ProgramInterrupt{
         Block[] blocks = new Block[Utils.VM_MEM_BLOCK_COUNT];
+        for(int i = 0; i < Utils.VM_MEM_BLOCK_COUNT; i++){
+            blocks[i] = new Block();
+        }
         int i = 0;
         for(String str: strArray){
             Word[] words = new Word[Utils.BLOCK_WORD_COUNT];
