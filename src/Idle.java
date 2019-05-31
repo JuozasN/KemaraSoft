@@ -6,12 +6,11 @@ public class Idle extends Process{
     }
 
     public void run(){
-            if (os.CH1 == "Enter"){
-                Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Enter");
-            }
-            if (os.CH1 == "Esc"){
-                Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Esc");
-            }
-        }
+//        if (os.CH1 == "Enter"){
+//            Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Enter");
+//        }
+//        if (os.CH1 == "Esc"){
+//            Utils.releaseDynamicResource(os, this, Title.CHANNEL_INTERRUPT, "Esc");
+//        }
     }
 }

@@ -10,7 +10,8 @@ public class JCL extends Process{
     public void run(){
         switch(step){
             case 0:
-                Utils.getResource(os.resourceList, Title.KERNEL_PROGRAM).request(this);
+                //Utils.getResource(os.resourceList, Title.KERNEL_PROGRAM).request(this);
+                Distributor.request(this, Title.KERNEL_PROGRAM);
                 stepIncrement();
                 return;
             case 1:
