@@ -52,6 +52,9 @@ public class OS implements Initializable {
     private Scheduler scheduler;
     private Distributor distributor;
 
+    private boolean enterPressed = false;
+    private boolean escPressed = false;
+
     public static final ArrayList<Process> processList = new ArrayList<>();
     public static final ArrayList<Resource> resourceList = new ArrayList<>();
 
@@ -85,6 +88,7 @@ public class OS implements Initializable {
             inputText = inputField.getText();
             this.getInterrupt();
         }
+        enterPressed = true;
     }
 
     @Override
@@ -138,6 +142,10 @@ public class OS implements Initializable {
 
     public String getProcessLog() {
         return this.processLog.getText();
+    }
+
+    public void setEnterPressed(boolean enterPressed) {
+        this.enterPressed = enterPressed;
     }
 
     /**
